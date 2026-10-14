@@ -1,0 +1,10 @@
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ armv7-ios ]
+install-name:    '/System/Library/Frameworks/Foundation.framework/Foundation'
+current-version: 1349
+exports:
+  - targets:     [ armv7-ios ]
+    symbols:     [ _NSLog, ___CFConstantStringClassReference ]
+    objc-classes: [ NSArray, NSString ]
+...

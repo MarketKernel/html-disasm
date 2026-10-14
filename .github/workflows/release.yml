@@ -1,0 +1,96 @@
+name: Build and release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to create or update (for example, v0.1.0)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build the single file
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+        with:
+          # On a manual run github.ref points at the branch, but the tag's own
+          # sources are what must be built.
+          ref: ${{ inputs.tag || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The version lives in package.json only; the tag must name it.
+      - name: Check that the tag is package.json's version
+        shell: bash
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$VERSION" != "$RELEASE_TAG" ]; then
+            echo "::error::The tag is $RELEASE_TAG but package.json has $VERSION"
+            exit 1
+          fi
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      # The browser tests (tests/app.mjs, tests/pwa.mjs) are left out here: they depend on the
+      # runner's Chrome and its timing, and one has failed now and then for no fault of the code.
+      # `npm run check` runs them before a commit.
+
+      - name: Package
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp build/disassembler.html "dist/disassembler-$RELEASE_TAG.html"
+          # Computed from dist, or the sums file would hold a path, not a file name.
+          ( cd dist && shasum -a 256 ./*.html > SHA256SUMS.txt )
+          cat dist/SHA256SUMS.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-disassembler
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: html-disassembler
+          merge-multiple: true
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Disassembler $RELEASE_TAG" \
+              --generate-notes
+          fi

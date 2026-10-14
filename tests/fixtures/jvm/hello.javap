@@ -1,0 +1,2912 @@
+  Compiled from "Hello.java"
+final class hello.Hello$Kind extends java.lang.Enum<hello.Hello$Kind> {
+  public static final hello.Hello$Kind SMALL;
+
+  public static final hello.Hello$Kind MEDIUM;
+
+  public static final hello.Hello$Kind LARGE;
+
+  private static final hello.Hello$Kind[] $VALUES;
+
+  public static hello.Hello$Kind[] values();
+    Code:
+         0: getstatic     #13                 // Field $VALUES:[Lhello/Hello$Kind;
+         3: invokevirtual #17                 // Method "[Lhello/Hello$Kind;".clone:()Ljava/lang/Object;
+         6: checkcast     #18                 // class "[Lhello/Hello$Kind;"
+         9: areturn
+
+  public static hello.Hello$Kind valueOf(java.lang.String);
+    Code:
+         0: ldc           #1                  // class hello/Hello$Kind
+         2: aload_0
+         3: invokestatic  #22                 // Method java/lang/Enum.valueOf:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+         6: checkcast     #1                  // class hello/Hello$Kind
+         9: areturn
+
+  private hello.Hello$Kind();
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: invokespecial #28                 // Method java/lang/Enum."<init>":(Ljava/lang/String;I)V
+         6: return
+
+  private static hello.Hello$Kind[] $values();
+    Code:
+         0: iconst_3
+         1: anewarray     #1                  // class hello/Hello$Kind
+         4: dup
+         5: iconst_0
+         6: getstatic     #3                  // Field SMALL:Lhello/Hello$Kind;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: getstatic     #7                  // Field MEDIUM:Lhello/Hello$Kind;
+        15: aastore
+        16: dup
+        17: iconst_2
+        18: getstatic     #10                 // Field LARGE:Lhello/Hello$Kind;
+        21: aastore
+        22: areturn
+
+  static {};
+    Code:
+         0: new           #1                  // class hello/Hello$Kind
+         3: dup
+         4: ldc           #32                 // String SMALL
+         6: iconst_0
+         7: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        10: putstatic     #3                  // Field SMALL:Lhello/Hello$Kind;
+        13: new           #1                  // class hello/Hello$Kind
+        16: dup
+        17: ldc           #34                 // String MEDIUM
+        19: iconst_1
+        20: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        23: putstatic     #7                  // Field MEDIUM:Lhello/Hello$Kind;
+        26: new           #1                  // class hello/Hello$Kind
+        29: dup
+        30: ldc           #35                 // String LARGE
+        32: iconst_2
+        33: invokespecial #33                 // Method "<init>":(Ljava/lang/String;I)V
+        36: putstatic     #10                 // Field LARGE:Lhello/Hello$Kind;
+        39: invokestatic  #36                 // Method $values:()[Lhello/Hello$Kind;
+        42: putstatic     #13                 // Field $VALUES:[Lhello/Hello$Kind;
+        45: return
+}
+  Compiled from "Hello.java"
+final class hello.Hello$Point extends java.lang.Record {
+  private final int x;
+
+  private final int y;
+
+  hello.Hello$Point(int, int);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Record."<init>":()V
+         4: aload_0
+         5: iload_1
+         6: putfield      #7                  // Field x:I
+         9: aload_0
+        10: iload_2
+        11: putfield      #13                 // Field y:I
+        14: return
+
+  long length2();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field x:I
+         4: i2l
+         5: aload_0
+         6: getfield      #7                  // Field x:I
+         9: i2l
+        10: lmul
+        11: aload_0
+        12: getfield      #13                 // Field y:I
+        15: i2l
+        16: aload_0
+        17: getfield      #13                 // Field y:I
+        20: i2l
+        21: lmul
+        22: ladd
+        23: lreturn
+
+  public final java.lang.String toString();
+    Code:
+         0: aload_0
+         1: invokedynamic #16,  0             // InvokeDynamic #0:toString:(Lhello/Hello$Point;)Ljava/lang/String;
+         6: areturn
+
+  public final int hashCode();
+    Code:
+         0: aload_0
+         1: invokedynamic #20,  0             // InvokeDynamic #0:hashCode:(Lhello/Hello$Point;)I
+         6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #24,  0             // InvokeDynamic #0:equals:(Lhello/Hello$Point;Ljava/lang/Object;)Z
+         7: ireturn
+
+  public int x();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field x:I
+         4: ireturn
+
+  public int y();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field y:I
+         4: ireturn
+}
+  Compiled from "Hello.java"
+public class hello.Hello {
+  public hello.Hello();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  static long sum(int[], int);
+    Code:
+         0: lconst_0
+         1: lstore_2
+         2: iconst_0
+         3: istore        4
+         5: iload         4
+         7: iload_1
+         8: if_icmpge     25
+        11: lload_2
+        12: aload_0
+        13: iload         4
+        15: iaload
+        16: i2l
+        17: ladd
+        18: lstore_2
+        19: iinc          4, 1
+        22: goto          5
+        25: lload_2
+        26: lreturn
+
+  static java.lang.String kindOf(long);
+    Code:
+         0: lload_0
+         1: ldc2_w        #7                  // long 4l
+         4: lrem
+         5: l2i
+         6: tableswitch   { // 0 to 2
+                       0: 32
+                       1: 37
+                       2: 42
+                 default: 47
+            }
+        32: ldc           #9                  // String zero
+        34: goto          49
+        37: ldc           #11                 // String one
+        39: goto          49
+        42: ldc           #13                 // String two
+        44: goto          49
+        47: ldc           #15                 // String many
+        49: areturn
+
+  static hello.Hello$Kind classify(double);
+    Code:
+         0: dload_0
+         1: ldc2_w        #17                 // double 1.5d
+         4: dcmpg
+         5: ifge          12
+         8: getstatic     #19                 // Field hello/Hello$Kind.SMALL:Lhello/Hello$Kind;
+        11: areturn
+        12: dload_0
+        13: ldc2_w        #25                 // double 100.25d
+        16: dcmpg
+        17: ifgt          24
+        20: getstatic     #27                 // Field hello/Hello$Kind.MEDIUM:Lhello/Hello$Kind;
+        23: areturn
+        24: getstatic     #30                 // Field hello/Hello$Kind.LARGE:Lhello/Hello$Kind;
+        27: areturn
+
+  static int checksum(byte[]);
+    Code:
+         0: iconst_0
+         1: istore_1
+         2: iconst_0
+         3: istore_2
+         4: iload_2
+         5: aload_0
+         6: arraylength
+         7: if_icmpge     28
+        10: iload_1
+        11: iconst_1
+        12: ishl
+        13: aload_0
+        14: iload_2
+        15: baload
+        16: sipush        255
+        19: iand
+        20: ixor
+        21: istore_1
+        22: iinc          2, 1
+        25: goto          4
+        28: iload_1
+        29: ireturn
+
+  static <T extends java.lang.Comparable<T>> T largest(java.util.List<T>);
+    Code:
+         0: aload_0
+         1: iconst_0
+         2: invokeinterface #33,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+         7: checkcast     #39                 // class java/lang/Comparable
+        10: astore_1
+        11: aload_0
+        12: invokeinterface #41,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        17: astore_2
+        18: aload_2
+        19: invokeinterface #45,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+        24: ifeq          52
+        27: aload_2
+        28: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        33: checkcast     #39                 // class java/lang/Comparable
+        36: astore_3
+        37: aload_3
+        38: aload_1
+        39: invokeinterface #55,  2           // InterfaceMethod java/lang/Comparable.compareTo:(Ljava/lang/Object;)I
+        44: ifle          49
+        47: aload_3
+        48: astore_1
+        49: goto          18
+        52: aload_1
+        53: areturn
+
+  public static void main(java.lang.String[]);
+    Code:
+         0: aload_0
+         1: arraylength
+         2: ifle          25
+         5: aload_0
+         6: iconst_0
+         7: aaload
+         8: ldc           #59                 // String --help
+        10: invokevirtual #61                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        13: ifeq          25
+        16: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        19: ldc           #73                 // String usage: hello [numbers...]
+        21: invokevirtual #75                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        24: return
+        25: bipush        8
+        27: newarray       int
+        29: dup
+        30: iconst_0
+        31: iconst_1
+        32: iastore
+        33: dup
+        34: iconst_1
+        35: iconst_2
+        36: iastore
+        37: dup
+        38: iconst_2
+        39: iconst_3
+        40: iastore
+        41: dup
+        42: iconst_3
+        43: iconst_4
+        44: iastore
+        45: dup
+        46: iconst_4
+        47: iconst_5
+        48: iastore
+        49: dup
+        50: iconst_5
+        51: bipush        6
+        53: iastore
+        54: dup
+        55: bipush        6
+        57: bipush        7
+        59: iastore
+        60: dup
+        61: bipush        7
+        63: bipush        8
+        65: iastore
+        66: astore_1
+        67: aload_1
+        68: aload_1
+        69: arraylength
+        70: invokestatic  #81                 // Method sum:([II)J
+        73: lstore_2
+        74: lload_2
+        75: l2d
+        76: aload_1
+        77: arraylength
+        78: i2d
+        79: ddiv
+        80: dstore        4
+        82: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        85: lload_2
+        86: ldc           #87                 // String %.2f
+        88: iconst_1
+        89: anewarray     #2                  // class java/lang/Object
+        92: dup
+        93: iconst_0
+        94: dload         4
+        96: invokestatic  #89                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        99: aastore
+       100: invokestatic  #95                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+       103: lload_2
+       104: invokestatic  #99                 // Method kindOf:(J)Ljava/lang/String;
+       107: invokedynamic #103,  0            // InvokeDynamic #0:makeConcatWithConstants:(JLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       112: invokevirtual #75                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       115: new           #107                // class hello/Hello$Point
+       118: dup
+       119: iconst_3
+       120: iconst_4
+       121: invokespecial #109                // Method hello/Hello$Point."<init>":(II)V
+       124: astore        6
+       126: invokedynamic #112,  0            // InvokeDynamic #1:applyAsInt:()Ljava/util/function/IntUnaryOperator;
+       131: astore        7
+       133: lload_2
+       134: aload         7
+       136: aload         6
+       138: invokevirtual #116                // Method hello/Hello$Point.x:()I
+       141: invokeinterface #120,  2          // InterfaceMethod java/util/function/IntUnaryOperator.applyAsInt:(I)I
+       146: aload_0
+       147: arraylength
+       148: iconst_1
+       149: if_icmple     158
+       152: aload_0
+       153: iconst_1
+       154: aaload
+       155: goto          160
+       158: ldc           #125                // String 7
+       160: invokestatic  #127                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+       163: imul
+       164: i2l
+       165: invokestatic  #133                // Method java/lang/Math.addExact:(JJ)J
+       168: lstore_2
+       169: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       172: dload         4
+       174: invokestatic  #139                // Method classify:(D)Lhello/Hello$Kind;
+       177: invokevirtual #143                // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+       180: goto          226
+       183: astore        8
+       185: getstatic     #148                // Field java/lang/System.err:Ljava/io/PrintStream;
+       188: aload         8
+       190: invokevirtual #151                // Method java/lang/NumberFormatException.getMessage:()Ljava/lang/String;
+       193: invokevirtual #75                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       196: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       199: dload         4
+       201: invokestatic  #139                // Method classify:(D)Lhello/Hello$Kind;
+       204: invokevirtual #143                // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+       207: goto          226
+       210: astore        9
+       212: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       215: dload         4
+       217: invokestatic  #139                // Method classify:(D)Lhello/Hello$Kind;
+       220: invokevirtual #143                // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+       223: aload         9
+       225: athrow
+       226: new           #155                // class java/util/ArrayList
+       229: dup
+       230: ldc           #157                // String pear
+       232: ldc           #159                // String apple
+       234: ldc           #161                // String fig
+       236: invokestatic  #163                // InterfaceMethod java/util/List.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
+       239: invokespecial #167                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+       242: astore        8
+       244: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       247: aload         8
+       249: invokestatic  #170                // Method largest:(Ljava/util/List;)Ljava/lang/Comparable;
+       252: checkcast     #62                 // class java/lang/String
+       255: aload         6
+       257: invokevirtual #174                // Method hello/Hello$Point.length2:()J
+       260: iconst_3
+       261: newarray       byte
+       263: dup
+       264: iconst_0
+       265: iconst_1
+       266: bastore
+       267: dup
+       268: iconst_1
+       269: iconst_2
+       270: bastore
+       271: dup
+       272: iconst_2
+       273: iconst_3
+       274: bastore
+       275: invokestatic  #178                // Method checksum:([B)I
+       278: invokedynamic #182,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;JI)Ljava/lang/String;
+       283: invokevirtual #75                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       286: lload_2
+       287: lconst_0
+       288: lcmp
+       289: ifle          296
+       292: iconst_0
+       293: goto          297
+       296: iconst_1
+       297: invokestatic  #185                // Method java/lang/System.exit:(I)V
+       300: return
+      Exception table:
+         from    to  target type
+           133   169   183   Class java/lang/NumberFormatException
+           133   169   210   any
+           183   196   210   any
+           210   212   210   any
+
+  private static int lambda$main$0(int);
+    Code:
+         0: iload_0
+         1: iconst_2
+         2: imul
+         3: ireturn
+}
+  Compiled from "More.java"
+class hello.More$1 implements java.lang.Runnable {
+  final java.lang.String val$prefix;
+
+  hello.More$1();
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #1                  // Field val$prefix:Ljava/lang/String;
+         5: aload_0
+         6: invokespecial #7                  // Method java/lang/Object."<init>":()V
+         9: return
+
+  public void run();
+    Code:
+         0: getstatic     #13                 // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: aload_0
+         4: getfield      #1                  // Field val$prefix:Ljava/lang/String;
+         7: invokevirtual #19                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        10: return
+}
+  Compiled from "More.java"
+final class hello.More$Add extends java.lang.Record implements hello.More$Expr {
+  private final hello.More$Expr left;
+
+  private final hello.More$Expr right;
+
+  hello.More$Add(hello.More$Expr, hello.More$Expr);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Record."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field left:Lhello/More$Expr;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field right:Lhello/More$Expr;
+        14: return
+
+  public final java.lang.String toString();
+    Code:
+         0: aload_0
+         1: invokedynamic #16,  0             // InvokeDynamic #0:toString:(Lhello/More$Add;)Ljava/lang/String;
+         6: areturn
+
+  public final int hashCode();
+    Code:
+         0: aload_0
+         1: invokedynamic #20,  0             // InvokeDynamic #0:hashCode:(Lhello/More$Add;)I
+         6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #24,  0             // InvokeDynamic #0:equals:(Lhello/More$Add;Ljava/lang/Object;)Z
+         7: ireturn
+
+  public hello.More$Expr left();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field left:Lhello/More$Expr;
+         4: areturn
+
+  public hello.More$Expr right();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field right:Lhello/More$Expr;
+         4: areturn
+}
+  Compiled from "More.java"
+final class hello.More$Circle implements hello.More$Shape {
+  final double r;
+
+  hello.More$Circle(double);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: dload_1
+         6: putfield      #7                  // Field r:D
+         9: return
+
+  public double area();
+    Code:
+         0: ldc2_w        #15                 // double 3.141592653589793d
+         3: aload_0
+         4: getfield      #7                  // Field r:D
+         7: dmul
+         8: aload_0
+         9: getfield      #7                  // Field r:D
+        12: dmul
+        13: dreturn
+
+  public java.lang.String name();
+    Code:
+         0: aload_0
+         1: invokespecial #17                 // InterfaceMethod hello/More$Shape.name:()Ljava/lang/String;
+         4: invokedynamic #23,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+         9: areturn
+}
+  Compiled from "More.java"
+interface hello.More$Expr {
+}
+  Compiled from "More.java"
+class hello.More$Inner {
+  final hello.More this$0;
+
+  hello.More$Inner(hello.More);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: dup
+         3: invokestatic  #1                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+         6: pop
+         7: putfield      #7                  // Field this$0:Lhello/More;
+        10: aload_0
+        11: invokespecial #13                 // Method java/lang/Object."<init>":()V
+        14: return
+
+  int outerCount();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field this$0:Lhello/More;
+         4: getfield      #19                 // Field hello/More.count:I
+         7: iconst_1
+         8: iadd
+         9: ireturn
+}
+  Compiled from "More.java"
+final class hello.More$Num extends java.lang.Record implements hello.More$Expr {
+  private final int value;
+
+  hello.More$Num(int);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Record."<init>":()V
+         4: aload_0
+         5: iload_1
+         6: putfield      #7                  // Field value:I
+         9: return
+
+  public final java.lang.String toString();
+    Code:
+         0: aload_0
+         1: invokedynamic #13,  0             // InvokeDynamic #0:toString:(Lhello/More$Num;)Ljava/lang/String;
+         6: areturn
+
+  public final int hashCode();
+    Code:
+         0: aload_0
+         1: invokedynamic #17,  0             // InvokeDynamic #0:hashCode:(Lhello/More$Num;)I
+         6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #21,  0             // InvokeDynamic #0:equals:(Lhello/More$Num;Ljava/lang/Object;)Z
+         7: ireturn
+
+  public int value();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field value:I
+         4: ireturn
+}
+  Compiled from "More.java"
+interface hello.More$Shape {
+  public abstract double area();
+
+  public default java.lang.String name();
+    Code:
+         0: ldc           #1                  // String shape
+         2: areturn
+
+  public static hello.More$Shape unit();
+    Code:
+         0: invokedynamic #3,  0              // InvokeDynamic #0:area:()Lhello/More$Shape;
+         5: areturn
+
+  private static double lambda$unit$0();
+    Code:
+         0: dconst_1
+         1: dreturn
+}
+  Compiled from "More.java"
+public class hello.More implements java.lang.Comparable<hello.More> {
+  private int count;
+
+  private long total;
+
+  private static int created;
+
+  private volatile boolean done;
+
+  private final java.lang.Object lock;
+
+  private int[] counts;
+
+  private long[] wide;
+
+  static final boolean $assertionsDisabled;
+
+  public hello.More();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #2                  // class java/lang/Object
+         8: dup
+         9: invokespecial #1                  // Method java/lang/Object."<init>":()V
+        12: putfield      #7                  // Field lock:Ljava/lang/Object;
+        15: aload_0
+        16: iconst_4
+        17: newarray       int
+        19: putfield      #13                 // Field counts:[I
+        22: aload_0
+        23: iconst_4
+        24: newarray       long
+        26: putfield      #17                 // Field wide:[J
+        29: return
+
+  static long constants();
+    Code:
+         0: ldc           #21                 // int 1000000
+         2: istore_0
+         3: sipush        -129
+         6: istore_1
+         7: bipush        127
+         9: istore_2
+        10: iconst_m1
+        11: istore_3
+        12: ldc           #24                 // int -2147483648
+        14: istore        4
+        16: iconst_5
+        17: istore        5
+        19: sipush        32767
+        22: istore        6
+        24: sipush        -32768
+        27: istore        7
+        29: sipush        128
+        32: istore        8
+        34: ldc2_w        #25                 // long 81985529216486895l
+        37: lstore        9
+        39: ldc2_w        #27                 // long -1l
+        42: lstore        11
+        44: ldc2_w        #31                 // long 9223372036854775807l
+        47: lstore        13
+        49: lconst_0
+        50: lstore        15
+        52: lconst_1
+        53: lstore        17
+        55: ldc2_w        #33                 // long 2l
+        58: lstore        19
+        60: fconst_1
+        61: fstore        21
+        63: ldc           #35                 // float 0.1f
+        65: fstore        22
+        67: ldc           #38                 // float NaNf
+        69: fstore        23
+        71: ldc           #39                 // float Infinityf
+        73: fstore        24
+        75: ldc           #40                 // float -0.0f
+        77: fstore        25
+        79: ldc           #41                 // float 3.4E38f
+        81: fstore        26
+        83: ldc           #42                 // float 1.0E-7f
+        85: fstore        27
+        87: fconst_2
+        88: fstore        28
+        90: fconst_0
+        91: fstore        29
+        93: ldc           #43                 // float 1.4E-45f
+        95: fstore        30
+        97: ldc           #44                 // float 1.0E7f
+        99: fstore        31
+       101: ldc           #45                 // float 0.001f
+       103: fstore        32
+       105: ldc2_w        #46                 // double 2.0d
+       108: dstore        33
+       110: ldc2_w        #48                 // double 0.1d
+       113: dstore        35
+       115: ldc2_w        #52                 // double -Infinityd
+       118: dstore        37
+       120: ldc2_w        #54                 // double 1.0E300d
+       123: dstore        39
+       125: ldc2_w        #56                 // double 1.23456789125E8d
+       128: dstore        41
+       130: ldc2_w        #58                 // double 4.9E-324d
+       133: dstore        43
+       135: dconst_0
+       136: dstore        45
+       138: dconst_1
+       139: dstore        47
+       141: ldc2_w        #60                 // double 1.0E7d
+       144: dstore        49
+       146: ldc2_w        #62                 // double 0.001d
+       149: dstore        51
+       151: ldc2_w        #64                 // double 9999999.0d
+       154: dstore        53
+       156: ldc2_w        #66                 // double NaNd
+       159: dstore        55
+       161: ldc2_w        #68                 // double 1.0E23d
+       164: dstore        57
+       166: ldc2_w        #70                 // double -0.0d
+       169: dstore        59
+       171: iload_0
+       172: iload_1
+       173: iadd
+       174: iload_2
+       175: iadd
+       176: iload_3
+       177: iadd
+       178: iload         4
+       180: iadd
+       181: iload         5
+       183: iadd
+       184: iload         6
+       186: iadd
+       187: iload         7
+       189: iadd
+       190: iload         8
+       192: iadd
+       193: i2l
+       194: lload         9
+       196: ladd
+       197: lload         11
+       199: ladd
+       200: lload         13
+       202: ladd
+       203: lload         15
+       205: ladd
+       206: lload         17
+       208: ladd
+       209: lload         19
+       211: ladd
+       212: fload         21
+       214: fload         22
+       216: fadd
+       217: fload         23
+       219: fadd
+       220: fload         24
+       222: fadd
+       223: fload         25
+       225: fadd
+       226: fload         26
+       228: fadd
+       229: fload         27
+       231: fadd
+       232: fload         28
+       234: fadd
+       235: fload         29
+       237: fadd
+       238: fload         30
+       240: fadd
+       241: fload         31
+       243: fadd
+       244: fload         32
+       246: fadd
+       247: f2l
+       248: ladd
+       249: dload         33
+       251: dload         35
+       253: dadd
+       254: dload         37
+       256: dadd
+       257: dload         39
+       259: dadd
+       260: dload         41
+       262: dadd
+       263: dload         43
+       265: dadd
+       266: dload         45
+       268: dadd
+       269: dload         47
+       271: dadd
+       272: dload         49
+       274: dadd
+       275: dload         51
+       277: dadd
+       278: dload         53
+       280: dadd
+       281: dload         55
+       283: dadd
+       284: dload         57
+       286: dadd
+       287: dload         59
+       289: dadd
+       290: d2l
+       291: ladd
+       292: lreturn
+
+  static java.lang.String strings();
+    Code:
+         0: ldc           #72                 // String tab\there\nnewline \"quoted\" back\\slash \'single\' \r\b\f \u0001\u001f\u007f\u0085
+         2: astore_0
+         3: ldc           #74                 // String Привет, мир — €5 ✓ 😀
+         5: astore_1
+         6: ldc           #76                 // String
+         8: astore_2
+         9: ldc           #78                 // String nul\u0000byte
+        11: astore_3
+        12: bipush        120
+        14: istore        4
+        16: aload_0
+        17: aload_1
+        18: aload_2
+        19: aload_3
+        20: iload         4
+        22: aconst_null
+        23: invokestatic  #80                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        26: invokedynamic #86,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;CLjava/lang/String;)Ljava/lang/String;
+        31: areturn
+
+  static int dense(int);
+    Code:
+         0: iload_0
+         1: tableswitch   { // 1 to 6
+                       1: 40
+                       2: 43
+                       3: 46
+                       4: 55
+                       5: 49
+                       6: 52
+                 default: 55
+            }
+        40: bipush        10
+        42: ireturn
+        43: bipush        20
+        45: ireturn
+        46: bipush        30
+        48: ireturn
+        49: bipush        50
+        51: ireturn
+        52: bipush        60
+        54: ireturn
+        55: iconst_m1
+        56: ireturn
+
+  static int sparse(int);
+    Code:
+         0: iload_0
+         1: lookupswitch  { // 4
+                   -1000: 44
+                       7: 46
+                  100000: 48
+              2147483647: 50
+                 default: 52
+            }
+        44: iconst_1
+        45: ireturn
+        46: iconst_2
+        47: ireturn
+        48: iconst_3
+        49: ireturn
+        50: iconst_4
+        51: ireturn
+        52: iconst_0
+        53: ireturn
+
+  static int words(java.lang.String);
+    Code:
+         0: aload_0
+         1: astore_1
+         2: iconst_m1
+         3: istore_2
+         4: aload_1
+         5: invokevirtual #90                 // Method java/lang/String.hashCode:()I
+         8: lookupswitch  { // 3
+                  110182: 44
+                  115276: 58
+               110339486: 72
+                 default: 83
+            }
+        44: aload_1
+        45: ldc           #94                 // String one
+        47: invokevirtual #96                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        50: ifeq          83
+        53: iconst_0
+        54: istore_2
+        55: goto          83
+        58: aload_1
+        59: ldc           #100                // String two
+        61: invokevirtual #96                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        64: ifeq          83
+        67: iconst_1
+        68: istore_2
+        69: goto          83
+        72: aload_1
+        73: ldc           #102                // String three
+        75: invokevirtual #96                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        78: ifeq          83
+        81: iconst_2
+        82: istore_2
+        83: iload_2
+        84: tableswitch   { // 0 to 2
+                       0: 112
+                       1: 116
+                       2: 120
+                 default: 124
+            }
+       112: iconst_1
+       113: goto          125
+       116: iconst_2
+       117: goto          125
+       120: iconst_3
+       121: goto          125
+       124: iconst_0
+       125: ireturn
+
+  static int eval(hello.More$Expr);
+    Code:
+         0: aload_0
+         1: dup
+         2: invokestatic  #104                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+         5: pop
+         6: astore_1
+         7: iconst_0
+         8: istore_2
+         9: aload_1
+        10: iload_2
+        11: invokedynamic #110,  0            // InvokeDynamic #1:typeSwitch:(Lhello/More$Expr;I)I
+        16: lookupswitch  { // 2
+                       0: 54
+                       1: 66
+                 default: 44
+            }
+        44: new           #114                // class java/lang/MatchException
+        47: dup
+        48: aconst_null
+        49: aconst_null
+        50: invokespecial #116                // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        53: athrow
+        54: aload_1
+        55: checkcast     #119                // class hello/More$Num
+        58: astore_3
+        59: aload_3
+        60: invokevirtual #121                // Method hello/More$Num.value:()I
+        63: goto          105
+        66: aload_1
+        67: checkcast     #124                // class hello/More$Add
+        70: astore        4
+        72: aload         4
+        74: invokevirtual #126                // Method hello/More$Add.left:()Lhello/More$Expr;
+        77: astore        7
+        79: aload         7
+        81: astore        5
+        83: aload         4
+        85: invokevirtual #130                // Method hello/More$Add.right:()Lhello/More$Expr;
+        88: astore        7
+        90: aload         7
+        92: astore        6
+        94: aload         5
+        96: invokestatic  #133                // Method eval:(Lhello/More$Expr;)I
+        99: aload         6
+       101: invokestatic  #133                // Method eval:(Lhello/More$Expr;)I
+       104: iadd
+       105: ireturn
+       106: astore_1
+       107: new           #114                // class java/lang/MatchException
+       110: dup
+       111: aload_1
+       112: invokevirtual #139                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+       115: aload_1
+       116: invokespecial #116                // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+       119: athrow
+      Exception table:
+         from    to  target type
+            74    77   106   Class java/lang/Throwable
+            85    88   106   Class java/lang/Throwable
+
+  static java.lang.Object arrays(int);
+    Code:
+         0: iload_0
+         1: newarray       boolean
+         3: astore_1
+         4: iload_0
+         5: newarray       char
+         7: astore_2
+         8: iload_0
+         9: newarray       float
+        11: astore_3
+        12: iload_0
+        13: newarray       double
+        15: astore        4
+        17: iload_0
+        18: newarray       byte
+        20: astore        5
+        22: iload_0
+        23: newarray       short
+        25: astore        6
+        27: iload_0
+        28: newarray       int
+        30: astore        7
+        32: iload_0
+        33: newarray       long
+        35: astore        8
+        37: iload_0
+        38: anewarray     #81                 // class java/lang/String
+        41: astore        9
+        43: iload_0
+        44: iload_0
+        45: iconst_1
+        46: iadd
+        47: multianewarray #143,  2           // class "[[I"
+        51: astore        10
+        53: iconst_2
+        54: iconst_3
+        55: multianewarray #145,  2           // class "[[[Ljava/lang/String;"
+        59: astore        11
+        61: aload_1
+        62: iconst_0
+        63: iconst_1
+        64: bastore
+        65: aload_2
+        66: iconst_0
+        67: bipush        97
+        69: castore
+        70: aload_3
+        71: iconst_0
+        72: ldc           #147                // float 1.5f
+        74: fastore
+        75: aload         4
+        77: iconst_0
+        78: ldc2_w        #148                // double 2.5d
+        81: dastore
+        82: aload         5
+        84: iconst_0
+        85: bipush        -56
+        87: bastore
+        88: aload         6
+        90: iconst_0
+        91: sipush        4464
+        94: sastore
+        95: aload         7
+        97: iconst_0
+        98: iload_0
+        99: iastore
+       100: aload         8
+       102: iconst_0
+       103: iload_0
+       104: i2l
+       105: lastore
+       106: aload         9
+       108: iconst_0
+       109: ldc           #150                // String s
+       111: aastore
+       112: aload         10
+       114: iconst_1
+       115: aaload
+       116: iconst_2
+       117: iconst_3
+       118: iastore
+       119: aload         11
+       121: iconst_1
+       122: aaload
+       123: iconst_2
+       124: aload         9
+       126: aastore
+       127: aload         7
+       129: iconst_0
+       130: dup2
+       131: iaload
+       132: dup_x2
+       133: iconst_1
+       134: iadd
+       135: iastore
+       136: istore        12
+       138: aload         8
+       140: iconst_1
+       141: dup2
+       142: laload
+       143: lconst_1
+       144: ladd
+       145: lastore
+       146: aload         7
+       148: iconst_1
+       149: dup2
+       150: iaload
+       151: iconst_5
+       152: iadd
+       153: iastore
+       154: aload         7
+       156: iconst_2
+       157: iload         12
+       159: dup_x2
+       160: iastore
+       161: istore        13
+       163: aload         8
+       165: iconst_2
+       166: aload         8
+       168: iconst_0
+       169: laload
+       170: dup2_x2
+       171: lastore
+       172: lstore        14
+       174: aload_1
+       175: iconst_0
+       176: baload
+       177: ifeq          244
+       180: aload_2
+       181: iconst_0
+       182: caload
+       183: i2f
+       184: aload_3
+       185: iconst_0
+       186: faload
+       187: fadd
+       188: f2d
+       189: aload         4
+       191: iconst_0
+       192: daload
+       193: dadd
+       194: aload         5
+       196: iconst_0
+       197: baload
+       198: i2d
+       199: dadd
+       200: aload         6
+       202: iconst_0
+       203: saload
+       204: i2d
+       205: dadd
+       206: aload         7
+       208: iconst_0
+       209: iaload
+       210: i2d
+       211: dadd
+       212: aload         8
+       214: iconst_0
+       215: laload
+       216: l2d
+       217: dadd
+       218: aload         10
+       220: arraylength
+       221: i2d
+       222: dadd
+       223: aload         11
+       225: iconst_1
+       226: aaload
+       227: arraylength
+       228: i2d
+       229: dadd
+       230: iload         13
+       232: i2d
+       233: dadd
+       234: lload         14
+       236: l2d
+       237: dadd
+       238: invokestatic  #152                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       241: goto          245
+       244: aconst_null
+       245: areturn
+
+  int fields(int);
+    Code:
+         0: aload_0
+         1: dup
+         2: getfield      #155                // Field count:I
+         5: iconst_1
+         6: iadd
+         7: putfield      #155                // Field count:I
+        10: aload_0
+        11: dup
+        12: getfield      #159                // Field total:J
+        15: iload_1
+        16: i2l
+        17: ladd
+        18: putfield      #159                // Field total:J
+        21: aload_0
+        22: aload_0
+        23: getfield      #155                // Field count:I
+        26: iconst_2
+        27: imul
+        28: putfield      #155                // Field count:I
+        31: aload_0
+        32: iload_1
+        33: dup_x1
+        34: putfield      #155                // Field count:I
+        37: istore_2
+        38: aload_0
+        39: iload_2
+        40: i2l
+        41: dup2_x1
+        42: putfield      #159                // Field total:J
+        45: lstore_3
+        46: getstatic     #163                // Field created:I
+        49: iconst_1
+        50: iadd
+        51: putstatic     #163                // Field created:I
+        54: getstatic     #163                // Field created:I
+        57: iconst_1
+        58: isub
+        59: putstatic     #163                // Field created:I
+        62: aload_0
+        63: getfield      #13                 // Field counts:[I
+        66: iload_1
+        67: iconst_3
+        68: iand
+        69: dup2
+        70: iaload
+        71: iconst_1
+        72: iadd
+        73: iastore
+        74: aload_0
+        75: getfield      #17                 // Field wide:[J
+        78: iload_1
+        79: iconst_3
+        80: iand
+        81: dup2
+        82: laload
+        83: lload_3
+        84: ladd
+        85: lastore
+        86: iload_2
+        87: lload_3
+        88: l2i
+        89: iadd
+        90: aload_0
+        91: getfield      #13                 // Field counts:[I
+        94: arraylength
+        95: iadd
+        96: ireturn
+
+  static int conversions(int, long, float, double);
+    Code:
+         0: iload_0
+         1: i2b
+         2: istore        6
+         4: iload_0
+         5: i2c
+         6: istore        7
+         8: iload_0
+         9: i2s
+        10: istore        8
+        12: iload_0
+        13: i2l
+        14: lload_1
+        15: ladd
+        16: lstore        9
+        18: lload_1
+        19: l2f
+        20: fload_3
+        21: fadd
+        22: fstore        11
+        24: fload_3
+        25: f2d
+        26: dload         4
+        28: dadd
+        29: dstore        12
+        31: lload_1
+        32: l2i
+        33: fload_3
+        34: f2i
+        35: iadd
+        36: dload         4
+        38: d2i
+        39: iadd
+        40: lload_1
+        41: iconst_3
+        42: lushr
+        43: l2i
+        44: iadd
+        45: iload_0
+        46: iconst_2
+        47: iushr
+        48: iadd
+        49: iload_0
+        50: iconst_1
+        51: ishr
+        52: iadd
+        53: iload_0
+        54: iconst_3
+        55: ishl
+        56: iadd
+        57: istore        14
+        59: fload_3
+        60: f2l
+        61: dload         4
+        63: d2l
+        64: ladd
+        65: lload_1
+        66: iconst_2
+        67: lshl
+        68: ladd
+        69: lload_1
+        70: bipush        7
+        72: lshr
+        73: ladd
+        74: lstore        15
+        76: dload         4
+        78: d2f
+        79: iload_0
+        80: i2f
+        81: fadd
+        82: fstore        17
+        84: lload_1
+        85: l2d
+        86: dstore        18
+        88: iload         6
+        90: iload         7
+        92: iadd
+        93: iload         8
+        95: iadd
+        96: lload         9
+        98: l2i
+        99: iadd
+       100: fload         11
+       102: f2i
+       103: iadd
+       104: dload         12
+       106: d2i
+       107: iadd
+       108: iload         14
+       110: iadd
+       111: lload         15
+       113: l2i
+       114: iadd
+       115: fload         17
+       117: f2i
+       118: iadd
+       119: dload         18
+       121: d2i
+       122: iadd
+       123: iload_0
+       124: bipush        7
+       126: irem
+       127: iadd
+       128: lload_1
+       129: ldc2_w        #166                // long 9l
+       132: lrem
+       133: l2i
+       134: iadd
+       135: fload_3
+       136: fconst_2
+       137: frem
+       138: f2i
+       139: iadd
+       140: dload         4
+       142: ldc2_w        #168                // double 3.0d
+       145: drem
+       146: d2i
+       147: iadd
+       148: iload_0
+       149: iconst_3
+       150: idiv
+       151: iadd
+       152: iload_0
+       153: ineg
+       154: iadd
+       155: iload_0
+       156: iconst_5
+       157: iand
+       158: iadd
+       159: iload_0
+       160: bipush        6
+       162: ior
+       163: iadd
+       164: iload_0
+       165: bipush        7
+       167: ixor
+       168: iadd
+       169: iload_0
+       170: iconst_m1
+       171: ixor
+       172: iadd
+       173: ireturn
+
+  static int compares(int, long, float, double, java.lang.Object, java.lang.String);
+    Code:
+         0: iconst_0
+         1: istore        8
+         3: lload_1
+         4: lconst_0
+         5: lcmp
+         6: ifle          12
+         9: iinc          8, 1
+        12: lload_1
+        13: ldc2_w        #170                // long 5l
+        16: lcmp
+        17: ifgt          23
+        20: iinc          8, 1
+        23: fload_3
+        24: fconst_1
+        25: fcmpg
+        26: ifge          32
+        29: iinc          8, 1
+        32: fload_3
+        33: fconst_2
+        34: fcmpl
+        35: iflt          41
+        38: iinc          8, 1
+        41: dload         4
+        43: ldc2_w        #168                // double 3.0d
+        46: dcmpl
+        47: ifle          53
+        50: iinc          8, 1
+        53: dload         4
+        55: ldc2_w        #172                // double 4.0d
+        58: dcmpl
+        59: ifeq          65
+        62: iinc          8, 1
+        65: dload         4
+        67: ldc2_w        #174                // double 5.0d
+        70: dcmpl
+        71: ifne          77
+        74: iinc          8, 1
+        77: aload         6
+        79: ifnonnull     85
+        82: iinc          8, 1
+        85: aload         6
+        87: aload         7
+        89: if_acmpeq     95
+        92: iinc          8, 1
+        95: aload         6
+        97: instanceof    #81                 // class java/lang/String
+       100: ifeq          121
+       103: aload         6
+       105: checkcast     #81                 // class java/lang/String
+       108: astore        9
+       110: aload         9
+       112: invokevirtual #176                // Method java/lang/String.isEmpty:()Z
+       115: ifeq          121
+       118: iinc          8, 1
+       121: iload_0
+       122: bipush        10
+       124: if_icmple     133
+       127: iload_0
+       128: bipush        20
+       130: if_icmplt     139
+       133: iload_0
+       134: bipush        30
+       136: if_icmpne     142
+       139: iinc          8, 1
+       142: iinc          8, 2
+       145: iload         8
+       147: bipush        100
+       149: if_icmplt     142
+       152: iconst_0
+       153: istore        9
+       155: iload         9
+       157: iconst_3
+       158: if_icmpge     197
+       161: iconst_0
+       162: istore        10
+       164: iload         10
+       166: iconst_3
+       167: if_icmpge     191
+       170: iload         9
+       172: iload         10
+       174: imul
+       175: iconst_2
+       176: if_icmpne     182
+       179: goto          197
+       182: iinc          8, 1
+       185: iinc          10, 1
+       188: goto          164
+       191: iinc          9, 1
+       194: goto          155
+       197: iload_0
+       198: i2l
+       199: lload_1
+       200: lcmp
+       201: ifle          208
+       204: iconst_1
+       205: goto          209
+       208: iconst_0
+       209: istore        9
+       211: iload         9
+       213: ifeq          221
+       216: iload         8
+       218: goto          224
+       221: iload         8
+       223: ineg
+       224: ireturn
+
+  void locked();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field lock:Ljava/lang/Object;
+         4: dup
+         5: astore_1
+         6: monitorenter
+         7: aload_0
+         8: dup
+         9: getfield      #155                // Field count:I
+        12: iconst_1
+        13: iadd
+        14: putfield      #155                // Field count:I
+        17: aload_1
+        18: monitorexit
+        19: goto          27
+        22: astore_2
+        23: aload_1
+        24: monitorexit
+        25: aload_2
+        26: athrow
+        27: ldc           #8                  // class hello/More
+        29: dup
+        30: astore_1
+        31: monitorenter
+        32: getstatic     #163                // Field created:I
+        35: iconst_1
+        36: iadd
+        37: putstatic     #163                // Field created:I
+        40: aload_1
+        41: monitorexit
+        42: goto          50
+        45: astore_3
+        46: aload_1
+        47: monitorexit
+        48: aload_3
+        49: athrow
+        50: return
+      Exception table:
+         from    to  target type
+             7    19    22   any
+            22    25    22   any
+            32    42    45   any
+            45    48    45   any
+
+  static synchronized void lockedStatic();
+    Code:
+         0: getstatic     #163                // Field created:I
+         3: iconst_1
+         4: isub
+         5: putstatic     #163                // Field created:I
+         8: return
+
+  static int exceptions(java.lang.String) throws java.io.IOException;
+    Code:
+         0: invokedynamic #180,  0            // InvokeDynamic #2:close:()Ljava/io/Closeable;
+         5: astore_1
+         6: aload_0
+         7: invokestatic  #184                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+        10: istore_2
+        11: aload_1
+        12: ifnull        21
+        15: aload_1
+        16: invokeinterface #188,  1          // InterfaceMethod java/io/Closeable.close:()V
+        21: getstatic     #163                // Field created:I
+        24: iconst_1
+        25: iadd
+        26: putstatic     #163                // Field created:I
+        29: iload_2
+        30: ireturn
+        31: astore_2
+        32: aload_1
+        33: ifnull        51
+        36: aload_1
+        37: invokeinterface #188,  1          // InterfaceMethod java/io/Closeable.close:()V
+        42: goto          51
+        45: astore_3
+        46: aload_2
+        47: aload_3
+        48: invokevirtual #192                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+        51: aload_2
+        52: athrow
+        53: astore_1
+        54: new           #200                // class java/io/IOException
+        57: dup
+        58: aload_0
+        59: invokedynamic #202,  0            // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        64: aload_1
+        65: invokespecial #205                // Method java/io/IOException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        68: athrow
+        69: astore        4
+        71: getstatic     #163                // Field created:I
+        74: iconst_1
+        75: iadd
+        76: putstatic     #163                // Field created:I
+        79: aload         4
+        81: athrow
+      Exception table:
+         from    to  target type
+             6    11    31   Class java/lang/Throwable
+            36    42    45   Class java/lang/Throwable
+             0    21    53   Class java/lang/NumberFormatException
+             0    21    53   Class java/lang/IllegalStateException
+            31    53    53   Class java/lang/NumberFormatException
+            31    53    53   Class java/lang/IllegalStateException
+             0    21    69   any
+            31    71    69   any
+
+  static void asserts(int);
+    Code:
+         0: getstatic     #206                // Field $assertionsDisabled:Z
+         3: ifne          20
+         6: iload_0
+         7: ifgt          20
+        10: new           #210                // class java/lang/AssertionError
+        13: dup
+        14: ldc           #212                // String x must be positive
+        16: invokespecial #214                // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+        19: athrow
+        20: iload_0
+        21: bipush        42
+        23: if_icmpne     34
+        26: new           #217                // class java/lang/IllegalArgumentException
+        29: dup
+        30: invokespecial #219                // Method java/lang/IllegalArgumentException."<init>":()V
+        33: athrow
+        34: return
+
+  static java.lang.Object lambdas(java.lang.String);
+    Code:
+         0: aload_0
+         1: invokedynamic #220,  0            // InvokeDynamic #4:apply:(Ljava/lang/String;)Ljava/util/function/Function;
+         6: astore_1
+         7: invokedynamic #224,  0            // InvokeDynamic #5:get:()Ljava/util/function/Supplier;
+        12: astore_2
+        13: invokedynamic #228,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        18: astore_3
+        19: new           #231                // class hello/More$1
+        22: dup
+        23: aload_0
+        24: invokespecial #233                // Method hello/More$1."<init>":(Ljava/lang/String;)V
+        27: astore        4
+        29: aload         4
+        31: invokeinterface #236,  1          // InterfaceMethod java/lang/Runnable.run:()V
+        36: bipush        7
+        38: anewarray     #2                  // class java/lang/Object
+        41: dup
+        42: iconst_0
+        43: aload_1
+        44: aastore
+        45: dup
+        46: iconst_1
+        47: aload_2
+        48: aastore
+        49: dup
+        50: iconst_2
+        51: aload_3
+        52: aastore
+        53: dup
+        54: iconst_3
+        55: invokestatic  #241                // InterfaceMethod hello/More$Shape.unit:()Lhello/More$Shape;
+        58: aastore
+        59: dup
+        60: iconst_4
+        61: ldc           #247                // class "[Ljava/lang/String;"
+        63: aastore
+        64: dup
+        65: iconst_5
+        66: getstatic     #249                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+        69: aastore
+        70: dup
+        71: bipush        6
+        73: ldc           #8                  // class hello/More
+        75: aastore
+        76: astore        5
+        78: aload         5
+        80: invokedynamic #253,  0            // InvokeDynamic #7:compare:()Ljava/util/Comparator;
+        85: invokestatic  #257                // Method java/util/Arrays.sort:([Ljava/lang/Object;Ljava/util/Comparator;)V
+        88: aload_1
+        89: ldc_w         #263                // String x
+        92: invokeinterface #265,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+        97: checkcast     #81                 // class java/lang/String
+       100: aload_3
+       101: ldc_w         #269                // String 12
+       104: invokeinterface #265,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+       109: invokestatic  #80                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+       112: aload_2
+       113: invokeinterface #271,  1          // InterfaceMethod java/util/function/Supplier.get:()Ljava/lang/Object;
+       118: checkcast     #8                  // class hello/More
+       121: getfield      #155                // Field count:I
+       124: aload         5
+       126: arraylength
+       127: invokedynamic #276,  0            // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;II)Ljava/lang/String;
+       132: areturn
+
+  static void discard();
+    Code:
+         0: invokestatic  #279                // Method java/lang/System.nanoTime:()J
+         3: pop2
+         4: invokestatic  #285                // Method java/lang/System.currentTimeMillis:()J
+         7: pop2
+         8: iconst_1
+         9: iconst_2
+        10: invokestatic  #288                // Method java/lang/Math.max:(II)I
+        13: pop
+        14: ldc_w         #263                // String x
+        17: invokevirtual #294                // Method java/lang/String.length:()I
+        20: pop
+        21: return
+
+  static int varargs(java.lang.String...);
+    Code:
+         0: aload_0
+         1: arraylength
+         2: ldc_w         #297                // String ,
+         5: aload_0
+         6: invokestatic  #299                // Method java/lang/String.join:(Ljava/lang/CharSequence;[Ljava/lang/CharSequence;)Ljava/lang/String;
+         9: invokevirtual #294                // Method java/lang/String.length:()I
+        12: iadd
+        13: ldc_w         #303                // String %d %s
+        16: iconst_2
+        17: anewarray     #2                  // class java/lang/Object
+        20: dup
+        21: iconst_0
+        22: iconst_1
+        23: invokestatic  #305                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        26: aastore
+        27: dup
+        28: iconst_1
+        29: ldc_w         #308                // String a
+        32: aastore
+        33: invokestatic  #310                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+        36: invokevirtual #294                // Method java/lang/String.length:()I
+        39: iadd
+        40: ireturn
+
+  public int compareTo(hello.More);
+    Code:
+         0: aload_0
+         1: getfield      #155                // Field count:I
+         4: aload_1
+         5: getfield      #155                // Field count:I
+         8: invokestatic  #314                // Method java/lang/Integer.compare:(II)I
+        11: ireturn
+
+  static int many();
+    Code:
+         0: iconst_0
+         1: istore_0
+         2: iconst_1
+         3: istore_1
+         4: iconst_2
+         5: istore_2
+         6: iconst_3
+         7: istore_3
+         8: iconst_4
+         9: istore        4
+        11: iconst_5
+        12: istore        5
+        14: bipush        6
+        16: istore        6
+        18: bipush        7
+        20: istore        7
+        22: bipush        8
+        24: istore        8
+        26: bipush        9
+        28: istore        9
+        30: lconst_0
+        31: lstore        10
+        33: lconst_1
+        34: lstore        12
+        36: ldc2_w        #33                 // long 2l
+        39: lstore        14
+        41: ldc2_w        #316                // long 3l
+        44: lstore        16
+        46: ldc2_w        #318                // long 4l
+        49: lstore        18
+        51: ldc2_w        #170                // long 5l
+        54: lstore        20
+        56: ldc2_w        #320                // long 6l
+        59: lstore        22
+        61: ldc2_w        #322                // long 7l
+        64: lstore        24
+        66: ldc2_w        #324                // long 8l
+        69: lstore        26
+        71: ldc2_w        #166                // long 9l
+        74: lstore        28
+        76: dconst_0
+        77: dstore        30
+        79: dconst_1
+        80: dstore        32
+        82: ldc2_w        #46                 // double 2.0d
+        85: dstore        34
+        87: ldc2_w        #168                // double 3.0d
+        90: dstore        36
+        92: ldc2_w        #172                // double 4.0d
+        95: dstore        38
+        97: ldc2_w        #174                // double 5.0d
+       100: dstore        40
+       102: ldc2_w        #326                // double 6.0d
+       105: dstore        42
+       107: ldc2_w        #328                // double 7.0d
+       110: dstore        44
+       112: ldc2_w        #330                // double 8.0d
+       115: dstore        46
+       117: ldc2_w        #332                // double 9.0d
+       120: dstore        48
+       122: lconst_0
+       123: lstore        50
+       125: lconst_1
+       126: lstore        52
+       128: ldc2_w        #33                 // long 2l
+       131: lstore        54
+       133: ldc2_w        #316                // long 3l
+       136: lstore        56
+       138: ldc2_w        #318                // long 4l
+       141: lstore        58
+       143: ldc2_w        #170                // long 5l
+       146: lstore        60
+       148: ldc2_w        #320                // long 6l
+       151: lstore        62
+       153: ldc2_w        #322                // long 7l
+       156: lstore        64
+       158: ldc2_w        #324                // long 8l
+       161: lstore        66
+       163: ldc2_w        #166                // long 9l
+       166: lstore        68
+       168: dconst_0
+       169: dstore        70
+       171: dconst_1
+       172: dstore        72
+       174: ldc2_w        #46                 // double 2.0d
+       177: dstore        74
+       179: ldc2_w        #168                // double 3.0d
+       182: dstore        76
+       184: ldc2_w        #172                // double 4.0d
+       187: dstore        78
+       189: ldc2_w        #174                // double 5.0d
+       192: dstore        80
+       194: ldc2_w        #326                // double 6.0d
+       197: dstore        82
+       199: ldc2_w        #328                // double 7.0d
+       202: dstore        84
+       204: ldc2_w        #330                // double 8.0d
+       207: dstore        86
+       209: ldc2_w        #332                // double 9.0d
+       212: dstore        88
+       214: lconst_0
+       215: lstore        90
+       217: lconst_1
+       218: lstore        92
+       220: ldc2_w        #33                 // long 2l
+       223: lstore        94
+       225: ldc2_w        #316                // long 3l
+       228: lstore        96
+       230: ldc2_w        #318                // long 4l
+       233: lstore        98
+       235: ldc2_w        #170                // long 5l
+       238: lstore        100
+       240: ldc2_w        #320                // long 6l
+       243: lstore        102
+       245: ldc2_w        #322                // long 7l
+       248: lstore        104
+       250: ldc2_w        #324                // long 8l
+       253: lstore        106
+       255: ldc2_w        #166                // long 9l
+       258: lstore        108
+       260: dconst_0
+       261: dstore        110
+       263: dconst_1
+       264: dstore        112
+       266: ldc2_w        #46                 // double 2.0d
+       269: dstore        114
+       271: ldc2_w        #168                // double 3.0d
+       274: dstore        116
+       276: ldc2_w        #172                // double 4.0d
+       279: dstore        118
+       281: ldc2_w        #174                // double 5.0d
+       284: dstore        120
+       286: ldc2_w        #326                // double 6.0d
+       289: dstore        122
+       291: ldc2_w        #328                // double 7.0d
+       294: dstore        124
+       296: ldc2_w        #330                // double 8.0d
+       299: dstore        126
+       301: ldc2_w        #332                // double 9.0d
+       304: dstore        128
+       306: lconst_0
+       307: lstore        130
+       309: lconst_1
+       310: lstore        132
+       312: ldc2_w        #33                 // long 2l
+       315: lstore        134
+       317: ldc2_w        #316                // long 3l
+       320: lstore        136
+       322: ldc2_w        #318                // long 4l
+       325: lstore        138
+       327: ldc2_w        #170                // long 5l
+       330: lstore        140
+       332: ldc2_w        #320                // long 6l
+       335: lstore        142
+       337: ldc2_w        #322                // long 7l
+       340: lstore        144
+       342: ldc2_w        #324                // long 8l
+       345: lstore        146
+       347: ldc2_w        #166                // long 9l
+       350: lstore        148
+       352: dconst_0
+       353: dstore        150
+       355: dconst_1
+       356: dstore        152
+       358: ldc2_w        #46                 // double 2.0d
+       361: dstore        154
+       363: ldc2_w        #168                // double 3.0d
+       366: dstore        156
+       368: ldc2_w        #172                // double 4.0d
+       371: dstore        158
+       373: ldc2_w        #174                // double 5.0d
+       376: dstore        160
+       378: ldc2_w        #326                // double 6.0d
+       381: dstore        162
+       383: ldc2_w        #328                // double 7.0d
+       386: dstore        164
+       388: ldc2_w        #330                // double 8.0d
+       391: dstore        166
+       393: ldc2_w        #332                // double 9.0d
+       396: dstore        168
+       398: lconst_0
+       399: lstore        170
+       401: lconst_1
+       402: lstore        172
+       404: ldc2_w        #33                 // long 2l
+       407: lstore        174
+       409: ldc2_w        #316                // long 3l
+       412: lstore        176
+       414: ldc2_w        #318                // long 4l
+       417: lstore        178
+       419: ldc2_w        #170                // long 5l
+       422: lstore        180
+       424: ldc2_w        #320                // long 6l
+       427: lstore        182
+       429: ldc2_w        #322                // long 7l
+       432: lstore        184
+       434: ldc2_w        #324                // long 8l
+       437: lstore        186
+       439: ldc2_w        #166                // long 9l
+       442: lstore        188
+       444: dconst_0
+       445: dstore        190
+       447: dconst_1
+       448: dstore        192
+       450: ldc2_w        #46                 // double 2.0d
+       453: dstore        194
+       455: ldc2_w        #168                // double 3.0d
+       458: dstore        196
+       460: ldc2_w        #172                // double 4.0d
+       463: dstore        198
+       465: ldc2_w        #174                // double 5.0d
+       468: dstore        200
+       470: ldc2_w        #326                // double 6.0d
+       473: dstore        202
+       475: ldc2_w        #328                // double 7.0d
+       478: dstore        204
+       480: ldc2_w        #330                // double 8.0d
+       483: dstore        206
+       485: ldc2_w        #332                // double 9.0d
+       488: dstore        208
+       490: lconst_0
+       491: lstore        210
+       493: lconst_1
+       494: lstore        212
+       496: ldc2_w        #33                 // long 2l
+       499: lstore        214
+       501: ldc2_w        #316                // long 3l
+       504: lstore        216
+       506: ldc2_w        #318                // long 4l
+       509: lstore        218
+       511: ldc2_w        #170                // long 5l
+       514: lstore        220
+       516: ldc2_w        #320                // long 6l
+       519: lstore        222
+       521: ldc2_w        #322                // long 7l
+       524: lstore        224
+       526: ldc2_w        #324                // long 8l
+       529: lstore        226
+       531: ldc2_w        #166                // long 9l
+       534: lstore        228
+       536: dconst_0
+       537: dstore        230
+       539: dconst_1
+       540: dstore        232
+       542: ldc2_w        #46                 // double 2.0d
+       545: dstore        234
+       547: ldc2_w        #168                // double 3.0d
+       550: dstore        236
+       552: ldc2_w        #172                // double 4.0d
+       555: dstore        238
+       557: ldc2_w        #174                // double 5.0d
+       560: dstore        240
+       562: ldc2_w        #326                // double 6.0d
+       565: dstore        242
+       567: ldc2_w        #328                // double 7.0d
+       570: dstore        244
+       572: ldc2_w        #330                // double 8.0d
+       575: dstore        246
+       577: ldc2_w        #332                // double 9.0d
+       580: dstore        248
+       582: lconst_0
+       583: lstore        250
+       585: lconst_1
+       586: lstore        252
+       588: ldc2_w        #33                 // long 2l
+       591: lstore        254
+       593: ldc2_w        #316                // long 3l
+       596: lstore_w      256
+       600: ldc2_w        #318                // long 4l
+       603: lstore_w      258
+       607: ldc2_w        #170                // long 5l
+       610: lstore_w      260
+       614: ldc2_w        #320                // long 6l
+       617: lstore_w      262
+       621: ldc2_w        #322                // long 7l
+       624: lstore_w      264
+       628: ldc2_w        #324                // long 8l
+       631: lstore_w      266
+       635: ldc2_w        #166                // long 9l
+       638: lstore_w      268
+       642: sipush        300
+       645: istore_w      270
+       649: ldc_w         #334                // String far
+       652: astore_w      271
+       656: ldc           #147                // float 1.5f
+       658: fstore_w      272
+       662: ldc2_w        #322                // long 7l
+       665: lstore_w      273
+       669: ldc2_w        #148                // double 2.5d
+       672: dstore_w      275
+       676: iinc_w        270, 1000
+       682: iinc_w        270, 1
+       688: lload_w       273
+       692: lconst_1
+       693: ladd
+       694: lstore_w      273
+       698: aload_w       271
+       702: checkcast     #81                 // class java/lang/String
+       705: astore_w      277
+       709: iload_0
+       710: iload         9
+       712: iadd
+       713: lload         28
+       715: l2d
+       716: dload         48
+       718: dadd
+       719: lload         68
+       721: l2d
+       722: dadd
+       723: dload         88
+       725: dadd
+       726: lload         108
+       728: l2d
+       729: dadd
+       730: dload         128
+       732: dadd
+       733: lload         148
+       735: l2d
+       736: dadd
+       737: dload         168
+       739: dadd
+       740: lload         188
+       742: l2d
+       743: dadd
+       744: dload         208
+       746: dadd
+       747: lload         228
+       749: l2d
+       750: dadd
+       751: dload         248
+       753: dadd
+       754: lload_w       268
+       758: l2d
+       759: dadd
+       760: d2i
+       761: iadd
+       762: iload_w       270
+       766: iadd
+       767: aload_w       277
+       771: invokevirtual #294                // Method java/lang/String.length:()I
+       774: iadd
+       775: fload_w       272
+       779: f2i
+       780: iadd
+       781: lload_w       273
+       785: l2i
+       786: iadd
+       787: dload_w       275
+       791: d2i
+       792: iadd
+       793: ireturn
+
+  static int strings300();
+    Code:
+         0: sipush        140
+         3: anewarray     #81                 // class java/lang/String
+         6: dup
+         7: iconst_0
+         8: ldc_w         #336                // String s000
+        11: aastore
+        12: dup
+        13: iconst_1
+        14: ldc_w         #338                // String s001
+        17: aastore
+        18: dup
+        19: iconst_2
+        20: ldc_w         #340                // String s002
+        23: aastore
+        24: dup
+        25: iconst_3
+        26: ldc_w         #342                // String s003
+        29: aastore
+        30: dup
+        31: iconst_4
+        32: ldc_w         #344                // String s004
+        35: aastore
+        36: dup
+        37: iconst_5
+        38: ldc_w         #346                // String s005
+        41: aastore
+        42: dup
+        43: bipush        6
+        45: ldc_w         #348                // String s006
+        48: aastore
+        49: dup
+        50: bipush        7
+        52: ldc_w         #350                // String s007
+        55: aastore
+        56: dup
+        57: bipush        8
+        59: ldc_w         #352                // String s008
+        62: aastore
+        63: dup
+        64: bipush        9
+        66: ldc_w         #354                // String s009
+        69: aastore
+        70: dup
+        71: bipush        10
+        73: ldc_w         #356                // String s010
+        76: aastore
+        77: dup
+        78: bipush        11
+        80: ldc_w         #358                // String s011
+        83: aastore
+        84: dup
+        85: bipush        12
+        87: ldc_w         #360                // String s012
+        90: aastore
+        91: dup
+        92: bipush        13
+        94: ldc_w         #362                // String s013
+        97: aastore
+        98: dup
+        99: bipush        14
+       101: ldc_w         #364                // String s014
+       104: aastore
+       105: dup
+       106: bipush        15
+       108: ldc_w         #366                // String s015
+       111: aastore
+       112: dup
+       113: bipush        16
+       115: ldc_w         #368                // String s016
+       118: aastore
+       119: dup
+       120: bipush        17
+       122: ldc_w         #370                // String s017
+       125: aastore
+       126: dup
+       127: bipush        18
+       129: ldc_w         #372                // String s018
+       132: aastore
+       133: dup
+       134: bipush        19
+       136: ldc_w         #374                // String s019
+       139: aastore
+       140: dup
+       141: bipush        20
+       143: ldc_w         #376                // String s020
+       146: aastore
+       147: dup
+       148: bipush        21
+       150: ldc_w         #378                // String s021
+       153: aastore
+       154: dup
+       155: bipush        22
+       157: ldc_w         #380                // String s022
+       160: aastore
+       161: dup
+       162: bipush        23
+       164: ldc_w         #382                // String s023
+       167: aastore
+       168: dup
+       169: bipush        24
+       171: ldc_w         #384                // String s024
+       174: aastore
+       175: dup
+       176: bipush        25
+       178: ldc_w         #386                // String s025
+       181: aastore
+       182: dup
+       183: bipush        26
+       185: ldc_w         #388                // String s026
+       188: aastore
+       189: dup
+       190: bipush        27
+       192: ldc_w         #390                // String s027
+       195: aastore
+       196: dup
+       197: bipush        28
+       199: ldc_w         #392                // String s028
+       202: aastore
+       203: dup
+       204: bipush        29
+       206: ldc_w         #394                // String s029
+       209: aastore
+       210: dup
+       211: bipush        30
+       213: ldc_w         #396                // String s030
+       216: aastore
+       217: dup
+       218: bipush        31
+       220: ldc_w         #398                // String s031
+       223: aastore
+       224: dup
+       225: bipush        32
+       227: ldc_w         #400                // String s032
+       230: aastore
+       231: dup
+       232: bipush        33
+       234: ldc_w         #402                // String s033
+       237: aastore
+       238: dup
+       239: bipush        34
+       241: ldc_w         #404                // String s034
+       244: aastore
+       245: dup
+       246: bipush        35
+       248: ldc_w         #406                // String s035
+       251: aastore
+       252: dup
+       253: bipush        36
+       255: ldc_w         #408                // String s036
+       258: aastore
+       259: dup
+       260: bipush        37
+       262: ldc_w         #410                // String s037
+       265: aastore
+       266: dup
+       267: bipush        38
+       269: ldc_w         #412                // String s038
+       272: aastore
+       273: dup
+       274: bipush        39
+       276: ldc_w         #414                // String s039
+       279: aastore
+       280: dup
+       281: bipush        40
+       283: ldc_w         #416                // String s040
+       286: aastore
+       287: dup
+       288: bipush        41
+       290: ldc_w         #418                // String s041
+       293: aastore
+       294: dup
+       295: bipush        42
+       297: ldc_w         #420                // String s042
+       300: aastore
+       301: dup
+       302: bipush        43
+       304: ldc_w         #422                // String s043
+       307: aastore
+       308: dup
+       309: bipush        44
+       311: ldc_w         #424                // String s044
+       314: aastore
+       315: dup
+       316: bipush        45
+       318: ldc_w         #426                // String s045
+       321: aastore
+       322: dup
+       323: bipush        46
+       325: ldc_w         #428                // String s046
+       328: aastore
+       329: dup
+       330: bipush        47
+       332: ldc_w         #430                // String s047
+       335: aastore
+       336: dup
+       337: bipush        48
+       339: ldc_w         #432                // String s048
+       342: aastore
+       343: dup
+       344: bipush        49
+       346: ldc_w         #434                // String s049
+       349: aastore
+       350: dup
+       351: bipush        50
+       353: ldc_w         #436                // String s050
+       356: aastore
+       357: dup
+       358: bipush        51
+       360: ldc_w         #438                // String s051
+       363: aastore
+       364: dup
+       365: bipush        52
+       367: ldc_w         #440                // String s052
+       370: aastore
+       371: dup
+       372: bipush        53
+       374: ldc_w         #442                // String s053
+       377: aastore
+       378: dup
+       379: bipush        54
+       381: ldc_w         #444                // String s054
+       384: aastore
+       385: dup
+       386: bipush        55
+       388: ldc_w         #446                // String s055
+       391: aastore
+       392: dup
+       393: bipush        56
+       395: ldc_w         #448                // String s056
+       398: aastore
+       399: dup
+       400: bipush        57
+       402: ldc_w         #450                // String s057
+       405: aastore
+       406: dup
+       407: bipush        58
+       409: ldc_w         #452                // String s058
+       412: aastore
+       413: dup
+       414: bipush        59
+       416: ldc_w         #454                // String s059
+       419: aastore
+       420: dup
+       421: bipush        60
+       423: ldc_w         #456                // String s060
+       426: aastore
+       427: dup
+       428: bipush        61
+       430: ldc_w         #458                // String s061
+       433: aastore
+       434: dup
+       435: bipush        62
+       437: ldc_w         #460                // String s062
+       440: aastore
+       441: dup
+       442: bipush        63
+       444: ldc_w         #462                // String s063
+       447: aastore
+       448: dup
+       449: bipush        64
+       451: ldc_w         #464                // String s064
+       454: aastore
+       455: dup
+       456: bipush        65
+       458: ldc_w         #466                // String s065
+       461: aastore
+       462: dup
+       463: bipush        66
+       465: ldc_w         #468                // String s066
+       468: aastore
+       469: dup
+       470: bipush        67
+       472: ldc_w         #470                // String s067
+       475: aastore
+       476: dup
+       477: bipush        68
+       479: ldc_w         #472                // String s068
+       482: aastore
+       483: dup
+       484: bipush        69
+       486: ldc_w         #474                // String s069
+       489: aastore
+       490: dup
+       491: bipush        70
+       493: ldc_w         #476                // String s070
+       496: aastore
+       497: dup
+       498: bipush        71
+       500: ldc_w         #478                // String s071
+       503: aastore
+       504: dup
+       505: bipush        72
+       507: ldc_w         #480                // String s072
+       510: aastore
+       511: dup
+       512: bipush        73
+       514: ldc_w         #482                // String s073
+       517: aastore
+       518: dup
+       519: bipush        74
+       521: ldc_w         #484                // String s074
+       524: aastore
+       525: dup
+       526: bipush        75
+       528: ldc_w         #486                // String s075
+       531: aastore
+       532: dup
+       533: bipush        76
+       535: ldc_w         #488                // String s076
+       538: aastore
+       539: dup
+       540: bipush        77
+       542: ldc_w         #490                // String s077
+       545: aastore
+       546: dup
+       547: bipush        78
+       549: ldc_w         #492                // String s078
+       552: aastore
+       553: dup
+       554: bipush        79
+       556: ldc_w         #494                // String s079
+       559: aastore
+       560: dup
+       561: bipush        80
+       563: ldc_w         #496                // String s080
+       566: aastore
+       567: dup
+       568: bipush        81
+       570: ldc_w         #498                // String s081
+       573: aastore
+       574: dup
+       575: bipush        82
+       577: ldc_w         #500                // String s082
+       580: aastore
+       581: dup
+       582: bipush        83
+       584: ldc_w         #502                // String s083
+       587: aastore
+       588: dup
+       589: bipush        84
+       591: ldc_w         #504                // String s084
+       594: aastore
+       595: dup
+       596: bipush        85
+       598: ldc_w         #506                // String s085
+       601: aastore
+       602: dup
+       603: bipush        86
+       605: ldc_w         #508                // String s086
+       608: aastore
+       609: dup
+       610: bipush        87
+       612: ldc_w         #510                // String s087
+       615: aastore
+       616: dup
+       617: bipush        88
+       619: ldc_w         #512                // String s088
+       622: aastore
+       623: dup
+       624: bipush        89
+       626: ldc_w         #514                // String s089
+       629: aastore
+       630: dup
+       631: bipush        90
+       633: ldc_w         #516                // String s090
+       636: aastore
+       637: dup
+       638: bipush        91
+       640: ldc_w         #518                // String s091
+       643: aastore
+       644: dup
+       645: bipush        92
+       647: ldc_w         #520                // String s092
+       650: aastore
+       651: dup
+       652: bipush        93
+       654: ldc_w         #522                // String s093
+       657: aastore
+       658: dup
+       659: bipush        94
+       661: ldc_w         #524                // String s094
+       664: aastore
+       665: dup
+       666: bipush        95
+       668: ldc_w         #526                // String s095
+       671: aastore
+       672: dup
+       673: bipush        96
+       675: ldc_w         #528                // String s096
+       678: aastore
+       679: dup
+       680: bipush        97
+       682: ldc_w         #530                // String s097
+       685: aastore
+       686: dup
+       687: bipush        98
+       689: ldc_w         #532                // String s098
+       692: aastore
+       693: dup
+       694: bipush        99
+       696: ldc_w         #534                // String s099
+       699: aastore
+       700: dup
+       701: bipush        100
+       703: ldc_w         #536                // String s100
+       706: aastore
+       707: dup
+       708: bipush        101
+       710: ldc_w         #538                // String s101
+       713: aastore
+       714: dup
+       715: bipush        102
+       717: ldc_w         #540                // String s102
+       720: aastore
+       721: dup
+       722: bipush        103
+       724: ldc_w         #542                // String s103
+       727: aastore
+       728: dup
+       729: bipush        104
+       731: ldc_w         #544                // String s104
+       734: aastore
+       735: dup
+       736: bipush        105
+       738: ldc_w         #546                // String s105
+       741: aastore
+       742: dup
+       743: bipush        106
+       745: ldc_w         #548                // String s106
+       748: aastore
+       749: dup
+       750: bipush        107
+       752: ldc_w         #550                // String s107
+       755: aastore
+       756: dup
+       757: bipush        108
+       759: ldc_w         #552                // String s108
+       762: aastore
+       763: dup
+       764: bipush        109
+       766: ldc_w         #554                // String s109
+       769: aastore
+       770: dup
+       771: bipush        110
+       773: ldc_w         #556                // String s110
+       776: aastore
+       777: dup
+       778: bipush        111
+       780: ldc_w         #558                // String s111
+       783: aastore
+       784: dup
+       785: bipush        112
+       787: ldc_w         #560                // String s112
+       790: aastore
+       791: dup
+       792: bipush        113
+       794: ldc_w         #562                // String s113
+       797: aastore
+       798: dup
+       799: bipush        114
+       801: ldc_w         #564                // String s114
+       804: aastore
+       805: dup
+       806: bipush        115
+       808: ldc_w         #566                // String s115
+       811: aastore
+       812: dup
+       813: bipush        116
+       815: ldc_w         #568                // String s116
+       818: aastore
+       819: dup
+       820: bipush        117
+       822: ldc_w         #570                // String s117
+       825: aastore
+       826: dup
+       827: bipush        118
+       829: ldc_w         #572                // String s118
+       832: aastore
+       833: dup
+       834: bipush        119
+       836: ldc_w         #574                // String s119
+       839: aastore
+       840: dup
+       841: bipush        120
+       843: ldc_w         #576                // String s120
+       846: aastore
+       847: dup
+       848: bipush        121
+       850: ldc_w         #578                // String s121
+       853: aastore
+       854: dup
+       855: bipush        122
+       857: ldc_w         #580                // String s122
+       860: aastore
+       861: dup
+       862: bipush        123
+       864: ldc_w         #582                // String s123
+       867: aastore
+       868: dup
+       869: bipush        124
+       871: ldc_w         #584                // String s124
+       874: aastore
+       875: dup
+       876: bipush        125
+       878: ldc_w         #586                // String s125
+       881: aastore
+       882: dup
+       883: bipush        126
+       885: ldc_w         #588                // String s126
+       888: aastore
+       889: dup
+       890: bipush        127
+       892: ldc_w         #590                // String s127
+       895: aastore
+       896: dup
+       897: sipush        128
+       900: ldc_w         #592                // String s128
+       903: aastore
+       904: dup
+       905: sipush        129
+       908: ldc_w         #594                // String s129
+       911: aastore
+       912: dup
+       913: sipush        130
+       916: ldc_w         #596                // String s130
+       919: aastore
+       920: dup
+       921: sipush        131
+       924: ldc_w         #598                // String s131
+       927: aastore
+       928: dup
+       929: sipush        132
+       932: ldc_w         #600                // String s132
+       935: aastore
+       936: dup
+       937: sipush        133
+       940: ldc_w         #602                // String s133
+       943: aastore
+       944: dup
+       945: sipush        134
+       948: ldc_w         #604                // String s134
+       951: aastore
+       952: dup
+       953: sipush        135
+       956: ldc_w         #606                // String s135
+       959: aastore
+       960: dup
+       961: sipush        136
+       964: ldc_w         #608                // String s136
+       967: aastore
+       968: dup
+       969: sipush        137
+       972: ldc_w         #610                // String s137
+       975: aastore
+       976: dup
+       977: sipush        138
+       980: ldc_w         #612                // String s138
+       983: aastore
+       984: dup
+       985: sipush        139
+       988: ldc_w         #614                // String s139
+       991: aastore
+       992: astore_0
+       993: ldc_w         #616                // float 123.25f
+       996: fstore_1
+       997: aload_0
+       998: arraylength
+       999: fload_1
+      1000: f2i
+      1001: iadd
+      1002: ldc_w         #617                // int 100000
+      1005: iadd
+      1006: iconst_3
+      1007: iadd
+      1008: ireturn
+
+  public int compareTo(java.lang.Object);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: checkcast     #8                  // class hello/More
+         5: invokevirtual #618                // Method compareTo:(Lhello/More;)I
+         8: ireturn
+
+  private static int lambda$lambdas$1(java.lang.Object, java.lang.Object);
+    Code:
+         0: aload_0
+         1: invokevirtual #622                // Method java/lang/Object.hashCode:()I
+         4: aload_1
+         5: invokevirtual #622                // Method java/lang/Object.hashCode:()I
+         8: isub
+         9: ireturn
+
+  private static java.lang.String lambda$lambdas$0(java.lang.String, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokedynamic #623,  0            // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+         7: areturn
+
+  private static void lambda$exceptions$0() throws java.io.IOException;
+    Code:
+         0: getstatic     #626                // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc_w         #630                // String closed
+         6: invokevirtual #632                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         9: return
+
+  static {};
+    Code:
+         0: ldc           #8                  // class hello/More
+         2: invokevirtual #637                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #206                // Field $assertionsDisabled:Z
+        16: return
+}
+public class hello.Odd {
+  static int 1st;
+
+  static long with space;
+
+  static java.lang.String emoji😀;
+
+  static double имя;
+
+  public static long stack(int, long);
+    Code:
+         0: iconst_1
+         1: iconst_2
+         2: swap
+         3: pop2
+         4: iload_0
+         5: iconst_3
+         6: iconst_4
+         7: dup_x2
+         8: pop2
+         9: pop2
+        10: lload_1
+        11: iconst_5
+        12: dup2_x1
+        13: pop2
+        14: pop
+        15: pop2
+        16: lload_1
+        17: lload_1
+        18: dup2_x2
+        19: pop2
+        20: pop2
+        21: pop2
+        22: iconst_0
+        23: iconst_1
+        24: iconst_2
+        25: iconst_3
+        26: dup2_x2
+        27: pop2
+        28: pop2
+        29: pop2
+        30: iload_0
+        31: iconst_1
+        32: dup2
+        33: pop2
+        34: pop2
+        35: iload_0
+        36: dup_x1
+        37: pop2
+        38: lload_1
+        39: lreturn
+
+  public static void weird-name();
+    Code:
+         0: getstatic     #18                 // Field "1st":I
+         3: putstatic     #18                 // Field "1st":I
+         6: getstatic     #20                 // Field "with space":J
+         9: putstatic     #20                 // Field "with space":J
+        12: getstatic     #22                 // Field "emoji😀":Ljava/lang/String;
+        15: putstatic     #22                 // Field "emoji😀":Ljava/lang/String;
+        18: getstatic     #24                 // Field имя:D
+        21: putstatic     #24                 // Field имя:D
+        24: getstatic     #29                 // Field "hello/weird-class".x:I
+        27: pop
+        28: invokestatic  #32                 // Method "hello/weird-class"."do it":()V
+        31: ldc           #34                 // class "[[Ljava/lang/String;"
+        33: pop
+        34: ldc           #36                 // class "[I"
+        36: pop
+        37: anewarray     #36                 // class "[I"
+        40: pop
+        41: return
+
+  public static java.lang.Object constants();
+    Code:
+         0: ldc_w         #40                 // String wide ldc
+         3: pop
+         4: ldc_w         #41                 // int 70000
+         7: pop
+         8: ldc_w         #42                 // float NaNf
+        11: pop
+        12: ldc           #43                 // float NaNf
+        14: pop
+        15: ldc2_w        #44                 // double NaNd
+        18: pop2
+        19: ldc           #46                 // float -Infinityf
+        21: pop
+        22: ldc2_w        #47                 // long -9223372036854775808l
+        25: pop2
+        26: ldc           #50                 // MethodType (Ljava/lang/String;[J)I
+        28: pop
+        29: ldc           #57                 // MethodHandle REF_invokeStatic java/lang/Integer.parseInt:(Ljava/lang/String;)I
+        31: pop
+        32: ldc           #64                 // MethodHandle REF_invokeVirtual java/lang/String.length:()I
+        34: pop
+        35: ldc           #70                 // MethodHandle REF_invokeInterface java/util/List.size:()I
+        37: pop
+        38: ldc           #76                 // MethodHandle REF_newInvokeSpecial java/lang/StringBuilder."<init>":()V
+        40: pop
+        41: ldc           #77                 // MethodHandle REF_getStatic hello/Odd."1st":I
+        43: pop
+        44: ldc           #81                 // MethodHandle REF_putField java/awt/Point.x:I
+        46: pop
+        47: ldc           #91                 // Dynamic #0:MAX_VALUE:I
+        49: pop
+        50: ldc           #99                 // Dynamic #1:I:Ljava/lang/Class;
+        52: pop
+        53: ldc           #101                // String ? lone,   separator, ­ soft hyphen, \u0000 nul, ﻿ bom
+        55: pop
+        56: invokedynamic #113,  0            // InvokeDynamic #2:makeConcatWithConstants:(I)Ljava/lang/String;
+        61: pop
+        62: aconst_null
+        63: areturn
+
+  public static int switches(int);
+    Code:
+         0: iload_0
+         1: lookupswitch  { // 0
+                 default: 12
+            }
+        12: iload_0
+        13: tableswitch   { // 5 to 5
+                       5: 64
+                 default: 32
+            }
+        32: iload_0
+        33: tableswitch   { // -2 to 1
+                      -2: 66
+                      -1: 64
+                       0: 66
+                       1: 64
+                 default: 64
+            }
+        64: iconst_0
+        65: ireturn
+        66: iconst_1
+        67: ireturn
+
+  public static void monitors(java.lang.Object);
+    Code:
+         0: aload_0
+         1: monitorenter
+         2: aload_0
+         3: monitorexit
+         4: aload_0
+         5: checkcast     #59                 // class java/lang/String
+         8: instanceof    #59                 // class java/lang/String
+        11: pop
+        12: ldc           #118                // int 3
+        14: ldc           #119                // int 4
+        16: multianewarray #121,  2           // class "[[[J"
+        20: arraylength
+        21: pop
+        22: aload_0
+        23: athrow
+}
+public class hello.Old {
+  public static int subroutines(int);
+    Code:
+         0: jsr
+         3: jsr_w
+         8: goto_w        30
+        13: astore_1
+        14: iinc          0, 1
+        17: ret
+        19: astore_w      300
+        23: iinc          0, 2
+        26: ret_w
+        30: iload_0
+        31: ifeq          37
+        34: iinc          0, -1
+        37: iload_0
+        38: ireturn
+}

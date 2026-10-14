@@ -1,0 +1,4 @@
+LIBRARY dep.dll
+EXPORTS
+  ext_call
+  ext_log

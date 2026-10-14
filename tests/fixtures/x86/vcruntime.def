@@ -1,0 +1,3 @@
+LIBRARY vcruntime140.dll
+EXPORTS
+  ??3@YAXPEAX_K@Z

@@ -1,0 +1,9 @@
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ armv7-ios ]
+install-name:    '@rpath/HelloKit.framework/HelloKit'
+current-version: 1
+exports:
+  - targets:     [ armv7-ios ]
+    symbols:     [ _HelloKitAnswer ]
+...

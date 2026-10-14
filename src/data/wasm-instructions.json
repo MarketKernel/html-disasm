@@ -1,0 +1,3442 @@
+{
+ "about": "Every WebAssembly instruction the disassembler decodes, with a plain-English description. The opcodes, immediates and stack signatures are in src/core/wasm/opcodes.ts; the text is here.",
+ "source": {
+  "spec": "WebAssembly Core Specification 3.0 and the threads and wide-arithmetic proposals (webassembly.github.io/spec)",
+  "text": "Descriptions written for this project; follow the links for the authoritative text"
+ },
+ "docBase": "https://webassembly.github.io/spec/core/",
+ "instructions": {
+  "any.convert_extern": {
+   "summary": "Extern to internal reference",
+   "description": "Turns a reference that came from the host (externref) into one the module's GC types can inspect (anyref).",
+   "operation": "internalize",
+   "category": "reference"
+  },
+  "array.copy": {
+   "summary": "Copy array elements",
+   "description": "Copies n elements from one array to another (or within one), correctly when they overlap.",
+   "operation": "copy n elements",
+   "category": "aggregate"
+  },
+  "array.fill": {
+   "summary": "Fill an array",
+   "description": "Sets n elements from an index on to a value.",
+   "operation": "r[i..i+n] = a",
+   "category": "aggregate"
+  },
+  "array.get": {
+   "summary": "Read an array element",
+   "description": "Pops an index and an array reference and pushes the element. Traps on null or an index out of range.",
+   "operation": "r[i]",
+   "category": "aggregate"
+  },
+  "array.get_s": {
+   "summary": "Read a packed element signed",
+   "description": "Reads an i8 or i16 array element, sign-extended to i32.",
+   "operation": "sext(r[i])",
+   "category": "aggregate"
+  },
+  "array.get_u": {
+   "summary": "Read a packed element unsigned",
+   "description": "Reads an i8 or i16 array element, zero-extended to i32.",
+   "operation": "zext(r[i])",
+   "category": "aggregate"
+  },
+  "array.init_data": {
+   "summary": "Fill an array from data",
+   "description": "Overwrites n elements of an array with values read from a data segment.",
+   "operation": "copy from data",
+   "category": "aggregate"
+  },
+  "array.init_elem": {
+   "summary": "Fill an array from an element segment",
+   "description": "Overwrites n elements of an array with references from an element segment.",
+   "operation": "copy from elem",
+   "category": "aggregate"
+  },
+  "array.len": {
+   "summary": "Array length",
+   "description": "Pushes the number of elements of an array. Traps on null.",
+   "operation": "len(r)",
+   "category": "aggregate"
+  },
+  "array.new": {
+   "summary": "Allocate an array",
+   "description": "Pushes a reference to a new array of n elements, each set to a given value.",
+   "operation": "new T[n](a)",
+   "category": "aggregate"
+  },
+  "array.new_data": {
+   "summary": "Allocate an array from data",
+   "description": "Makes a new array of n numeric elements from the bytes of a data segment, starting at an offset.",
+   "operation": "new T[n](data)",
+   "category": "aggregate"
+  },
+  "array.new_default": {
+   "summary": "Allocate a zeroed array",
+   "description": "Pushes a reference to a new array of n zero or null elements.",
+   "operation": "new T[n]()",
+   "category": "aggregate"
+  },
+  "array.new_elem": {
+   "summary": "Allocate an array from an element segment",
+   "description": "Makes a new array of n references from an element segment, starting at an offset.",
+   "operation": "new T[n](elem)",
+   "category": "aggregate"
+  },
+  "array.new_fixed": {
+   "summary": "Allocate an array of given values",
+   "description": "Pops as many values as the instruction says and pushes a new array holding them.",
+   "operation": "new T[]{…}",
+   "category": "aggregate"
+  },
+  "array.set": {
+   "summary": "Write an array element",
+   "description": "Stores a value at an index of a mutable array. Traps on null or an index out of range.",
+   "operation": "r[i] = a",
+   "category": "aggregate"
+  },
+  "atomic.fence": {
+   "summary": "Memory fence",
+   "description": "Orders memory accesses: no access before it may be observed after it, and the reverse (sequentially consistent).",
+   "operation": "fence",
+   "category": "barrier"
+  },
+  "block": {
+   "summary": "Block",
+   "description": "Opens a block that ends at its end. A branch to the block (br, br_if, br_table with its label) jumps forward, past its end: the way WebAssembly writes forward jumps, breaks and early exits.",
+   "operation": "block … end",
+   "category": "structure"
+  },
+  "br": {
+   "summary": "Branch",
+   "description": "Jumps to a label, counted from the innermost enclosing block: 0 is the block it is in. For a block or an if that means past its end, for a loop back to its start, for the outermost label a return.",
+   "operation": "goto label",
+   "category": "branch"
+  },
+  "br_if": {
+   "summary": "Branch if",
+   "description": "Pops a condition and branches to the label when it is not zero; otherwise goes on. Loops end with it, and conditions leave blocks with it.",
+   "operation": "if c { goto label }",
+   "category": "branch"
+  },
+  "br_on_cast": {
+   "summary": "Branch on a successful cast",
+   "description": "Branches to a label with the reference when it is of the target type; otherwise leaves it and goes on.",
+   "operation": "if r is T { goto label }",
+   "category": "branch"
+  },
+  "br_on_cast_fail": {
+   "summary": "Branch on a failed cast",
+   "description": "Branches to a label with the reference when it is not of the target type; otherwise leaves it, cast, and goes on.",
+   "operation": "if !(r is T) { goto label }",
+   "category": "branch"
+  },
+  "br_on_non_null": {
+   "summary": "Branch if not null",
+   "description": "Branches to a label with the reference when it is not null; otherwise drops it and goes on.",
+   "operation": "if r != null { goto label }",
+   "category": "branch"
+  },
+  "br_on_null": {
+   "summary": "Branch if null",
+   "description": "Branches to a label when the reference on top of the stack is null (dropping it); otherwise leaves it there, now known to be non-null.",
+   "operation": "if r == null { goto label }",
+   "category": "branch"
+  },
+  "br_table": {
+   "summary": "Branch table",
+   "description": "Pops an index and branches to the label at that position of the list, or to the last label (the default) when the index is past the end: how a switch statement is compiled.",
+   "operation": "switch i { … }",
+   "category": "branch"
+  },
+  "call": {
+   "summary": "Call",
+   "description": "Calls a function by its index: pops its arguments (the first deepest) and, when it returns, leaves its results on the stack. Imported functions come first in the index space.",
+   "operation": "f(args)",
+   "category": "call"
+  },
+  "call_indirect": {
+   "summary": "Call through a table",
+   "description": "Pops an index into a table of functions and calls the function there — how function pointers and virtual methods work. Traps when the slot is empty or the function does not have the expected type.",
+   "operation": "table[i](args)",
+   "category": "call"
+  },
+  "call_ref": {
+   "summary": "Call a function reference",
+   "description": "Pops a typed function reference and calls it. Traps when the reference is null.",
+   "operation": "ref(args)",
+   "category": "call"
+  },
+  "catch": {
+   "summary": "Catch (legacy)",
+   "description": "Starts the handler for exceptions of one tag inside a try; their values are on the stack.",
+   "operation": "} catch tag {",
+   "category": "exception"
+  },
+  "catch_all": {
+   "summary": "Catch all (legacy)",
+   "description": "Starts the handler for any exception inside a try.",
+   "operation": "} catch {",
+   "category": "exception"
+  },
+  "data.drop": {
+   "summary": "Drop a data segment",
+   "description": "Tells the engine a passive data segment is no longer needed: memory.init of it traps from now on (except with zero length), and the engine may free it.",
+   "operation": "drop the segment",
+   "category": "memory-copy"
+  },
+  "delegate": {
+   "summary": "Delegate (legacy)",
+   "description": "Ends a try by handing its exceptions to an outer try, named by a label.",
+   "operation": "delegate label",
+   "category": "exception"
+  },
+  "drop": {
+   "summary": "Drop",
+   "description": "Pops a value and forgets it — a function result nobody uses, for instance.",
+   "operation": "_ = a",
+   "category": "other"
+  },
+  "elem.drop": {
+   "summary": "Drop an element segment",
+   "description": "Tells the engine a passive element segment is no longer needed; table.init from it traps afterwards (except with zero length).",
+   "operation": "drop the segment",
+   "category": "table"
+  },
+  "else": {
+   "summary": "Else",
+   "description": "Separates the two branches of an if; reaching it from the first branch continues after the end.",
+   "operation": "} else {",
+   "category": "structure"
+  },
+  "end": {
+   "summary": "End",
+   "description": "Closes a block, loop, if or try — or, as the last instruction, the function itself, which then returns the values on the stack.",
+   "operation": "}",
+   "category": "structure"
+  },
+  "extern.convert_any": {
+   "summary": "Internal to extern reference",
+   "description": "Turns an internal reference (anyref) into an externref, to hand to the host.",
+   "operation": "externalize",
+   "category": "reference"
+  },
+  "f32.abs": {
+   "summary": "Absolute value (f32)",
+   "description": "Clears the sign bit of a — of a NaN too, without looking at it otherwise.",
+   "operation": "fabs(a)",
+   "category": "fp-arith"
+  },
+  "f32.add": {
+   "summary": "Add (f32)",
+   "description": "Adds two single-precision floats, rounding to the nearest representable value (ties to even), as IEEE 754 prescribes.",
+   "operation": "a + b",
+   "category": "fp-arith"
+  },
+  "f32.ceil": {
+   "summary": "Round up (f32)",
+   "description": "Rounds a to an integral value toward +∞; the result is still a single-precision float.",
+   "operation": "ceil(a)",
+   "category": "fp-arith"
+  },
+  "f32.const": {
+   "summary": "Single-precision constant",
+   "description": "Pushes the single-precision float whose 4 bytes follow the opcode, exactly — NaN payloads included.",
+   "operation": "the constant",
+   "category": "fp-move"
+  },
+  "f32.convert_i32_s": {
+   "summary": "Convert signed i32 to f32",
+   "description": "Converts a signed 32-bit integer to the nearest single-precision float, a tie going to even.",
+   "operation": "f32(a)",
+   "category": "fp-convert"
+  },
+  "f32.convert_i32_u": {
+   "summary": "Convert unsigned i32 to f32",
+   "description": "Converts an unsigned 32-bit integer to the nearest single-precision float, a tie going to even.",
+   "operation": "f32u(a)",
+   "category": "fp-convert"
+  },
+  "f32.convert_i64_s": {
+   "summary": "Convert signed i64 to f32",
+   "description": "Converts a signed 64-bit integer to the nearest single-precision float, a tie going to even.",
+   "operation": "f32(a)",
+   "category": "fp-convert"
+  },
+  "f32.convert_i64_u": {
+   "summary": "Convert unsigned i64 to f32",
+   "description": "Converts an unsigned 64-bit integer to the nearest single-precision float, a tie going to even.",
+   "operation": "f32u(a)",
+   "category": "fp-convert"
+  },
+  "f32.copysign": {
+   "summary": "Copy sign (f32)",
+   "description": "Pushes a with the sign bit of b: the magnitude of one value with the sign of the other.",
+   "operation": "copysign(a, b)",
+   "category": "fp-arith"
+  },
+  "f32.demote_f64": {
+   "summary": "Demote f64 to f32",
+   "description": "Rounds a double to the nearest single-precision value; too large a value becomes an infinity.",
+   "operation": "f32(a)",
+   "category": "fp-convert"
+  },
+  "f32.div": {
+   "summary": "Divide (f32)",
+   "description": "Pushes a / b, rounded to nearest. Dividing by zero gives an infinity or NaN, never a trap.",
+   "operation": "a / b",
+   "category": "fp-arith"
+  },
+  "f32.eq": {
+   "summary": "Equal (f32)",
+   "description": "Pushes 1 when a == b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a == b",
+   "category": "fp-compare"
+  },
+  "f32.floor": {
+   "summary": "Round down (f32)",
+   "description": "Rounds a to an integral value toward −∞.",
+   "operation": "floor(a)",
+   "category": "fp-arith"
+  },
+  "f32.ge": {
+   "summary": "Greater or equal (f32)",
+   "description": "Pushes 1 when a >= b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a >= b",
+   "category": "fp-compare"
+  },
+  "f32.gt": {
+   "summary": "Greater than (f32)",
+   "description": "Pushes 1 when a > b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a > b",
+   "category": "fp-compare"
+  },
+  "f32.le": {
+   "summary": "Less or equal (f32)",
+   "description": "Pushes 1 when a <= b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a <= b",
+   "category": "fp-compare"
+  },
+  "f32.load": {
+   "summary": "Load f32",
+   "description": "Reads 4 bytes of linear memory, little-endian. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "f32[addr + offset]",
+   "category": "load"
+  },
+  "f32.lt": {
+   "summary": "Less than (f32)",
+   "description": "Pushes 1 when a < b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a < b",
+   "category": "fp-compare"
+  },
+  "f32.max": {
+   "summary": "Maximum (f32)",
+   "description": "Pushes the larger of two single-precision floats. NaN in either gives NaN, and +0 counts as larger than −0.",
+   "operation": "fmax(a, b)",
+   "category": "fp-arith"
+  },
+  "f32.min": {
+   "summary": "Minimum (f32)",
+   "description": "Pushes the smaller of two single-precision floats. NaN in either gives NaN, and −0 counts as smaller than +0.",
+   "operation": "fmin(a, b)",
+   "category": "fp-arith"
+  },
+  "f32.mul": {
+   "summary": "Multiply (f32)",
+   "description": "Pushes the product of two single-precision floats, rounded to nearest.",
+   "operation": "a * b",
+   "category": "fp-arith"
+  },
+  "f32.ne": {
+   "summary": "Not equal (f32)",
+   "description": "Pushes 1 when a != b holds for two single-precision floats, 0 otherwise. NaN on either side makes it 1.",
+   "operation": "a != b",
+   "category": "fp-compare"
+  },
+  "f32.nearest": {
+   "summary": "Round to nearest (f32)",
+   "description": "Rounds a to the nearest integral value, a tie going to the even one (2.5 → 2.0, 3.5 → 4.0).",
+   "operation": "nearest(a)",
+   "category": "fp-arith"
+  },
+  "f32.neg": {
+   "summary": "Negate (f32)",
+   "description": "Flips the sign bit of a, NaN included.",
+   "operation": "-a",
+   "category": "fp-arith"
+  },
+  "f32.reinterpret_i32": {
+   "summary": "Reinterpret i32 bits as f32",
+   "description": "Pushes the 32 bits of an integer unchanged, as a float.",
+   "operation": "bitcast(a)",
+   "category": "fp-move"
+  },
+  "f32.sqrt": {
+   "summary": "Square root (f32)",
+   "description": "Pushes the square root of a, correctly rounded; NaN for a negative number (−0 gives −0).",
+   "operation": "sqrt(a)",
+   "category": "fp-arith"
+  },
+  "f32.store": {
+   "summary": "Store f32",
+   "description": "Pops a value and an address and writes the value (4 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "f32[addr + offset] = value",
+   "category": "store"
+  },
+  "f32.sub": {
+   "summary": "Subtract (f32)",
+   "description": "Pushes a − b (a is the value below, b the one on top), rounded to nearest.",
+   "operation": "a - b",
+   "category": "fp-arith"
+  },
+  "f32.trunc": {
+   "summary": "Round toward zero (f32)",
+   "description": "Drops the fraction of a, keeping an integral float.",
+   "operation": "trunc(a)",
+   "category": "fp-arith"
+  },
+  "f32x4.abs": {
+   "summary": "Absolute value (f32x4)",
+   "description": "Clears the sign bit of each of the four single-precision lanes.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "f32x4.add": {
+   "summary": "Add (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: adds the lanes of two vectors.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.ceil": {
+   "summary": "Round up (f32x4)",
+   "description": "Rounds each of the four single-precision lanes to an integral value toward +∞.",
+   "operation": "r[i] = ceil(a[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.convert_i32x4_s": {
+   "summary": "Convert i32x4 to f32x4 (signed)",
+   "description": "Converts the four signed 32-bit lanes to floats.",
+   "operation": "r[i] = f32(a[i])",
+   "category": "simd-convert"
+  },
+  "f32x4.convert_i32x4_u": {
+   "summary": "Convert i32x4 to f32x4 (unsigned)",
+   "description": "Converts the four unsigned 32-bit lanes to floats.",
+   "operation": "r[i] = f32(a[i])",
+   "category": "simd-convert"
+  },
+  "f32x4.demote_f64x2_zero": {
+   "summary": "Demote f64x2 to f32x4",
+   "description": "Rounds the two double lanes to single precision into the low lanes; the upper two are zero.",
+   "operation": "r = f32(a[0]), f32(a[1]), 0, 0",
+   "category": "simd-convert"
+  },
+  "f32x4.div": {
+   "summary": "Divide (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: divides the lanes of a by those of b.",
+   "operation": "a[i] / b[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.eq": {
+   "summary": "Equal (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.extract_lane": {
+   "summary": "Extract a lane (f32x4)",
+   "description": "Pushes one lane of a vector, chosen by the immediate.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "f32x4.floor": {
+   "summary": "Round down (f32x4)",
+   "description": "Rounds each of the four single-precision lanes to an integral value toward −∞.",
+   "operation": "r[i] = floor(a[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.ge": {
+   "summary": "Greater or equal (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.gt": {
+   "summary": "Greater than (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.le": {
+   "summary": "Less or equal (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.lt": {
+   "summary": "Less than (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.max": {
+   "summary": "Maximum (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: takes the larger of each pair of lanes (NaN wins, +0 > −0).",
+   "operation": "fmax(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.min": {
+   "summary": "Minimum (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: takes the smaller of each pair of lanes (NaN wins, −0 < +0).",
+   "operation": "fmin(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.mul": {
+   "summary": "Multiply (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: multiplies the lanes of two vectors.",
+   "operation": "a[i] * b[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.ne": {
+   "summary": "Not equal (f32x4)",
+   "description": "Compares the four single-precision lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f32x4.nearest": {
+   "summary": "Round to nearest (f32x4)",
+   "description": "Rounds each of the four single-precision lanes to an integral value to the nearest, ties to even.",
+   "operation": "r[i] = nearest(a[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.neg": {
+   "summary": "Negate (f32x4)",
+   "description": "Negates each of the four single-precision lanes (flips its sign bit).",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.pmax": {
+   "summary": "Pseudo-maximum (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: takes b where a < b and a otherwise.",
+   "operation": "a[i] < b[i] ? b[i] : a[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.pmin": {
+   "summary": "Pseudo-minimum (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: takes b where b < a and a otherwise — C's ternary minimum, cheap on x86.",
+   "operation": "b[i] < a[i] ? b[i] : a[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.relaxed_madd": {
+   "summary": "Relaxed multiply-add (f32x4)",
+   "description": "Computes a × b + c in each lane, fused (one rounding) or not, as the processor prefers.",
+   "operation": "r[i] = a[i] * b[i] + c[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.relaxed_max": {
+   "summary": "Relaxed maximum (f32x4)",
+   "description": "The larger of each pair of lanes; with NaN or zeros of both signs, whatever the processor gives.",
+   "operation": "r[i] = max(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.relaxed_min": {
+   "summary": "Relaxed minimum (f32x4)",
+   "description": "The smaller of each pair of lanes; with NaN or zeros of both signs, whatever the processor's instruction gives.",
+   "operation": "r[i] = min(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.relaxed_nmadd": {
+   "summary": "Relaxed negated multiply-add (f32x4)",
+   "description": "Computes −(a × b) + c in each lane, fused or not.",
+   "operation": "r[i] = -(a[i] * b[i]) + c[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.replace_lane": {
+   "summary": "Replace a lane (f32x4)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "f32x4.splat": {
+   "summary": "Splat to f32x4",
+   "description": "Copies a scalar into all four single-precision lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "f32x4.sqrt": {
+   "summary": "Square root (f32x4)",
+   "description": "Takes the square root of each of the four single-precision lanes.",
+   "operation": "r[i] = sqrt(a[i])",
+   "category": "simd-arith"
+  },
+  "f32x4.sub": {
+   "summary": "Subtract (f32x4)",
+   "description": "Works on a 128-bit vector of four single-precision lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "f32x4.trunc": {
+   "summary": "Round toward zero (f32x4)",
+   "description": "Rounds each of the four single-precision lanes to an integral value toward zero.",
+   "operation": "r[i] = trunc(a[i])",
+   "category": "simd-arith"
+  },
+  "f64.abs": {
+   "summary": "Absolute value (f64)",
+   "description": "Clears the sign bit of a — of a NaN too, without looking at it otherwise.",
+   "operation": "fabs(a)",
+   "category": "fp-arith"
+  },
+  "f64.add": {
+   "summary": "Add (f64)",
+   "description": "Adds two double-precision floats, rounding to the nearest representable value (ties to even), as IEEE 754 prescribes.",
+   "operation": "a + b",
+   "category": "fp-arith"
+  },
+  "f64.ceil": {
+   "summary": "Round up (f64)",
+   "description": "Rounds a to an integral value toward +∞; the result is still a double-precision float.",
+   "operation": "ceil(a)",
+   "category": "fp-arith"
+  },
+  "f64.const": {
+   "summary": "Double-precision constant",
+   "description": "Pushes the double-precision float whose 8 bytes follow the opcode, exactly — NaN payloads included.",
+   "operation": "the constant",
+   "category": "fp-move"
+  },
+  "f64.convert_i32_s": {
+   "summary": "Convert signed i32 to f64",
+   "description": "Converts a signed 32-bit integer to the nearest double-precision float, a tie going to even.",
+   "operation": "f64(a)",
+   "category": "fp-convert"
+  },
+  "f64.convert_i32_u": {
+   "summary": "Convert unsigned i32 to f64",
+   "description": "Converts an unsigned 32-bit integer to the nearest double-precision float, a tie going to even.",
+   "operation": "f64u(a)",
+   "category": "fp-convert"
+  },
+  "f64.convert_i64_s": {
+   "summary": "Convert signed i64 to f64",
+   "description": "Converts a signed 64-bit integer to the nearest double-precision float, a tie going to even.",
+   "operation": "f64(a)",
+   "category": "fp-convert"
+  },
+  "f64.convert_i64_u": {
+   "summary": "Convert unsigned i64 to f64",
+   "description": "Converts an unsigned 64-bit integer to the nearest double-precision float, a tie going to even.",
+   "operation": "f64u(a)",
+   "category": "fp-convert"
+  },
+  "f64.copysign": {
+   "summary": "Copy sign (f64)",
+   "description": "Pushes a with the sign bit of b: the magnitude of one value with the sign of the other.",
+   "operation": "copysign(a, b)",
+   "category": "fp-arith"
+  },
+  "f64.div": {
+   "summary": "Divide (f64)",
+   "description": "Pushes a / b, rounded to nearest. Dividing by zero gives an infinity or NaN, never a trap.",
+   "operation": "a / b",
+   "category": "fp-arith"
+  },
+  "f64.eq": {
+   "summary": "Equal (f64)",
+   "description": "Pushes 1 when a == b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a == b",
+   "category": "fp-compare"
+  },
+  "f64.floor": {
+   "summary": "Round down (f64)",
+   "description": "Rounds a to an integral value toward −∞.",
+   "operation": "floor(a)",
+   "category": "fp-arith"
+  },
+  "f64.ge": {
+   "summary": "Greater or equal (f64)",
+   "description": "Pushes 1 when a >= b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a >= b",
+   "category": "fp-compare"
+  },
+  "f64.gt": {
+   "summary": "Greater than (f64)",
+   "description": "Pushes 1 when a > b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a > b",
+   "category": "fp-compare"
+  },
+  "f64.le": {
+   "summary": "Less or equal (f64)",
+   "description": "Pushes 1 when a <= b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a <= b",
+   "category": "fp-compare"
+  },
+  "f64.load": {
+   "summary": "Load f64",
+   "description": "Reads 8 bytes of linear memory, little-endian. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "f64[addr + offset]",
+   "category": "load"
+  },
+  "f64.lt": {
+   "summary": "Less than (f64)",
+   "description": "Pushes 1 when a < b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 0.",
+   "operation": "a < b",
+   "category": "fp-compare"
+  },
+  "f64.max": {
+   "summary": "Maximum (f64)",
+   "description": "Pushes the larger of two double-precision floats. NaN in either gives NaN, and +0 counts as larger than −0.",
+   "operation": "fmax(a, b)",
+   "category": "fp-arith"
+  },
+  "f64.min": {
+   "summary": "Minimum (f64)",
+   "description": "Pushes the smaller of two double-precision floats. NaN in either gives NaN, and −0 counts as smaller than +0.",
+   "operation": "fmin(a, b)",
+   "category": "fp-arith"
+  },
+  "f64.mul": {
+   "summary": "Multiply (f64)",
+   "description": "Pushes the product of two double-precision floats, rounded to nearest.",
+   "operation": "a * b",
+   "category": "fp-arith"
+  },
+  "f64.ne": {
+   "summary": "Not equal (f64)",
+   "description": "Pushes 1 when a != b holds for two double-precision floats, 0 otherwise. NaN on either side makes it 1.",
+   "operation": "a != b",
+   "category": "fp-compare"
+  },
+  "f64.nearest": {
+   "summary": "Round to nearest (f64)",
+   "description": "Rounds a to the nearest integral value, a tie going to the even one (2.5 → 2.0, 3.5 → 4.0).",
+   "operation": "nearest(a)",
+   "category": "fp-arith"
+  },
+  "f64.neg": {
+   "summary": "Negate (f64)",
+   "description": "Flips the sign bit of a, NaN included.",
+   "operation": "-a",
+   "category": "fp-arith"
+  },
+  "f64.promote_f32": {
+   "summary": "Promote f32 to f64",
+   "description": "Widens a single-precision value to double precision, exactly.",
+   "operation": "f64(a)",
+   "category": "fp-convert"
+  },
+  "f64.reinterpret_i64": {
+   "summary": "Reinterpret i64 bits as f64",
+   "description": "Pushes the 64 bits of an integer unchanged, as a double.",
+   "operation": "bitcast(a)",
+   "category": "fp-move"
+  },
+  "f64.sqrt": {
+   "summary": "Square root (f64)",
+   "description": "Pushes the square root of a, correctly rounded; NaN for a negative number (−0 gives −0).",
+   "operation": "sqrt(a)",
+   "category": "fp-arith"
+  },
+  "f64.store": {
+   "summary": "Store f64",
+   "description": "Pops a value and an address and writes the value (8 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "f64[addr + offset] = value",
+   "category": "store"
+  },
+  "f64.sub": {
+   "summary": "Subtract (f64)",
+   "description": "Pushes a − b (a is the value below, b the one on top), rounded to nearest.",
+   "operation": "a - b",
+   "category": "fp-arith"
+  },
+  "f64.trunc": {
+   "summary": "Round toward zero (f64)",
+   "description": "Drops the fraction of a, keeping an integral float.",
+   "operation": "trunc(a)",
+   "category": "fp-arith"
+  },
+  "f64x2.abs": {
+   "summary": "Absolute value (f64x2)",
+   "description": "Clears the sign bit of each of the two double-precision lanes.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "f64x2.add": {
+   "summary": "Add (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: adds the lanes of two vectors.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.ceil": {
+   "summary": "Round up (f64x2)",
+   "description": "Rounds each of the two double-precision lanes to an integral value toward +∞.",
+   "operation": "r[i] = ceil(a[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.convert_low_i32x4_s": {
+   "summary": "Convert the low half of i32x4 to f64x2 (signed)",
+   "description": "Converts the two low signed 32-bit lanes to floats.",
+   "operation": "r[i] = f64(a[i])",
+   "category": "simd-convert"
+  },
+  "f64x2.convert_low_i32x4_u": {
+   "summary": "Convert the low half of i32x4 to f64x2 (unsigned)",
+   "description": "Converts the two low unsigned 32-bit lanes to floats.",
+   "operation": "r[i] = f64(a[i])",
+   "category": "simd-convert"
+  },
+  "f64x2.div": {
+   "summary": "Divide (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: divides the lanes of a by those of b.",
+   "operation": "a[i] / b[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.eq": {
+   "summary": "Equal (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.extract_lane": {
+   "summary": "Extract a lane (f64x2)",
+   "description": "Pushes one lane of a vector, chosen by the immediate.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "f64x2.floor": {
+   "summary": "Round down (f64x2)",
+   "description": "Rounds each of the two double-precision lanes to an integral value toward −∞.",
+   "operation": "r[i] = floor(a[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.ge": {
+   "summary": "Greater or equal (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.gt": {
+   "summary": "Greater than (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.le": {
+   "summary": "Less or equal (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.lt": {
+   "summary": "Less than (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.max": {
+   "summary": "Maximum (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: takes the larger of each pair of lanes (NaN wins, +0 > −0).",
+   "operation": "fmax(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.min": {
+   "summary": "Minimum (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: takes the smaller of each pair of lanes (NaN wins, −0 < +0).",
+   "operation": "fmin(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.mul": {
+   "summary": "Multiply (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: multiplies the lanes of two vectors.",
+   "operation": "a[i] * b[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.ne": {
+   "summary": "Not equal (f64x2)",
+   "description": "Compares the two double-precision lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "f64x2.nearest": {
+   "summary": "Round to nearest (f64x2)",
+   "description": "Rounds each of the two double-precision lanes to an integral value to the nearest, ties to even.",
+   "operation": "r[i] = nearest(a[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.neg": {
+   "summary": "Negate (f64x2)",
+   "description": "Negates each of the two double-precision lanes (flips its sign bit).",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.pmax": {
+   "summary": "Pseudo-maximum (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: takes b where a < b and a otherwise.",
+   "operation": "a[i] < b[i] ? b[i] : a[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.pmin": {
+   "summary": "Pseudo-minimum (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: takes b where b < a and a otherwise — C's ternary minimum, cheap on x86.",
+   "operation": "b[i] < a[i] ? b[i] : a[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.promote_low_f32x4": {
+   "summary": "Promote the low half of f32x4",
+   "description": "Widens the two low single-precision lanes to double precision.",
+   "operation": "r = f64(a[0]), f64(a[1])",
+   "category": "simd-convert"
+  },
+  "f64x2.relaxed_madd": {
+   "summary": "Relaxed multiply-add (f64x2)",
+   "description": "Computes a × b + c in each lane, fused (one rounding) or not, as the processor prefers.",
+   "operation": "r[i] = a[i] * b[i] + c[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.relaxed_max": {
+   "summary": "Relaxed maximum (f64x2)",
+   "description": "The larger of each pair of lanes; with NaN or zeros of both signs, whatever the processor gives.",
+   "operation": "r[i] = max(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.relaxed_min": {
+   "summary": "Relaxed minimum (f64x2)",
+   "description": "The smaller of each pair of lanes; with NaN or zeros of both signs, whatever the processor's instruction gives.",
+   "operation": "r[i] = min(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.relaxed_nmadd": {
+   "summary": "Relaxed negated multiply-add (f64x2)",
+   "description": "Computes −(a × b) + c in each lane, fused or not.",
+   "operation": "r[i] = -(a[i] * b[i]) + c[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.replace_lane": {
+   "summary": "Replace a lane (f64x2)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "f64x2.splat": {
+   "summary": "Splat to f64x2",
+   "description": "Copies a scalar into all two double-precision lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "f64x2.sqrt": {
+   "summary": "Square root (f64x2)",
+   "description": "Takes the square root of each of the two double-precision lanes.",
+   "operation": "r[i] = sqrt(a[i])",
+   "category": "simd-arith"
+  },
+  "f64x2.sub": {
+   "summary": "Subtract (f64x2)",
+   "description": "Works on a 128-bit vector of two double-precision lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "f64x2.trunc": {
+   "summary": "Round toward zero (f64x2)",
+   "description": "Rounds each of the two double-precision lanes to an integral value toward zero.",
+   "operation": "r[i] = trunc(a[i])",
+   "category": "simd-arith"
+  },
+  "global.get": {
+   "summary": "Read a global",
+   "description": "Pushes the value of a global variable of the module — the stack pointer of C and Rust code lives in one.",
+   "operation": "push g",
+   "category": "variable"
+  },
+  "global.set": {
+   "summary": "Write a global",
+   "description": "Pops a value into a mutable global variable.",
+   "operation": "g = a",
+   "category": "variable"
+  },
+  "i16x8.abs": {
+   "summary": "Absolute value (i16x8)",
+   "description": "Takes the absolute value of each of the eight 16-bit integer lanes; the most negative value stays as it is.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "i16x8.add": {
+   "summary": "Add (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: adds the lanes of two vectors, wrapping around.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "i16x8.add_sat_s": {
+   "summary": "Signed saturating add (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: adds lanes as signed numbers, clamping the result to the lane's range instead of wrapping.",
+   "operation": "sat(a[i] + b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.add_sat_u": {
+   "summary": "Unsigned saturating add (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: adds lanes as unsigned numbers, clamping at the largest value.",
+   "operation": "usat(a[i] + b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.all_true": {
+   "summary": "All lanes true (i16x8)",
+   "description": "Pushes 1 when every one of the eight 16-bit integer lanes is non-zero, 0 otherwise.",
+   "operation": "all a[i] != 0",
+   "category": "simd-reduce"
+  },
+  "i16x8.avgr_u": {
+   "summary": "Unsigned rounding average (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: averages lanes as unsigned numbers, rounding up.",
+   "operation": "(a[i] + b[i] + 1) >> 1",
+   "category": "simd-arith"
+  },
+  "i16x8.bitmask": {
+   "summary": "Bitmask of signs (i16x8)",
+   "description": "Collects the top (sign) bit of each of the eight 16-bit integer lanes into the low bits of an i32.",
+   "operation": "bit i = sign of a[i]",
+   "category": "simd-reduce"
+  },
+  "i16x8.eq": {
+   "summary": "Equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.extadd_pairwise_i8x16_s": {
+   "summary": "Add neighbouring lanes (signed)",
+   "description": "Adds each pair of neighbouring i8x16 lanes into one lane twice as wide.",
+   "operation": "r[i] = a[2i] + a[2i+1]",
+   "category": "simd-arith"
+  },
+  "i16x8.extadd_pairwise_i8x16_u": {
+   "summary": "Add neighbouring lanes (unsigned)",
+   "description": "Adds each pair of neighbouring i8x16 lanes into one lane twice as wide.",
+   "operation": "r[i] = a[2i] + a[2i+1]",
+   "category": "simd-arith"
+  },
+  "i16x8.extend_high_i8x16_s": {
+   "summary": "Extend the high half of i8x16 (signed)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i16x8.extend_high_i8x16_u": {
+   "summary": "Extend the high half of i8x16 (unsigned)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i16x8.extend_low_i8x16_s": {
+   "summary": "Extend the low half of i8x16 (signed)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i])",
+   "category": "simd-convert"
+  },
+  "i16x8.extend_low_i8x16_u": {
+   "summary": "Extend the low half of i8x16 (unsigned)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i])",
+   "category": "simd-convert"
+  },
+  "i16x8.extmul_high_i8x16_s": {
+   "summary": "Extending multiply, high half (signed)",
+   "description": "Multiplies the high halves of the lanes of two i8x16 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.extmul_high_i8x16_u": {
+   "summary": "Extending multiply, high half (unsigned)",
+   "description": "Multiplies the high halves of the lanes of two i8x16 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.extmul_low_i8x16_s": {
+   "summary": "Extending multiply, low half (signed)",
+   "description": "Multiplies the low halves of the lanes of two i8x16 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.extmul_low_i8x16_u": {
+   "summary": "Extending multiply, low half (unsigned)",
+   "description": "Multiplies the low halves of the lanes of two i8x16 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.extract_lane_s": {
+   "summary": "Extract a lane (i16x8, signed)",
+   "description": "Pushes one lane of a vector, chosen by the immediate, sign-extended to i32.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i16x8.extract_lane_u": {
+   "summary": "Extract a lane (i16x8, unsigned)",
+   "description": "Pushes one lane of a vector, chosen by the immediate, zero-extended to i32.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i16x8.ge_s": {
+   "summary": "Signed greater or equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.ge_u": {
+   "summary": "Unsigned greater or equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.gt_s": {
+   "summary": "Signed greater than (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.gt_u": {
+   "summary": "Unsigned greater than (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.le_s": {
+   "summary": "Signed less or equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.le_u": {
+   "summary": "Unsigned less or equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.lt_s": {
+   "summary": "Signed less than (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.lt_u": {
+   "summary": "Unsigned less than (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.max_s": {
+   "summary": "Signed maximum (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: takes the larger of each pair of lanes as signed numbers.",
+   "operation": "max(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.max_u": {
+   "summary": "Unsigned maximum (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: takes the larger of each pair of lanes as unsigned numbers.",
+   "operation": "umax(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.min_s": {
+   "summary": "Signed minimum (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: takes the smaller of each pair of lanes as signed numbers.",
+   "operation": "min(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.min_u": {
+   "summary": "Unsigned minimum (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: takes the smaller of each pair of lanes as unsigned numbers.",
+   "operation": "umin(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.mul": {
+   "summary": "Multiply (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: multiplies the lanes of two vectors, keeping the low bits.",
+   "operation": "a[i] * b[i]",
+   "category": "simd-arith"
+  },
+  "i16x8.narrow_i32x4_s": {
+   "summary": "Narrow i32x4 to i16x8 (signed)",
+   "description": "Packs the lanes of two vectors into lanes half as wide, clamping each signed value to the signed range of the narrow lane.",
+   "operation": "r = sat(a) ++ sat(b)",
+   "category": "simd-convert"
+  },
+  "i16x8.narrow_i32x4_u": {
+   "summary": "Narrow i32x4 to i16x8 (unsigned)",
+   "description": "Packs the lanes of two vectors into lanes half as wide, clamping each signed value to the unsigned range of the narrow lane.",
+   "operation": "r = sat(a) ++ sat(b)",
+   "category": "simd-convert"
+  },
+  "i16x8.ne": {
+   "summary": "Not equal (i16x8)",
+   "description": "Compares the eight 16-bit integer lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i16x8.neg": {
+   "summary": "Negate (i16x8)",
+   "description": "Negates each of the eight 16-bit integer lanes, wrapping around.",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "i16x8.q15mulr_sat_s": {
+   "summary": "Q15 rounding multiply (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: multiplies lanes as Q15 fixed-point numbers, rounding and saturating.",
+   "operation": "sat((a[i] * b[i] + 0x4000) >> 15)",
+   "category": "simd-arith"
+  },
+  "i16x8.relaxed_dot_i8x16_i7x16_s": {
+   "summary": "Relaxed dot product of bytes",
+   "description": "Multiplies signed bytes of a by bytes of b (meant to be 7-bit) and adds neighbouring products into 16-bit lanes — the inner loop of quantised neural networks.",
+   "operation": "r[i] = a[2i]*b[2i] + a[2i+1]*b[2i+1]",
+   "category": "simd-arith"
+  },
+  "i16x8.relaxed_laneselect": {
+   "summary": "Relaxed lane select (i16x8)",
+   "description": "Picks each lane from a or b by a mask whose lanes are all ones or all zeros; for other masks the result depends on the processor.",
+   "operation": "r[i] = c[i] ? a[i] : b[i]",
+   "category": "simd-logic"
+  },
+  "i16x8.relaxed_q15mulr_s": {
+   "summary": "Relaxed Q15 rounding multiply",
+   "description": "Like i16x8.q15mulr_sat_s, except that −1 × −1 may wrap instead of saturating, as the processor does.",
+   "operation": "r[i] = (a[i] * b[i] + 0x4000) >> 15",
+   "category": "simd-arith"
+  },
+  "i16x8.replace_lane": {
+   "summary": "Replace a lane (i16x8)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "i16x8.shl": {
+   "summary": "Shift left (i16x8)",
+   "description": "Shifts each of the eight 16-bit integer lanes by the same scalar amount, taken modulo 16, filling with zeros.",
+   "operation": "r[i] = a[i] << n",
+   "category": "simd-shift"
+  },
+  "i16x8.shr_s": {
+   "summary": "Arithmetic shift right (i16x8)",
+   "description": "Shifts each of the eight 16-bit integer lanes by the same scalar amount, taken modulo 16, copying the sign bit.",
+   "operation": "r[i] = a[i] >> n",
+   "category": "simd-shift"
+  },
+  "i16x8.shr_u": {
+   "summary": "Logical shift right (i16x8)",
+   "description": "Shifts each of the eight 16-bit integer lanes by the same scalar amount, taken modulo 16, filling with zeros.",
+   "operation": "r[i] = a[i] >>> n",
+   "category": "simd-shift"
+  },
+  "i16x8.splat": {
+   "summary": "Splat to i16x8",
+   "description": "Copies a scalar into all eight 16-bit integer lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "i16x8.sub": {
+   "summary": "Subtract (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "i16x8.sub_sat_s": {
+   "summary": "Signed saturating subtract (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: subtracts lanes as signed numbers, clamping to the lane's range.",
+   "operation": "sat(a[i] - b[i])",
+   "category": "simd-arith"
+  },
+  "i16x8.sub_sat_u": {
+   "summary": "Unsigned saturating subtract (i16x8)",
+   "description": "Works on a 128-bit vector of eight 16-bit integer lanes: subtracts lanes as unsigned numbers, clamping at zero.",
+   "operation": "usat(a[i] - b[i])",
+   "category": "simd-arith"
+  },
+  "i31.get_s": {
+   "summary": "Read an i31 signed",
+   "description": "Pushes the 31-bit integer inside an i31ref, sign-extended to 32 bits. Traps on null.",
+   "operation": "sext31(r)",
+   "category": "reference"
+  },
+  "i31.get_u": {
+   "summary": "Read an i31 unsigned",
+   "description": "Pushes the 31-bit integer inside an i31ref, zero-extended to 32 bits. Traps on null.",
+   "operation": "zext31(r)",
+   "category": "reference"
+  },
+  "i32.add": {
+   "summary": "Add (i32)",
+   "description": "Pops two 32-bit integers and pushes their sum, wrapped modulo 2^32: an overflow is neither trapped nor reported. The same instruction serves signed and unsigned numbers.",
+   "operation": "a + b",
+   "category": "arithmetic"
+  },
+  "i32.and": {
+   "summary": "Bitwise AND (i32)",
+   "description": "Pushes the bits set in both a and b.",
+   "operation": "a & b",
+   "category": "logic"
+  },
+  "i32.atomic.load": {
+   "summary": "Atomic load 32 bits",
+   "description": "Reads 32 bits of shared memory atomically and in sequentially consistent order. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u32[addr])",
+   "category": "atomic"
+  },
+  "i32.atomic.load16_u": {
+   "summary": "Atomic load 16 bits to i32",
+   "description": "Reads 16 bits of shared memory atomically and in sequentially consistent order, zero-extended to i32. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u16[addr])",
+   "category": "atomic"
+  },
+  "i32.atomic.load8_u": {
+   "summary": "Atomic load 8 bits to i32",
+   "description": "Reads 8 bits of shared memory atomically and in sequentially consistent order, zero-extended to i32. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u8[addr])",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.add": {
+   "summary": "Atomic add (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, adds the operand to it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.and": {
+   "summary": "Atomic AND (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.cmpxchg": {
+   "summary": "Atomic compare and exchange (32 bits)",
+   "description": "Atomically compares the 32-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way.",
+   "operation": "old = cas(u32[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.or": {
+   "summary": "Atomic OR (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.sub": {
+   "summary": "Atomic subtract (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.xchg": {
+   "summary": "Atomic exchange (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw.xor": {
+   "summary": "Atomic XOR (32 bits)",
+   "description": "Atomically reads the 32-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.add_u": {
+   "summary": "Atomic add (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, adds the operand to it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.and_u": {
+   "summary": "Atomic AND (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.cmpxchg_u": {
+   "summary": "Atomic compare and exchange (16 bits, i32)",
+   "description": "Atomically compares the 16-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way, zero-extended to i32.",
+   "operation": "old = cas(u16[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.or_u": {
+   "summary": "Atomic OR (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.sub_u": {
+   "summary": "Atomic subtract (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.xchg_u": {
+   "summary": "Atomic exchange (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw16.xor_u": {
+   "summary": "Atomic XOR (16 bits, i32)",
+   "description": "Atomically reads the 16-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.add_u": {
+   "summary": "Atomic add (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, adds the operand to it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.and_u": {
+   "summary": "Atomic AND (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.cmpxchg_u": {
+   "summary": "Atomic compare and exchange (8 bits, i32)",
+   "description": "Atomically compares the 8-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way, zero-extended to i32.",
+   "operation": "old = cas(u8[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.or_u": {
+   "summary": "Atomic OR (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.sub_u": {
+   "summary": "Atomic subtract (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.xchg_u": {
+   "summary": "Atomic exchange (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.rmw8.xor_u": {
+   "summary": "Atomic XOR (8 bits, i32)",
+   "description": "Atomically reads the 8-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value, zero-extended to i32. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.store": {
+   "summary": "Atomic store 32 bits",
+   "description": "Writes a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.store16": {
+   "summary": "Atomic store 16 bits of i32",
+   "description": "Writes the low 16 bits of a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i32.atomic.store8": {
+   "summary": "Atomic store 8 bits of i32",
+   "description": "Writes the low 8 bits of a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i32.clz": {
+   "summary": "Count leading zeros (i32)",
+   "description": "Pushes how many zero bits a has above its highest set bit: 32 for zero.",
+   "operation": "clz(a)",
+   "category": "bitfield"
+  },
+  "i32.const": {
+   "summary": "32-bit integer constant",
+   "description": "Pushes the 32-bit integer written in the instruction (as a signed LEB128). A constant that is the address of data is how code points at strings and variables in memory.",
+   "operation": "the constant",
+   "category": "move"
+  },
+  "i32.ctz": {
+   "summary": "Count trailing zeros (i32)",
+   "description": "Pushes how many zero bits a has below its lowest set bit: 32 for zero.",
+   "operation": "ctz(a)",
+   "category": "bitfield"
+  },
+  "i32.div_s": {
+   "summary": "Signed divide (i32)",
+   "description": "Divides a by b as signed numbers, rounding toward zero. Stops the program (traps) when b is zero, and when the most negative value is divided by −1, whose quotient does not fit.",
+   "operation": "a / b (signed)",
+   "category": "arithmetic"
+  },
+  "i32.div_u": {
+   "summary": "Unsigned divide (i32)",
+   "description": "Divides a by b as unsigned numbers, rounding down. Traps when b is zero.",
+   "operation": "udiv(a, b)",
+   "category": "arithmetic"
+  },
+  "i32.eq": {
+   "summary": "Equal (i32)",
+   "description": "Pushes 1 when the two 32-bit integers equal, 0 otherwise.",
+   "operation": "a == b",
+   "category": "compare"
+  },
+  "i32.eqz": {
+   "summary": "Test for zero (i32)",
+   "description": "Pushes 1 when a is zero and 0 otherwise — the logical NOT of a value used as a condition.",
+   "operation": "a == 0",
+   "category": "compare"
+  },
+  "i32.extend16_s": {
+   "summary": "Sign-extend 16 bits (i32)",
+   "description": "Takes the low 16 bits of a as a signed number and widens it to 32 bits, copying bit 15 into all the bits above.",
+   "operation": "sext16(a)",
+   "category": "bitfield"
+  },
+  "i32.extend8_s": {
+   "summary": "Sign-extend 8 bits (i32)",
+   "description": "Takes the low 8 bits of a as a signed number and widens it to 32 bits, copying bit 7 into all the bits above.",
+   "operation": "sext8(a)",
+   "category": "bitfield"
+  },
+  "i32.ge_s": {
+   "summary": "Signed greater or equal (i32)",
+   "description": "Pushes 1 when a ≥ b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >= b",
+   "category": "compare"
+  },
+  "i32.ge_u": {
+   "summary": "Unsigned greater or equal (i32)",
+   "description": "Pushes 1 when a ≥ b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >=u b",
+   "category": "compare"
+  },
+  "i32.gt_s": {
+   "summary": "Signed greater than (i32)",
+   "description": "Pushes 1 when a > b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a > b",
+   "category": "compare"
+  },
+  "i32.gt_u": {
+   "summary": "Unsigned greater than (i32)",
+   "description": "Pushes 1 when a > b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >u b",
+   "category": "compare"
+  },
+  "i32.le_s": {
+   "summary": "Signed less or equal (i32)",
+   "description": "Pushes 1 when a ≤ b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <= b",
+   "category": "compare"
+  },
+  "i32.le_u": {
+   "summary": "Unsigned less or equal (i32)",
+   "description": "Pushes 1 when a ≤ b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <=u b",
+   "category": "compare"
+  },
+  "i32.load": {
+   "summary": "Load i32",
+   "description": "Reads 4 bytes of linear memory, little-endian. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i32[addr + offset]",
+   "category": "load"
+  },
+  "i32.load16_s": {
+   "summary": "Load 16 bits sign-extended to i32",
+   "description": "Reads 2 bytes of linear memory, little-endian, then widens the value to 32 bits as a signed number. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i16[addr + offset]",
+   "category": "load"
+  },
+  "i32.load16_u": {
+   "summary": "Load 16 bits zero-extended to i32",
+   "description": "Reads 2 bytes of linear memory, little-endian, then widens the value to 32 bits with zeros. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u16[addr + offset]",
+   "category": "load"
+  },
+  "i32.load8_s": {
+   "summary": "Load 8 bits sign-extended to i32",
+   "description": "Reads 1 byte of linear memory, little-endian, then widens the value to 32 bits as a signed number. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i8[addr + offset]",
+   "category": "load"
+  },
+  "i32.load8_u": {
+   "summary": "Load 8 bits zero-extended to i32",
+   "description": "Reads 1 byte of linear memory, little-endian, then widens the value to 32 bits with zeros. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u8[addr + offset]",
+   "category": "load"
+  },
+  "i32.lt_s": {
+   "summary": "Signed less than (i32)",
+   "description": "Pushes 1 when a < b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a < b",
+   "category": "compare"
+  },
+  "i32.lt_u": {
+   "summary": "Unsigned less than (i32)",
+   "description": "Pushes 1 when a < b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <u b",
+   "category": "compare"
+  },
+  "i32.mul": {
+   "summary": "Multiply (i32)",
+   "description": "Pops two 32-bit integers and pushes the low 32 bits of their product — the same bits whether the numbers are signed or unsigned.",
+   "operation": "a * b",
+   "category": "arithmetic"
+  },
+  "i32.ne": {
+   "summary": "Not equal (i32)",
+   "description": "Pushes 1 when the two 32-bit integers differ, 0 otherwise.",
+   "operation": "a != b",
+   "category": "compare"
+  },
+  "i32.or": {
+   "summary": "Bitwise OR (i32)",
+   "description": "Pushes the bits set in a, in b, or in both.",
+   "operation": "a | b",
+   "category": "logic"
+  },
+  "i32.popcnt": {
+   "summary": "Count set bits (i32)",
+   "description": "Pushes the number of one bits in a.",
+   "operation": "popcount(a)",
+   "category": "bitfield"
+  },
+  "i32.reinterpret_f32": {
+   "summary": "Reinterpret f32 bits as i32",
+   "description": "Pushes the 32 bits of a float unchanged, as an integer.",
+   "operation": "bitcast(a)",
+   "category": "fp-move"
+  },
+  "i32.rem_s": {
+   "summary": "Signed remainder (i32)",
+   "description": "The remainder of the signed division a / b; it has the sign of a. Traps when b is zero; the most negative value % −1 is simply 0.",
+   "operation": "a % b (signed)",
+   "category": "arithmetic"
+  },
+  "i32.rem_u": {
+   "summary": "Unsigned remainder (i32)",
+   "description": "The remainder of the unsigned division a / b. Traps when b is zero.",
+   "operation": "urem(a, b)",
+   "category": "arithmetic"
+  },
+  "i32.rotl": {
+   "summary": "Rotate left (i32)",
+   "description": "Rotates the bits of a left by b places: bits that leave on the left come back on the right.",
+   "operation": "rotl(a, b)",
+   "category": "shift"
+  },
+  "i32.rotr": {
+   "summary": "Rotate right (i32)",
+   "description": "Rotates the bits of a right by b places: bits that leave on the right come back on the left.",
+   "operation": "ror(a, b)",
+   "category": "shift"
+  },
+  "i32.shl": {
+   "summary": "Shift left (i32)",
+   "description": "Shifts a left by b bits, filling with zeros. Only the low 5 bits of b count: the shift is taken modulo 32.",
+   "operation": "a << b",
+   "category": "shift"
+  },
+  "i32.shr_s": {
+   "summary": "Arithmetic shift right (i32)",
+   "description": "Shifts a right by b bits (modulo 32), copying the sign bit into the vacated bits: a signed division by a power of two that rounds down.",
+   "operation": "a >> b",
+   "category": "shift"
+  },
+  "i32.shr_u": {
+   "summary": "Logical shift right (i32)",
+   "description": "Shifts a right by b bits (modulo 32), filling with zeros.",
+   "operation": "a >>> b",
+   "category": "shift"
+  },
+  "i32.store": {
+   "summary": "Store i32",
+   "description": "Pops a value and an address and writes the value (4 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i32[addr + offset] = value",
+   "category": "store"
+  },
+  "i32.store16": {
+   "summary": "Store the low 16 bits of i32",
+   "description": "Pops a value and an address and writes the low 16 bits of the value (2 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u16[addr + offset] = value",
+   "category": "store"
+  },
+  "i32.store8": {
+   "summary": "Store the low 8 bits of i32",
+   "description": "Pops a value and an address and writes the low 8 bits of the value (1 byte, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u8[addr + offset] = value",
+   "category": "store"
+  },
+  "i32.sub": {
+   "summary": "Subtract (i32)",
+   "description": "Pops two 32-bit integers and pushes a − b (a is the value below, b the one on top), wrapped modulo 2^32.",
+   "operation": "a - b",
+   "category": "arithmetic"
+  },
+  "i32.trunc_f32_s": {
+   "summary": "Truncate f32 to signed i32",
+   "description": "Converts a float to a signed 32-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "i32(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_f32_u": {
+   "summary": "Truncate f32 to unsigned i32",
+   "description": "Converts a float to an unsigned 32-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "u32(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_f64_s": {
+   "summary": "Truncate f64 to signed i32",
+   "description": "Converts a float to a signed 32-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "i32(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_f64_u": {
+   "summary": "Truncate f64 to unsigned i32",
+   "description": "Converts a float to an unsigned 32-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "u32(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_sat_f32_s": {
+   "summary": "Saturating truncate f32 to signed i32",
+   "description": "Converts a float to a signed 32-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "i32_sat(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_sat_f32_u": {
+   "summary": "Saturating truncate f32 to unsigned i32",
+   "description": "Converts a float to an unsigned 32-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "u32_sat(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_sat_f64_s": {
+   "summary": "Saturating truncate f64 to signed i32",
+   "description": "Converts a float to a signed 32-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "i32_sat(a)",
+   "category": "fp-convert"
+  },
+  "i32.trunc_sat_f64_u": {
+   "summary": "Saturating truncate f64 to unsigned i32",
+   "description": "Converts a float to an unsigned 32-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "u32_sat(a)",
+   "category": "fp-convert"
+  },
+  "i32.wrap_i64": {
+   "summary": "Wrap i64 to i32",
+   "description": "Keeps the low 32 bits of a 64-bit integer.",
+   "operation": "i32(a)",
+   "category": "bitfield"
+  },
+  "i32.xor": {
+   "summary": "Bitwise exclusive OR (i32)",
+   "description": "Pushes the bits set in exactly one of a and b. With −1 as b it inverts every bit.",
+   "operation": "a ^ b",
+   "category": "logic"
+  },
+  "i32x4.abs": {
+   "summary": "Absolute value (i32x4)",
+   "description": "Takes the absolute value of each of the four 32-bit integer lanes; the most negative value stays as it is.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "i32x4.add": {
+   "summary": "Add (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: adds the lanes of two vectors, wrapping around.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "i32x4.all_true": {
+   "summary": "All lanes true (i32x4)",
+   "description": "Pushes 1 when every one of the four 32-bit integer lanes is non-zero, 0 otherwise.",
+   "operation": "all a[i] != 0",
+   "category": "simd-reduce"
+  },
+  "i32x4.bitmask": {
+   "summary": "Bitmask of signs (i32x4)",
+   "description": "Collects the top (sign) bit of each of the four 32-bit integer lanes into the low bits of an i32.",
+   "operation": "bit i = sign of a[i]",
+   "category": "simd-reduce"
+  },
+  "i32x4.dot_i16x8_s": {
+   "summary": "Dot product of i16 pairs (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: multiplies the signed 16-bit lanes and adds neighbouring products into 32-bit lanes.",
+   "operation": "r[i] = a[2i]*b[2i] + a[2i+1]*b[2i+1]",
+   "category": "simd-arith"
+  },
+  "i32x4.eq": {
+   "summary": "Equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.extadd_pairwise_i16x8_s": {
+   "summary": "Add neighbouring lanes (signed)",
+   "description": "Adds each pair of neighbouring i16x8 lanes into one lane twice as wide.",
+   "operation": "r[i] = a[2i] + a[2i+1]",
+   "category": "simd-arith"
+  },
+  "i32x4.extadd_pairwise_i16x8_u": {
+   "summary": "Add neighbouring lanes (unsigned)",
+   "description": "Adds each pair of neighbouring i16x8 lanes into one lane twice as wide.",
+   "operation": "r[i] = a[2i] + a[2i+1]",
+   "category": "simd-arith"
+  },
+  "i32x4.extend_high_i16x8_s": {
+   "summary": "Extend the high half of i16x8 (signed)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i32x4.extend_high_i16x8_u": {
+   "summary": "Extend the high half of i16x8 (unsigned)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i32x4.extend_low_i16x8_s": {
+   "summary": "Extend the low half of i16x8 (signed)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.extend_low_i16x8_u": {
+   "summary": "Extend the low half of i16x8 (unsigned)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.extmul_high_i16x8_s": {
+   "summary": "Extending multiply, high half (signed)",
+   "description": "Multiplies the high halves of the lanes of two i16x8 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.extmul_high_i16x8_u": {
+   "summary": "Extending multiply, high half (unsigned)",
+   "description": "Multiplies the high halves of the lanes of two i16x8 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.extmul_low_i16x8_s": {
+   "summary": "Extending multiply, low half (signed)",
+   "description": "Multiplies the low halves of the lanes of two i16x8 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.extmul_low_i16x8_u": {
+   "summary": "Extending multiply, low half (unsigned)",
+   "description": "Multiplies the low halves of the lanes of two i16x8 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.extract_lane": {
+   "summary": "Extract a lane (i32x4)",
+   "description": "Pushes one lane of a vector, chosen by the immediate.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i32x4.ge_s": {
+   "summary": "Signed greater or equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.ge_u": {
+   "summary": "Unsigned greater or equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.gt_s": {
+   "summary": "Signed greater than (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.gt_u": {
+   "summary": "Unsigned greater than (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.le_s": {
+   "summary": "Signed less or equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.le_u": {
+   "summary": "Unsigned less or equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.lt_s": {
+   "summary": "Signed less than (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.lt_u": {
+   "summary": "Unsigned less than (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.max_s": {
+   "summary": "Signed maximum (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: takes the larger of each pair of lanes as signed numbers.",
+   "operation": "max(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.max_u": {
+   "summary": "Unsigned maximum (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: takes the larger of each pair of lanes as unsigned numbers.",
+   "operation": "umax(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.min_s": {
+   "summary": "Signed minimum (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: takes the smaller of each pair of lanes as signed numbers.",
+   "operation": "min(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.min_u": {
+   "summary": "Unsigned minimum (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: takes the smaller of each pair of lanes as unsigned numbers.",
+   "operation": "umin(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i32x4.mul": {
+   "summary": "Multiply (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: multiplies the lanes of two vectors, keeping the low bits.",
+   "operation": "a[i] * b[i]",
+   "category": "simd-arith"
+  },
+  "i32x4.ne": {
+   "summary": "Not equal (i32x4)",
+   "description": "Compares the four 32-bit integer lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i32x4.neg": {
+   "summary": "Negate (i32x4)",
+   "description": "Negates each of the four 32-bit integer lanes, wrapping around.",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "i32x4.relaxed_dot_i8x16_i7x16_add_s": {
+   "summary": "Relaxed dot product of bytes, accumulate",
+   "description": "Multiplies bytes of a and b (b meant to be 7-bit), adds each group of four products and accumulates into the 32-bit lanes of c.",
+   "operation": "r[i] = c[i] + Σ a[4i+k]*b[4i+k]",
+   "category": "simd-arith"
+  },
+  "i32x4.relaxed_laneselect": {
+   "summary": "Relaxed lane select (i32x4)",
+   "description": "Picks each lane from a or b by a mask whose lanes are all ones or all zeros; for other masks the result depends on the processor.",
+   "operation": "r[i] = c[i] ? a[i] : b[i]",
+   "category": "simd-logic"
+  },
+  "i32x4.relaxed_trunc_f32x4_s": {
+   "summary": "Relaxed truncate f32x4 to i32x4 (signed)",
+   "description": "Converts float lanes to signed 32-bit integers; values out of range and NaN give whatever the processor's instruction gives.",
+   "operation": "r[i] = i32(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.relaxed_trunc_f32x4_u": {
+   "summary": "Relaxed truncate f32x4 to i32x4 (unsigned)",
+   "description": "Converts float lanes to unsigned 32-bit integers; values out of range and NaN give whatever the processor's instruction gives.",
+   "operation": "r[i] = u32(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.relaxed_trunc_f64x2_s_zero": {
+   "summary": "Relaxed truncate f64x2 to i32x4 (signed)",
+   "description": "Converts float lanes to signed 32-bit integers; values out of range and NaN give whatever the processor's instruction gives. The upper two lanes are zero.",
+   "operation": "r[i] = i32(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.relaxed_trunc_f64x2_u_zero": {
+   "summary": "Relaxed truncate f64x2 to i32x4 (unsigned)",
+   "description": "Converts float lanes to unsigned 32-bit integers; values out of range and NaN give whatever the processor's instruction gives. The upper two lanes are zero.",
+   "operation": "r[i] = u32(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.replace_lane": {
+   "summary": "Replace a lane (i32x4)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "i32x4.shl": {
+   "summary": "Shift left (i32x4)",
+   "description": "Shifts each of the four 32-bit integer lanes by the same scalar amount, taken modulo 32, filling with zeros.",
+   "operation": "r[i] = a[i] << n",
+   "category": "simd-shift"
+  },
+  "i32x4.shr_s": {
+   "summary": "Arithmetic shift right (i32x4)",
+   "description": "Shifts each of the four 32-bit integer lanes by the same scalar amount, taken modulo 32, copying the sign bit.",
+   "operation": "r[i] = a[i] >> n",
+   "category": "simd-shift"
+  },
+  "i32x4.shr_u": {
+   "summary": "Logical shift right (i32x4)",
+   "description": "Shifts each of the four 32-bit integer lanes by the same scalar amount, taken modulo 32, filling with zeros.",
+   "operation": "r[i] = a[i] >>> n",
+   "category": "simd-shift"
+  },
+  "i32x4.splat": {
+   "summary": "Splat to i32x4",
+   "description": "Copies a scalar into all four 32-bit integer lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "i32x4.sub": {
+   "summary": "Subtract (i32x4)",
+   "description": "Works on a 128-bit vector of four 32-bit integer lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "i32x4.trunc_sat_f32x4_s": {
+   "summary": "Saturating truncate f32x4 to i32x4 (signed)",
+   "description": "Converts float lanes to signed 32-bit integers, clamping values out of range and turning NaN into 0.",
+   "operation": "r[i] = i32_sat(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.trunc_sat_f32x4_u": {
+   "summary": "Saturating truncate f32x4 to i32x4 (unsigned)",
+   "description": "Converts float lanes to unsigned 32-bit integers, clamping values out of range and turning NaN into 0.",
+   "operation": "r[i] = u32_sat(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.trunc_sat_f64x2_s_zero": {
+   "summary": "Saturating truncate f64x2 to i32x4 (signed)",
+   "description": "Converts float lanes to signed 32-bit integers, clamping values out of range and turning NaN into 0; the two upper lanes of the result are zero.",
+   "operation": "r[i] = i32_sat(a[i])",
+   "category": "simd-convert"
+  },
+  "i32x4.trunc_sat_f64x2_u_zero": {
+   "summary": "Saturating truncate f64x2 to i32x4 (unsigned)",
+   "description": "Converts float lanes to unsigned 32-bit integers, clamping values out of range and turning NaN into 0; the two upper lanes of the result are zero.",
+   "operation": "r[i] = u32_sat(a[i])",
+   "category": "simd-convert"
+  },
+  "i64.add": {
+   "summary": "Add (i64)",
+   "description": "Pops two 64-bit integers and pushes their sum, wrapped modulo 2^64: an overflow is neither trapped nor reported. The same instruction serves signed and unsigned numbers.",
+   "operation": "a + b",
+   "category": "arithmetic"
+  },
+  "i64.add128": {
+   "summary": "Add 128-bit integers",
+   "description": "Adds two 128-bit integers, each given as two i64 halves (low first), and pushes the two halves of the sum, wrapped modulo 2^128.",
+   "operation": "(lo, hi) = (a_lo, a_hi) + (b_lo, b_hi)",
+   "category": "arithmetic"
+  },
+  "i64.and": {
+   "summary": "Bitwise AND (i64)",
+   "description": "Pushes the bits set in both a and b.",
+   "operation": "a & b",
+   "category": "logic"
+  },
+  "i64.atomic.load": {
+   "summary": "Atomic load 64 bits",
+   "description": "Reads 64 bits of shared memory atomically and in sequentially consistent order. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u64[addr])",
+   "category": "atomic"
+  },
+  "i64.atomic.load16_u": {
+   "summary": "Atomic load 16 bits to i64",
+   "description": "Reads 16 bits of shared memory atomically and in sequentially consistent order, zero-extended to i64. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u16[addr])",
+   "category": "atomic"
+  },
+  "i64.atomic.load32_u": {
+   "summary": "Atomic load 32 bits to i64",
+   "description": "Reads 32 bits of shared memory atomically and in sequentially consistent order, zero-extended to i64. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u32[addr])",
+   "category": "atomic"
+  },
+  "i64.atomic.load8_u": {
+   "summary": "Atomic load 8 bits to i64",
+   "description": "Reads 8 bits of shared memory atomically and in sequentially consistent order, zero-extended to i64. Traps unless the address is aligned to the size.",
+   "operation": "atomic_load(u8[addr])",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.add": {
+   "summary": "Atomic add (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, adds the operand to it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.and": {
+   "summary": "Atomic AND (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.cmpxchg": {
+   "summary": "Atomic compare and exchange (64 bits)",
+   "description": "Atomically compares the 64-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way.",
+   "operation": "old = cas(u64[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.or": {
+   "summary": "Atomic OR (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.sub": {
+   "summary": "Atomic subtract (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.xchg": {
+   "summary": "Atomic exchange (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw.xor": {
+   "summary": "Atomic XOR (64 bits)",
+   "description": "Atomically reads the 64-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.add_u": {
+   "summary": "Atomic add (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, adds the operand to it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.and_u": {
+   "summary": "Atomic AND (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.cmpxchg_u": {
+   "summary": "Atomic compare and exchange (16 bits, i64)",
+   "description": "Atomically compares the 16-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way, zero-extended to i64.",
+   "operation": "old = cas(u16[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.or_u": {
+   "summary": "Atomic OR (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.sub_u": {
+   "summary": "Atomic subtract (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.xchg_u": {
+   "summary": "Atomic exchange (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw16.xor_u": {
+   "summary": "Atomic XOR (16 bits, i64)",
+   "description": "Atomically reads the 16-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.add_u": {
+   "summary": "Atomic add (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, adds the operand to it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.and_u": {
+   "summary": "Atomic AND (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.cmpxchg_u": {
+   "summary": "Atomic compare and exchange (32 bits, i64)",
+   "description": "Atomically compares the 32-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way, zero-extended to i64.",
+   "operation": "old = cas(u32[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.or_u": {
+   "summary": "Atomic OR (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.sub_u": {
+   "summary": "Atomic subtract (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.xchg_u": {
+   "summary": "Atomic exchange (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw32.xor_u": {
+   "summary": "Atomic XOR (32 bits, i64)",
+   "description": "Atomically reads the 32-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.add_u": {
+   "summary": "Atomic add (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, adds the operand to it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_add(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.and_u": {
+   "summary": "Atomic AND (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, ANDs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_and(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.cmpxchg_u": {
+   "summary": "Atomic compare and exchange (8 bits, i64)",
+   "description": "Atomically compares the 8-bit value at an address with an expected one and, when they are equal, writes the new value; pushes the old value either way, zero-extended to i64.",
+   "operation": "old = cas(u8[addr], expected, new)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.or_u": {
+   "summary": "Atomic OR (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, ORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_or(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.sub_u": {
+   "summary": "Atomic subtract (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, subtracts the operand from it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_sub(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.xchg_u": {
+   "summary": "Atomic exchange (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, replaces it with the operand, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_swap(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.rmw8.xor_u": {
+   "summary": "Atomic XOR (8 bits, i64)",
+   "description": "Atomically reads the 8-bit value at an address, XORs the operand into it, writes the result back, and pushes the old value, zero-extended to i64. Traps unless the address is aligned.",
+   "operation": "old = atomic_xor(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.store": {
+   "summary": "Atomic store 64 bits",
+   "description": "Writes a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u64[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.store16": {
+   "summary": "Atomic store 16 bits of i64",
+   "description": "Writes the low 16 bits of a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u16[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.store32": {
+   "summary": "Atomic store 32 bits of i64",
+   "description": "Writes the low 32 bits of a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u32[addr], a)",
+   "category": "atomic"
+  },
+  "i64.atomic.store8": {
+   "summary": "Atomic store 8 bits of i64",
+   "description": "Writes the low 8 bits of a value to shared memory atomically, in sequentially consistent order. Traps unless the address is aligned.",
+   "operation": "atomic_store(u8[addr], a)",
+   "category": "atomic"
+  },
+  "i64.clz": {
+   "summary": "Count leading zeros (i64)",
+   "description": "Pushes how many zero bits a has above its highest set bit: 64 for zero.",
+   "operation": "clz(a)",
+   "category": "bitfield"
+  },
+  "i64.const": {
+   "summary": "64-bit integer constant",
+   "description": "Pushes the 64-bit integer written in the instruction (as a signed LEB128). A constant that is the address of data is how code points at strings and variables in memory.",
+   "operation": "the constant",
+   "category": "move"
+  },
+  "i64.ctz": {
+   "summary": "Count trailing zeros (i64)",
+   "description": "Pushes how many zero bits a has below its lowest set bit: 64 for zero.",
+   "operation": "ctz(a)",
+   "category": "bitfield"
+  },
+  "i64.div_s": {
+   "summary": "Signed divide (i64)",
+   "description": "Divides a by b as signed numbers, rounding toward zero. Stops the program (traps) when b is zero, and when the most negative value is divided by −1, whose quotient does not fit.",
+   "operation": "a / b (signed)",
+   "category": "arithmetic"
+  },
+  "i64.div_u": {
+   "summary": "Unsigned divide (i64)",
+   "description": "Divides a by b as unsigned numbers, rounding down. Traps when b is zero.",
+   "operation": "udiv(a, b)",
+   "category": "arithmetic"
+  },
+  "i64.eq": {
+   "summary": "Equal (i64)",
+   "description": "Pushes 1 when the two 64-bit integers equal, 0 otherwise.",
+   "operation": "a == b",
+   "category": "compare"
+  },
+  "i64.eqz": {
+   "summary": "Test for zero (i64)",
+   "description": "Pushes 1 when a is zero and 0 otherwise — the logical NOT of a value used as a condition.",
+   "operation": "a == 0",
+   "category": "compare"
+  },
+  "i64.extend16_s": {
+   "summary": "Sign-extend 16 bits (i64)",
+   "description": "Takes the low 16 bits of a as a signed number and widens it to 64 bits, copying bit 15 into all the bits above.",
+   "operation": "sext16(a)",
+   "category": "bitfield"
+  },
+  "i64.extend32_s": {
+   "summary": "Sign-extend 32 bits (i64)",
+   "description": "Takes the low 32 bits of a as a signed number and widens it to 64 bits, copying bit 31 into all the bits above.",
+   "operation": "sext32(a)",
+   "category": "bitfield"
+  },
+  "i64.extend8_s": {
+   "summary": "Sign-extend 8 bits (i64)",
+   "description": "Takes the low 8 bits of a as a signed number and widens it to 64 bits, copying bit 7 into all the bits above.",
+   "operation": "sext8(a)",
+   "category": "bitfield"
+  },
+  "i64.extend_i32_s": {
+   "summary": "Sign-extend i32 to i64",
+   "description": "Widens a 32-bit integer to 64 bits as a signed number: the sign bit fills the upper half.",
+   "operation": "i64(a)",
+   "category": "bitfield"
+  },
+  "i64.extend_i32_u": {
+   "summary": "Zero-extend i32 to i64",
+   "description": "Widens a 32-bit integer to 64 bits as an unsigned number: the upper half is zero.",
+   "operation": "u64(a)",
+   "category": "bitfield"
+  },
+  "i64.ge_s": {
+   "summary": "Signed greater or equal (i64)",
+   "description": "Pushes 1 when a ≥ b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >= b",
+   "category": "compare"
+  },
+  "i64.ge_u": {
+   "summary": "Unsigned greater or equal (i64)",
+   "description": "Pushes 1 when a ≥ b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >=u b",
+   "category": "compare"
+  },
+  "i64.gt_s": {
+   "summary": "Signed greater than (i64)",
+   "description": "Pushes 1 when a > b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a > b",
+   "category": "compare"
+  },
+  "i64.gt_u": {
+   "summary": "Unsigned greater than (i64)",
+   "description": "Pushes 1 when a > b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a >u b",
+   "category": "compare"
+  },
+  "i64.le_s": {
+   "summary": "Signed less or equal (i64)",
+   "description": "Pushes 1 when a ≤ b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <= b",
+   "category": "compare"
+  },
+  "i64.le_u": {
+   "summary": "Unsigned less or equal (i64)",
+   "description": "Pushes 1 when a ≤ b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <=u b",
+   "category": "compare"
+  },
+  "i64.load": {
+   "summary": "Load i64",
+   "description": "Reads 8 bytes of linear memory, little-endian. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i64[addr + offset]",
+   "category": "load"
+  },
+  "i64.load16_s": {
+   "summary": "Load 16 bits sign-extended to i64",
+   "description": "Reads 2 bytes of linear memory, little-endian, then widens the value to 64 bits as a signed number. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i16[addr + offset]",
+   "category": "load"
+  },
+  "i64.load16_u": {
+   "summary": "Load 16 bits zero-extended to i64",
+   "description": "Reads 2 bytes of linear memory, little-endian, then widens the value to 64 bits with zeros. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u16[addr + offset]",
+   "category": "load"
+  },
+  "i64.load32_s": {
+   "summary": "Load 32 bits sign-extended to i64",
+   "description": "Reads 4 bytes of linear memory, little-endian, then widens the value to 64 bits as a signed number. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i32[addr + offset]",
+   "category": "load"
+  },
+  "i64.load32_u": {
+   "summary": "Load 32 bits zero-extended to i64",
+   "description": "Reads 4 bytes of linear memory, little-endian, then widens the value to 64 bits with zeros. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u32[addr + offset]",
+   "category": "load"
+  },
+  "i64.load8_s": {
+   "summary": "Load 8 bits sign-extended to i64",
+   "description": "Reads 1 byte of linear memory, little-endian, then widens the value to 64 bits as a signed number. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i8[addr + offset]",
+   "category": "load"
+  },
+  "i64.load8_u": {
+   "summary": "Load 8 bits zero-extended to i64",
+   "description": "Reads 1 byte of linear memory, little-endian, then widens the value to 64 bits with zeros. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u8[addr + offset]",
+   "category": "load"
+  },
+  "i64.lt_s": {
+   "summary": "Signed less than (i64)",
+   "description": "Pushes 1 when a < b as signed numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a < b",
+   "category": "compare"
+  },
+  "i64.lt_u": {
+   "summary": "Unsigned less than (i64)",
+   "description": "Pushes 1 when a < b as unsigned numbers (a is the value below, b the one on top), 0 otherwise.",
+   "operation": "a <u b",
+   "category": "compare"
+  },
+  "i64.mul": {
+   "summary": "Multiply (i64)",
+   "description": "Pops two 64-bit integers and pushes the low 64 bits of their product — the same bits whether the numbers are signed or unsigned.",
+   "operation": "a * b",
+   "category": "arithmetic"
+  },
+  "i64.mul_wide_s": {
+   "summary": "Signed 64×64→128 multiply",
+   "description": "Multiplies two i64 as signed numbers and pushes the full 128-bit product as its low and high halves.",
+   "operation": "(lo, hi) = a * b (signed)",
+   "category": "arithmetic"
+  },
+  "i64.mul_wide_u": {
+   "summary": "Unsigned 64×64→128 multiply",
+   "description": "Multiplies two i64 as unsigned numbers and pushes the full 128-bit product as its low and high halves.",
+   "operation": "(lo, hi) = a * b (unsigned)",
+   "category": "arithmetic"
+  },
+  "i64.ne": {
+   "summary": "Not equal (i64)",
+   "description": "Pushes 1 when the two 64-bit integers differ, 0 otherwise.",
+   "operation": "a != b",
+   "category": "compare"
+  },
+  "i64.or": {
+   "summary": "Bitwise OR (i64)",
+   "description": "Pushes the bits set in a, in b, or in both.",
+   "operation": "a | b",
+   "category": "logic"
+  },
+  "i64.popcnt": {
+   "summary": "Count set bits (i64)",
+   "description": "Pushes the number of one bits in a.",
+   "operation": "popcount(a)",
+   "category": "bitfield"
+  },
+  "i64.reinterpret_f64": {
+   "summary": "Reinterpret f64 bits as i64",
+   "description": "Pushes the 64 bits of a double unchanged, as an integer.",
+   "operation": "bitcast(a)",
+   "category": "fp-move"
+  },
+  "i64.rem_s": {
+   "summary": "Signed remainder (i64)",
+   "description": "The remainder of the signed division a / b; it has the sign of a. Traps when b is zero; the most negative value % −1 is simply 0.",
+   "operation": "a % b (signed)",
+   "category": "arithmetic"
+  },
+  "i64.rem_u": {
+   "summary": "Unsigned remainder (i64)",
+   "description": "The remainder of the unsigned division a / b. Traps when b is zero.",
+   "operation": "urem(a, b)",
+   "category": "arithmetic"
+  },
+  "i64.rotl": {
+   "summary": "Rotate left (i64)",
+   "description": "Rotates the bits of a left by b places: bits that leave on the left come back on the right.",
+   "operation": "rotl(a, b)",
+   "category": "shift"
+  },
+  "i64.rotr": {
+   "summary": "Rotate right (i64)",
+   "description": "Rotates the bits of a right by b places: bits that leave on the right come back on the left.",
+   "operation": "ror(a, b)",
+   "category": "shift"
+  },
+  "i64.shl": {
+   "summary": "Shift left (i64)",
+   "description": "Shifts a left by b bits, filling with zeros. Only the low 6 bits of b count: the shift is taken modulo 64.",
+   "operation": "a << b",
+   "category": "shift"
+  },
+  "i64.shr_s": {
+   "summary": "Arithmetic shift right (i64)",
+   "description": "Shifts a right by b bits (modulo 64), copying the sign bit into the vacated bits: a signed division by a power of two that rounds down.",
+   "operation": "a >> b",
+   "category": "shift"
+  },
+  "i64.shr_u": {
+   "summary": "Logical shift right (i64)",
+   "description": "Shifts a right by b bits (modulo 64), filling with zeros.",
+   "operation": "a >>> b",
+   "category": "shift"
+  },
+  "i64.store": {
+   "summary": "Store i64",
+   "description": "Pops a value and an address and writes the value (8 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "i64[addr + offset] = value",
+   "category": "store"
+  },
+  "i64.store16": {
+   "summary": "Store the low 16 bits of i64",
+   "description": "Pops a value and an address and writes the low 16 bits of the value (2 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u16[addr + offset] = value",
+   "category": "store"
+  },
+  "i64.store32": {
+   "summary": "Store the low 32 bits of i64",
+   "description": "Pops a value and an address and writes the low 32 bits of the value (4 bytes, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u32[addr + offset] = value",
+   "category": "store"
+  },
+  "i64.store8": {
+   "summary": "Store the low 8 bits of i64",
+   "description": "Pops a value and an address and writes the low 8 bits of the value (1 byte, little-endian) to linear memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "u8[addr + offset] = value",
+   "category": "store"
+  },
+  "i64.sub": {
+   "summary": "Subtract (i64)",
+   "description": "Pops two 64-bit integers and pushes a − b (a is the value below, b the one on top), wrapped modulo 2^64.",
+   "operation": "a - b",
+   "category": "arithmetic"
+  },
+  "i64.sub128": {
+   "summary": "Subtract 128-bit integers",
+   "description": "Subtracts two 128-bit integers given as pairs of i64 halves and pushes the low and high halves of the difference.",
+   "operation": "(lo, hi) = (a_lo, a_hi) - (b_lo, b_hi)",
+   "category": "arithmetic"
+  },
+  "i64.trunc_f32_s": {
+   "summary": "Truncate f32 to signed i64",
+   "description": "Converts a float to a signed 64-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "i64(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_f32_u": {
+   "summary": "Truncate f32 to unsigned i64",
+   "description": "Converts a float to an unsigned 64-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "u64(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_f64_s": {
+   "summary": "Truncate f64 to signed i64",
+   "description": "Converts a float to a signed 64-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "i64(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_f64_u": {
+   "summary": "Truncate f64 to unsigned i64",
+   "description": "Converts a float to an unsigned 64-bit integer, dropping the fraction. Traps when the value is NaN or does not fit.",
+   "operation": "u64(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_sat_f32_s": {
+   "summary": "Saturating truncate f32 to signed i64",
+   "description": "Converts a float to a signed 64-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "i64_sat(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_sat_f32_u": {
+   "summary": "Saturating truncate f32 to unsigned i64",
+   "description": "Converts a float to an unsigned 64-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "u64_sat(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_sat_f64_s": {
+   "summary": "Saturating truncate f64 to signed i64",
+   "description": "Converts a float to a signed 64-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "i64_sat(a)",
+   "category": "fp-convert"
+  },
+  "i64.trunc_sat_f64_u": {
+   "summary": "Saturating truncate f64 to unsigned i64",
+   "description": "Converts a float to an unsigned 64-bit integer, dropping the fraction, without ever trapping: a value too large becomes the largest integer, too small the smallest, NaN becomes 0.",
+   "operation": "u64_sat(a)",
+   "category": "fp-convert"
+  },
+  "i64.xor": {
+   "summary": "Bitwise exclusive OR (i64)",
+   "description": "Pushes the bits set in exactly one of a and b. With −1 as b it inverts every bit.",
+   "operation": "a ^ b",
+   "category": "logic"
+  },
+  "i64x2.abs": {
+   "summary": "Absolute value (i64x2)",
+   "description": "Takes the absolute value of each of the two 64-bit integer lanes; the most negative value stays as it is.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "i64x2.add": {
+   "summary": "Add (i64x2)",
+   "description": "Works on a 128-bit vector of two 64-bit integer lanes: adds the lanes of two vectors, wrapping around.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "i64x2.all_true": {
+   "summary": "All lanes true (i64x2)",
+   "description": "Pushes 1 when every one of the two 64-bit integer lanes is non-zero, 0 otherwise.",
+   "operation": "all a[i] != 0",
+   "category": "simd-reduce"
+  },
+  "i64x2.bitmask": {
+   "summary": "Bitmask of signs (i64x2)",
+   "description": "Collects the top (sign) bit of each of the two 64-bit integer lanes into the low bits of an i32.",
+   "operation": "bit i = sign of a[i]",
+   "category": "simd-reduce"
+  },
+  "i64x2.eq": {
+   "summary": "Equal (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.extend_high_i32x4_s": {
+   "summary": "Extend the high half of i32x4 (signed)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i64x2.extend_high_i32x4_u": {
+   "summary": "Extend the high half of i32x4 (unsigned)",
+   "description": "Widens the high half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i + n])",
+   "category": "simd-convert"
+  },
+  "i64x2.extend_low_i32x4_s": {
+   "summary": "Extend the low half of i32x4 (signed)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, sign-extending each.",
+   "operation": "r[i] = sext(a[i])",
+   "category": "simd-convert"
+  },
+  "i64x2.extend_low_i32x4_u": {
+   "summary": "Extend the low half of i32x4 (unsigned)",
+   "description": "Widens the low half of the lanes of a vector to lanes twice as wide, zero-extending each.",
+   "operation": "r[i] = zext(a[i])",
+   "category": "simd-convert"
+  },
+  "i64x2.extmul_high_i32x4_s": {
+   "summary": "Extending multiply, high half (signed)",
+   "description": "Multiplies the high halves of the lanes of two i32x4 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i64x2.extmul_high_i32x4_u": {
+   "summary": "Extending multiply, high half (unsigned)",
+   "description": "Multiplies the high halves of the lanes of two i32x4 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i64x2.extmul_low_i32x4_s": {
+   "summary": "Extending multiply, low half (signed)",
+   "description": "Multiplies the low halves of the lanes of two i32x4 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i64x2.extmul_low_i32x4_u": {
+   "summary": "Extending multiply, low half (unsigned)",
+   "description": "Multiplies the low halves of the lanes of two i32x4 vectors into full-width products, lanes twice as wide.",
+   "operation": "r[i] = ext(a[i]) * ext(b[i])",
+   "category": "simd-arith"
+  },
+  "i64x2.extract_lane": {
+   "summary": "Extract a lane (i64x2)",
+   "description": "Pushes one lane of a vector, chosen by the immediate.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i64x2.ge_s": {
+   "summary": "Signed greater or equal (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.gt_s": {
+   "summary": "Signed greater than (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.le_s": {
+   "summary": "Signed less or equal (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.lt_s": {
+   "summary": "Signed less than (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.mul": {
+   "summary": "Multiply (i64x2)",
+   "description": "Works on a 128-bit vector of two 64-bit integer lanes: multiplies the lanes of two vectors, keeping the low bits.",
+   "operation": "a[i] * b[i]",
+   "category": "simd-arith"
+  },
+  "i64x2.ne": {
+   "summary": "Not equal (i64x2)",
+   "description": "Compares the two 64-bit integer lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i64x2.neg": {
+   "summary": "Negate (i64x2)",
+   "description": "Negates each of the two 64-bit integer lanes, wrapping around.",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "i64x2.relaxed_laneselect": {
+   "summary": "Relaxed lane select (i64x2)",
+   "description": "Picks each lane from a or b by a mask whose lanes are all ones or all zeros; for other masks the result depends on the processor.",
+   "operation": "r[i] = c[i] ? a[i] : b[i]",
+   "category": "simd-logic"
+  },
+  "i64x2.replace_lane": {
+   "summary": "Replace a lane (i64x2)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "i64x2.shl": {
+   "summary": "Shift left (i64x2)",
+   "description": "Shifts each of the two 64-bit integer lanes by the same scalar amount, taken modulo 64, filling with zeros.",
+   "operation": "r[i] = a[i] << n",
+   "category": "simd-shift"
+  },
+  "i64x2.shr_s": {
+   "summary": "Arithmetic shift right (i64x2)",
+   "description": "Shifts each of the two 64-bit integer lanes by the same scalar amount, taken modulo 64, copying the sign bit.",
+   "operation": "r[i] = a[i] >> n",
+   "category": "simd-shift"
+  },
+  "i64x2.shr_u": {
+   "summary": "Logical shift right (i64x2)",
+   "description": "Shifts each of the two 64-bit integer lanes by the same scalar amount, taken modulo 64, filling with zeros.",
+   "operation": "r[i] = a[i] >>> n",
+   "category": "simd-shift"
+  },
+  "i64x2.splat": {
+   "summary": "Splat to i64x2",
+   "description": "Copies a scalar into all two 64-bit integer lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "i64x2.sub": {
+   "summary": "Subtract (i64x2)",
+   "description": "Works on a 128-bit vector of two 64-bit integer lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "i8x16.abs": {
+   "summary": "Absolute value (i8x16)",
+   "description": "Takes the absolute value of each of the sixteen 8-bit integer lanes; the most negative value stays as it is.",
+   "operation": "r[i] = |a[i]|",
+   "category": "simd-arith"
+  },
+  "i8x16.add": {
+   "summary": "Add (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: adds the lanes of two vectors, wrapping around.",
+   "operation": "a[i] + b[i]",
+   "category": "simd-arith"
+  },
+  "i8x16.add_sat_s": {
+   "summary": "Signed saturating add (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: adds lanes as signed numbers, clamping the result to the lane's range instead of wrapping.",
+   "operation": "sat(a[i] + b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.add_sat_u": {
+   "summary": "Unsigned saturating add (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: adds lanes as unsigned numbers, clamping at the largest value.",
+   "operation": "usat(a[i] + b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.all_true": {
+   "summary": "All lanes true (i8x16)",
+   "description": "Pushes 1 when every one of the sixteen 8-bit integer lanes is non-zero, 0 otherwise.",
+   "operation": "all a[i] != 0",
+   "category": "simd-reduce"
+  },
+  "i8x16.avgr_u": {
+   "summary": "Unsigned rounding average (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: averages lanes as unsigned numbers, rounding up.",
+   "operation": "(a[i] + b[i] + 1) >> 1",
+   "category": "simd-arith"
+  },
+  "i8x16.bitmask": {
+   "summary": "Bitmask of signs (i8x16)",
+   "description": "Collects the top (sign) bit of each of the sixteen 8-bit integer lanes into the low bits of an i32.",
+   "operation": "bit i = sign of a[i]",
+   "category": "simd-reduce"
+  },
+  "i8x16.eq": {
+   "summary": "Equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors and sets each lane of the result to all ones where a == b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] == b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.extract_lane_s": {
+   "summary": "Extract a lane (i8x16, signed)",
+   "description": "Pushes one lane of a vector, chosen by the immediate, sign-extended to i32.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i8x16.extract_lane_u": {
+   "summary": "Extract a lane (i8x16, unsigned)",
+   "description": "Pushes one lane of a vector, chosen by the immediate, zero-extended to i32.",
+   "operation": "a[lane]",
+   "category": "simd-move"
+  },
+  "i8x16.ge_s": {
+   "summary": "Signed greater or equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.ge_u": {
+   "summary": "Unsigned greater or equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a >= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] >= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.gt_s": {
+   "summary": "Signed greater than (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.gt_u": {
+   "summary": "Unsigned greater than (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a > b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] > b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.le_s": {
+   "summary": "Signed less or equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.le_u": {
+   "summary": "Unsigned less or equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a <= b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] <= b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.lt_s": {
+   "summary": "Signed less than (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as signed numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.lt_u": {
+   "summary": "Unsigned less than (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors as unsigned numbers and sets each lane of the result to all ones where a < b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] < b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.max_s": {
+   "summary": "Signed maximum (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: takes the larger of each pair of lanes as signed numbers.",
+   "operation": "max(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.max_u": {
+   "summary": "Unsigned maximum (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: takes the larger of each pair of lanes as unsigned numbers.",
+   "operation": "umax(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.min_s": {
+   "summary": "Signed minimum (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: takes the smaller of each pair of lanes as signed numbers.",
+   "operation": "min(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.min_u": {
+   "summary": "Unsigned minimum (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: takes the smaller of each pair of lanes as unsigned numbers.",
+   "operation": "umin(a[i], b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.narrow_i16x8_s": {
+   "summary": "Narrow i16x8 to i8x16 (signed)",
+   "description": "Packs the lanes of two vectors into lanes half as wide, clamping each signed value to the signed range of the narrow lane.",
+   "operation": "r = sat(a) ++ sat(b)",
+   "category": "simd-convert"
+  },
+  "i8x16.narrow_i16x8_u": {
+   "summary": "Narrow i16x8 to i8x16 (unsigned)",
+   "description": "Packs the lanes of two vectors into lanes half as wide, clamping each signed value to the unsigned range of the narrow lane.",
+   "operation": "r = sat(a) ++ sat(b)",
+   "category": "simd-convert"
+  },
+  "i8x16.ne": {
+   "summary": "Not equal (i8x16)",
+   "description": "Compares the sixteen 8-bit integer lanes of two vectors and sets each lane of the result to all ones where a != b holds and to zero where it does not: a mask for bitselect.",
+   "operation": "r[i] = a[i] != b[i] ? -1 : 0",
+   "category": "simd-compare"
+  },
+  "i8x16.neg": {
+   "summary": "Negate (i8x16)",
+   "description": "Negates each of the sixteen 8-bit integer lanes, wrapping around.",
+   "operation": "r[i] = -a[i]",
+   "category": "simd-arith"
+  },
+  "i8x16.popcnt": {
+   "summary": "Count set bits (i8x16)",
+   "description": "Counts the one bits of each byte of a vector.",
+   "operation": "r[i] = popcount(a[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.relaxed_laneselect": {
+   "summary": "Relaxed lane select (i8x16)",
+   "description": "Picks each lane from a or b by a mask whose lanes are all ones or all zeros; for other masks the result depends on the processor.",
+   "operation": "r[i] = c[i] ? a[i] : b[i]",
+   "category": "simd-logic"
+  },
+  "i8x16.relaxed_swizzle": {
+   "summary": "Relaxed swizzle",
+   "description": "Like i8x16.swizzle, but what an index past 15 gives depends on the processor — whatever its native instruction does.",
+   "operation": "r[i] = a[b[i]]",
+   "category": "simd-permute"
+  },
+  "i8x16.replace_lane": {
+   "summary": "Replace a lane (i8x16)",
+   "description": "Pushes a copy of a vector with one lane, chosen by the immediate, replaced by a scalar.",
+   "operation": "a[lane] = x",
+   "category": "simd-move"
+  },
+  "i8x16.shl": {
+   "summary": "Shift left (i8x16)",
+   "description": "Shifts each of the sixteen 8-bit integer lanes by the same scalar amount, taken modulo 8, filling with zeros.",
+   "operation": "r[i] = a[i] << n",
+   "category": "simd-shift"
+  },
+  "i8x16.shr_s": {
+   "summary": "Arithmetic shift right (i8x16)",
+   "description": "Shifts each of the sixteen 8-bit integer lanes by the same scalar amount, taken modulo 8, copying the sign bit.",
+   "operation": "r[i] = a[i] >> n",
+   "category": "simd-shift"
+  },
+  "i8x16.shr_u": {
+   "summary": "Logical shift right (i8x16)",
+   "description": "Shifts each of the sixteen 8-bit integer lanes by the same scalar amount, taken modulo 8, filling with zeros.",
+   "operation": "r[i] = a[i] >>> n",
+   "category": "simd-shift"
+  },
+  "i8x16.shuffle": {
+   "summary": "Shuffle bytes",
+   "description": "Builds a vector from the 32 bytes of two vectors by sixteen indices written in the instruction.",
+   "operation": "r[i] = (a ++ b)[lane[i]]",
+   "category": "simd-permute"
+  },
+  "i8x16.splat": {
+   "summary": "Splat to i8x16",
+   "description": "Copies a scalar into all sixteen 8-bit integer lanes of a new vector.",
+   "operation": "r[i] = a",
+   "category": "simd-move"
+  },
+  "i8x16.sub": {
+   "summary": "Subtract (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: subtracts the lanes of b from those of a.",
+   "operation": "a[i] - b[i]",
+   "category": "simd-arith"
+  },
+  "i8x16.sub_sat_s": {
+   "summary": "Signed saturating subtract (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: subtracts lanes as signed numbers, clamping to the lane's range.",
+   "operation": "sat(a[i] - b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.sub_sat_u": {
+   "summary": "Unsigned saturating subtract (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: subtracts lanes as unsigned numbers, clamping at zero.",
+   "operation": "usat(a[i] - b[i])",
+   "category": "simd-arith"
+  },
+  "i8x16.swizzle": {
+   "summary": "Swizzle bytes (i8x16)",
+   "description": "Works on a 128-bit vector of sixteen 8-bit integer lanes: picks bytes of a by the indices in b; an index past 15 gives zero.",
+   "operation": "r[i] = i < 16 ? a[b[i]] : 0",
+   "category": "simd-permute"
+  },
+  "if": {
+   "summary": "If",
+   "description": "Pops a condition: when it is not zero the instructions up to else (or end) run, otherwise those after else. Like a block, a branch to it goes past its end.",
+   "operation": "if c { … } else { … }",
+   "category": "structure"
+  },
+  "local.get": {
+   "summary": "Read a local",
+   "description": "Pushes the value of a local variable or parameter of the function — the registers of a stack machine. The most common instruction in most modules.",
+   "operation": "push l",
+   "category": "variable"
+  },
+  "local.set": {
+   "summary": "Write a local",
+   "description": "Pops a value into a local variable.",
+   "operation": "l = a",
+   "category": "variable"
+  },
+  "local.tee": {
+   "summary": "Write a local, keep the value",
+   "description": "Stores the value on top of the stack into a local and leaves it on the stack: an assignment used as an expression.",
+   "operation": "(l = a)",
+   "category": "variable"
+  },
+  "loop": {
+   "summary": "Loop",
+   "description": "Opens a block whose label is its start: a branch to it jumps back to the top. Reaching its end does not repeat it — a loop only goes round when a br or br_if sends it back.",
+   "operation": "loop … end",
+   "category": "structure"
+  },
+  "memory.atomic.notify": {
+   "summary": "Wake waiting threads",
+   "description": "Wakes up to n threads waiting on an address and pushes how many woke.",
+   "operation": "notify(addr, n)",
+   "category": "atomic"
+  },
+  "memory.atomic.wait32": {
+   "summary": "Wait on a 32-bit value",
+   "description": "When the i32 at an address equals the expected value, suspends the thread until notified or the timeout (ns, negative for none) passes. Pushes 0 when woken, 1 when the value differed, 2 on timeout.",
+   "operation": "wait32(addr, expected, timeout)",
+   "category": "atomic"
+  },
+  "memory.atomic.wait64": {
+   "summary": "Wait on a 64-bit value",
+   "description": "Like wait32, for the i64 at an address.",
+   "operation": "wait64(addr, expected, timeout)",
+   "category": "atomic"
+  },
+  "memory.copy": {
+   "summary": "Copy memory",
+   "description": "Copies n bytes from src to dest, correctly even when the ranges overlap (like memmove). Traps when either range runs outside memory.",
+   "operation": "memmove(dest, src, n)",
+   "category": "memory-copy"
+  },
+  "memory.fill": {
+   "summary": "Fill memory",
+   "description": "Sets n bytes starting at dest to the low byte of value (like memset). Traps when the range runs outside memory.",
+   "operation": "memset(dest, value, n)",
+   "category": "memory-copy"
+  },
+  "memory.grow": {
+   "summary": "Grow memory",
+   "description": "Adds n pages to a memory and pushes its previous size in pages, or −1 when it cannot grow (the maximum, or the engine refuses). New pages are zero.",
+   "operation": "old = pages; pages += n",
+   "category": "memory"
+  },
+  "memory.init": {
+   "summary": "Copy from a data segment",
+   "description": "Copies n bytes of a passive data segment, from an offset in it, into memory at dest. A module with shared memory places its data this way from the start function.",
+   "operation": "memcpy(dest, data + offset, n)",
+   "category": "memory-copy"
+  },
+  "memory.size": {
+   "summary": "Memory size",
+   "description": "Pushes the current size of a memory in pages (64 KiB each, unless the memory declares another page size).",
+   "operation": "pages",
+   "category": "memory"
+  },
+  "nop": {
+   "summary": "No operation",
+   "description": "Does nothing. Rare in compiled code.",
+   "operation": "nothing",
+   "category": "hint"
+  },
+  "ref.as_non_null": {
+   "summary": "Assert not null",
+   "description": "Leaves a reference on the stack with a non-null type; traps when it is null.",
+   "operation": "r!",
+   "category": "reference"
+  },
+  "ref.cast": {
+   "summary": "Cast a reference",
+   "description": "Checks that a reference is of the given type and leaves it typed so; traps when it is not.",
+   "operation": "r as T",
+   "category": "reference"
+  },
+  "ref.eq": {
+   "summary": "Reference equality",
+   "description": "Pops two references (to structs, arrays or i31 values) and pushes 1 when they are the same object, 0 otherwise.",
+   "operation": "a == b",
+   "category": "reference"
+  },
+  "ref.func": {
+   "summary": "Function reference",
+   "description": "Pushes a reference to a function of the module — its address, in the sense of WebAssembly.",
+   "operation": "&f",
+   "category": "reference"
+  },
+  "ref.i31": {
+   "summary": "Box a 31-bit integer",
+   "description": "Makes an i31ref, an unboxed small integer that lives inside a reference, from the low 31 bits of an i32.",
+   "operation": "i31(a)",
+   "category": "reference"
+  },
+  "ref.is_null": {
+   "summary": "Test for null",
+   "description": "Pops a reference and pushes 1 when it is null, 0 otherwise.",
+   "operation": "r == null",
+   "category": "reference"
+  },
+  "ref.null": {
+   "summary": "Null reference",
+   "description": "Pushes the null reference of a heap type.",
+   "operation": "null",
+   "category": "reference"
+  },
+  "ref.test": {
+   "summary": "Test a reference's type",
+   "description": "Pops a reference and pushes 1 when it is of the given type (a cast would succeed), 0 otherwise.",
+   "operation": "r is T",
+   "category": "reference"
+  },
+  "rethrow": {
+   "summary": "Rethrow (legacy)",
+   "description": "Throws again the exception caught by an enclosing catch.",
+   "operation": "rethrow",
+   "category": "exception"
+  },
+  "return": {
+   "summary": "Return",
+   "description": "Leaves the function, returning the values its type says from the top of the stack.",
+   "operation": "return",
+   "category": "branch"
+  },
+  "return_call": {
+   "summary": "Tail call",
+   "description": "Calls a function and returns its results, replacing the caller's frame instead of growing the stack.",
+   "operation": "return f(args)",
+   "category": "call"
+  },
+  "return_call_indirect": {
+   "summary": "Tail call through a table",
+   "description": "A call_indirect that returns the callee's results in place of the caller.",
+   "operation": "return table[i](args)",
+   "category": "call"
+  },
+  "return_call_ref": {
+   "summary": "Tail call a function reference",
+   "description": "A call_ref that returns the callee's results in place of the caller.",
+   "operation": "return ref(args)",
+   "category": "call"
+  },
+  "select": {
+   "summary": "Select",
+   "description": "Pops a condition and two values and pushes the first when the condition is not zero, the second otherwise. Both values have already been computed: a branch-free choice.",
+   "operation": "c ? a : b",
+   "category": "arithmetic"
+  },
+  "struct.get": {
+   "summary": "Read a struct field",
+   "description": "Pops a struct reference and pushes one of its fields. Traps on null.",
+   "operation": "r.field",
+   "category": "aggregate"
+  },
+  "struct.get_s": {
+   "summary": "Read a packed field signed",
+   "description": "Reads an i8 or i16 field of a struct, sign-extended to i32. Traps on null.",
+   "operation": "sext(r.field)",
+   "category": "aggregate"
+  },
+  "struct.get_u": {
+   "summary": "Read a packed field unsigned",
+   "description": "Reads an i8 or i16 field of a struct, zero-extended to i32. Traps on null.",
+   "operation": "zext(r.field)",
+   "category": "aggregate"
+  },
+  "struct.new": {
+   "summary": "Allocate a struct",
+   "description": "Pops the values of all fields and pushes a reference to a new garbage-collected struct holding them.",
+   "operation": "new T(fields)",
+   "category": "aggregate"
+  },
+  "struct.new_default": {
+   "summary": "Allocate a zeroed struct",
+   "description": "Pushes a reference to a new struct whose fields are all zero or null.",
+   "operation": "new T()",
+   "category": "aggregate"
+  },
+  "struct.set": {
+   "summary": "Write a struct field",
+   "description": "Pops a value and a struct reference and stores the value in a mutable field. Traps on null.",
+   "operation": "r.field = a",
+   "category": "aggregate"
+  },
+  "table.copy": {
+   "summary": "Copy table entries",
+   "description": "Copies n entries between tables (or within one), correctly when the ranges overlap.",
+   "operation": "copy n entries",
+   "category": "table"
+  },
+  "table.fill": {
+   "summary": "Fill a table",
+   "description": "Sets n entries from an index on to a reference. Traps when the range runs outside the table.",
+   "operation": "table[i..i+n] = ref",
+   "category": "table"
+  },
+  "table.get": {
+   "summary": "Read a table",
+   "description": "Pops an index and pushes the reference stored at it in a table. Traps when the index is out of range.",
+   "operation": "table[i]",
+   "category": "table"
+  },
+  "table.grow": {
+   "summary": "Grow a table",
+   "description": "Adds n entries, all set to a given reference, and pushes the old size, or −1 when the table cannot grow.",
+   "operation": "old = size; size += n",
+   "category": "table"
+  },
+  "table.init": {
+   "summary": "Copy from an element segment",
+   "description": "Copies n references of a passive element segment into a table.",
+   "operation": "copy from an element segment",
+   "category": "table"
+  },
+  "table.set": {
+   "summary": "Write a table",
+   "description": "Pops a reference and an index and stores the reference in the table. Traps when the index is out of range.",
+   "operation": "table[i] = ref",
+   "category": "table"
+  },
+  "table.size": {
+   "summary": "Table size",
+   "description": "Pushes the number of entries a table has.",
+   "operation": "size",
+   "category": "table"
+  },
+  "throw": {
+   "summary": "Throw",
+   "description": "Pops the values a tag carries and throws an exception with them; it unwinds to the nearest handler, or stops the program when there is none.",
+   "operation": "throw tag(args)",
+   "category": "exception"
+  },
+  "throw_ref": {
+   "summary": "Throw an exception reference",
+   "description": "Throws again an exception caught earlier as an exnref. Traps on null.",
+   "operation": "rethrow r",
+   "category": "exception"
+  },
+  "try": {
+   "summary": "Try (legacy)",
+   "description": "Opens a block whose exceptions the catch clauses after it handle — the first form of exception handling, which toolchains still emit.",
+   "operation": "try { … }",
+   "category": "exception"
+  },
+  "try_table": {
+   "summary": "Try with a catch table",
+   "description": "Opens a block in which an exception thrown by a tag the table lists branches to that clause's label (with the exception's values, and its reference for the _ref forms).",
+   "operation": "try { … } catch …",
+   "category": "exception"
+  },
+  "unreachable": {
+   "summary": "Unreachable: trap",
+   "description": "Stops the program with a trap. Compilers put it where control can never arrive — after a call that does not return, at the end of a switch with no default — and for abort and panics.",
+   "operation": "trap",
+   "category": "system"
+  },
+  "v128.and": {
+   "summary": "Vector AND",
+   "description": "Bitwise AND of two vectors.",
+   "operation": "a & b",
+   "category": "simd-logic"
+  },
+  "v128.andnot": {
+   "summary": "Vector AND NOT",
+   "description": "Keeps the bits of a that are clear in b.",
+   "operation": "a & ~b",
+   "category": "simd-logic"
+  },
+  "v128.any_true": {
+   "summary": "Any bit set",
+   "description": "Pushes 1 when any bit of a vector is set, 0 otherwise.",
+   "operation": "v != 0",
+   "category": "simd-reduce"
+  },
+  "v128.bitselect": {
+   "summary": "Bitwise select",
+   "description": "Takes each bit from a where the mask c has a one and from b where it has a zero: the vector form of select, usually with a compare's mask.",
+   "operation": "(a & c) | (b & ~c)",
+   "category": "simd-logic"
+  },
+  "v128.const": {
+   "summary": "Vector constant",
+   "description": "Pushes the 16 bytes written in the instruction as a vector.",
+   "operation": "the constant",
+   "category": "simd-move"
+  },
+  "v128.load": {
+   "summary": "Load a vector",
+   "description": "Reads 16 bytes of memory into a vector. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "v128[addr + offset]",
+   "category": "simd-load-store"
+  },
+  "v128.load16_lane": {
+   "summary": "Load 16 bits into a lane",
+   "description": "Reads a 16-bit value from memory into one lane of a vector, keeping the other lanes.",
+   "operation": "v[lane] = u16[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load16_splat": {
+   "summary": "Load 16 bits into every lane",
+   "description": "Reads one 16-bit value from memory and copies it into all lanes of a vector.",
+   "operation": "r[i] = u16[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load16x4_s": {
+   "summary": "Load 16×4 and extend (signed)",
+   "description": "Reads 8 bytes as 4 16-bit values and widens each to 32 bits, sign-extending.",
+   "operation": "r[i] = sext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.load16x4_u": {
+   "summary": "Load 16×4 and extend (unsigned)",
+   "description": "Reads 8 bytes as 4 16-bit values and widens each to 32 bits, zero-extending.",
+   "operation": "r[i] = zext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.load32_lane": {
+   "summary": "Load 32 bits into a lane",
+   "description": "Reads a 32-bit value from memory into one lane of a vector, keeping the other lanes.",
+   "operation": "v[lane] = u32[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load32_splat": {
+   "summary": "Load 32 bits into every lane",
+   "description": "Reads one 32-bit value from memory and copies it into all lanes of a vector.",
+   "operation": "r[i] = u32[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load32_zero": {
+   "summary": "Load 32 bits, zero the rest",
+   "description": "Reads a 32-bit value into the lowest lane of a vector whose other lanes are zero.",
+   "operation": "r = u32[addr], 0, 0, 0",
+   "category": "simd-load-store"
+  },
+  "v128.load32x2_s": {
+   "summary": "Load 32×2 and extend (signed)",
+   "description": "Reads 8 bytes as 2 32-bit values and widens each to 64 bits, sign-extending.",
+   "operation": "r[i] = sext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.load32x2_u": {
+   "summary": "Load 32×2 and extend (unsigned)",
+   "description": "Reads 8 bytes as 2 32-bit values and widens each to 64 bits, zero-extending.",
+   "operation": "r[i] = zext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.load64_lane": {
+   "summary": "Load 64 bits into a lane",
+   "description": "Reads a 64-bit value from memory into one lane of a vector, keeping the other lanes.",
+   "operation": "v[lane] = u64[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load64_splat": {
+   "summary": "Load 64 bits into every lane",
+   "description": "Reads one 64-bit value from memory and copies it into all lanes of a vector.",
+   "operation": "r[i] = u64[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load64_zero": {
+   "summary": "Load 64 bits, zero the rest",
+   "description": "Reads a 64-bit value into the low half of a vector whose upper half is zero.",
+   "operation": "r = u64[addr], 0",
+   "category": "simd-load-store"
+  },
+  "v128.load8_lane": {
+   "summary": "Load 8 bits into a lane",
+   "description": "Reads a 8-bit value from memory into one lane of a vector, keeping the other lanes.",
+   "operation": "v[lane] = u8[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load8_splat": {
+   "summary": "Load 8 bits into every lane",
+   "description": "Reads one 8-bit value from memory and copies it into all lanes of a vector.",
+   "operation": "r[i] = u8[addr]",
+   "category": "simd-load-store"
+  },
+  "v128.load8x8_s": {
+   "summary": "Load 8×8 and extend (signed)",
+   "description": "Reads 8 bytes as 8 8-bit values and widens each to 16 bits, sign-extending.",
+   "operation": "r[i] = sext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.load8x8_u": {
+   "summary": "Load 8×8 and extend (unsigned)",
+   "description": "Reads 8 bytes as 8 8-bit values and widens each to 16 bits, zero-extending.",
+   "operation": "r[i] = zext(mem[i])",
+   "category": "simd-load-store"
+  },
+  "v128.not": {
+   "summary": "Vector NOT",
+   "description": "Inverts every bit of a vector.",
+   "operation": "~a",
+   "category": "simd-logic"
+  },
+  "v128.or": {
+   "summary": "Vector OR",
+   "description": "Bitwise OR of two vectors.",
+   "operation": "a | b",
+   "category": "simd-logic"
+  },
+  "v128.store": {
+   "summary": "Store a vector",
+   "description": "Writes a vector to 16 bytes of memory. The address is the operand plus the offset written in the instruction; an access that does not fit in memory traps. Any alignment works: the align field is only a hint.",
+   "operation": "v128[addr + offset] = v",
+   "category": "simd-load-store"
+  },
+  "v128.store16_lane": {
+   "summary": "Store a 16-bit lane",
+   "description": "Writes one 16-bit lane of a vector to memory.",
+   "operation": "u16[addr] = v[lane]",
+   "category": "simd-load-store"
+  },
+  "v128.store32_lane": {
+   "summary": "Store a 32-bit lane",
+   "description": "Writes one 32-bit lane of a vector to memory.",
+   "operation": "u32[addr] = v[lane]",
+   "category": "simd-load-store"
+  },
+  "v128.store64_lane": {
+   "summary": "Store a 64-bit lane",
+   "description": "Writes one 64-bit lane of a vector to memory.",
+   "operation": "u64[addr] = v[lane]",
+   "category": "simd-load-store"
+  },
+  "v128.store8_lane": {
+   "summary": "Store a 8-bit lane",
+   "description": "Writes one 8-bit lane of a vector to memory.",
+   "operation": "u8[addr] = v[lane]",
+   "category": "simd-load-store"
+  },
+  "v128.xor": {
+   "summary": "Vector XOR",
+   "description": "Bitwise exclusive OR of two vectors.",
+   "operation": "a ^ b",
+   "category": "simd-logic"
+  }
+ }
+}

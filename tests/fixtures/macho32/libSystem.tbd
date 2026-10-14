@@ -1,0 +1,10 @@
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ armv7-ios ]
+install-name:    '/usr/lib/libSystem.B.dylib'
+current-version: 1311
+exports:
+  - targets:     [ armv7-ios ]
+    symbols:     [ _printf, _puts, _strcmp, _labs, ___stack_chk_guard, ___stack_chk_fail, dyld_stub_binder,
+                   ___divsi3, ___udivsi3, ___modsi3, __NSConcreteGlobalBlock ]
+...

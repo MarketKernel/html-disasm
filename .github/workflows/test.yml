@@ -1,0 +1,37 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      # The browser tests (tests/app.mjs, tests/pwa.mjs) are left out here: they depend on the
+      # runner's Chrome and its timing, and one has failed now and then for no fault of the code.
+      # `npm run check` runs them before a commit.
+
+      # The single HTML file must not pull anything off the network.
+      - name: No external references in the build
+        run: |
+          if grep -oE '<(script|link|img|iframe)[^>]+(src|href)="(https?:)?//[^"]*"' build/disassembler.html; then
+            echo "::error::external resources are left in build/disassembler.html"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: html-disassembler
+          path: build/disassembler.html
