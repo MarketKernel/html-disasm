@@ -1,4 +1,4 @@
-# Arm, x86, WebAssembly, .NET and Java Disassembler — a macOS, iOS, Windows, Linux or Android binary, a wasm module, a .NET assembly or a Java JAR, taken apart in one HTML file
+# Disassembler for ARM, x86, WebAssembly, .NET, and Java — in a Single HTML File
 
 <!-- languages -->
 <h3 align="center">
@@ -7,30 +7,34 @@
 </h3>
 <!-- /languages -->
 
-Open a macOS program — an app's executable, a `.dylib`, a command-line tool, for Apple Silicon
-or Intel, 64-bit or old i386 —, an iOS app (the whole `.ipa`, arm64 or old armv7), a Windows `.exe` or `.dll` for x86-64, i386, arm64 (ARM64EC and ARM64X too) or 32-bit Arm, an Android native library for
-arm64-v8a, armeabi-v7a, x86_64 or x86 (a `.so`, or the whole `.apk`), a Linux program or library
-for x86-64, i386, arm64 or 32-bit Arm, a WebAssembly module, a .NET assembly — the CIL of C#, F#
-or Visual Basic —, or Java bytecode — a `.class` or a `.jar` of Java, Kotlin or Scala —, and see
-every instruction of it: decoded, explained, counted, and — for arm64, x86-64, WebAssembly, .NET and Java — written
-either as assembly or as [HLA64](https://github.com/marketkernel/html-hlaa64), an assembler with
-syntactic sugar for ARM64, x64 and WebAssembly.
+**A cross-platform disassembler that runs entirely in your browser — offline, with no installation or uploads.** Open a native executable, shared library, WebAssembly module, .NET assembly, Java class, or application archive and explore its instructions, functions, references, strings, and binary metadata.
 
-The whole tool is one self-contained page, `build/disassembler.html`. It works from disk,
-offline, in any modern browser. **Nothing is uploaded**: the file is read by the page, and the
-page's Content-Security-Policy forbids it any network access at all.
+Everything fits into **one self-contained HTML file**: `build/disassembler.html`. Open it from your disk in a modern browser. Files are processed locally, and the page's Content Security Policy blocks network access.
 
-**Online version: <https://disasm.marketkernel.com>** — the same page as a PWA (Progressive Web
-App). Once opened, it works offline: the page is kept in the browser and opens with no
-connection, and programs are still read from the disk, never uploaded. It can be installed into
-the system and then runs as a separate app, with its own window and icon: on a computer, in
-Chrome, Edge and Arc, the install button in the address bar; on iOS, Share → Add to Home Screen.
+### Supported formats and architectures
 
-**Or download the file**: every [release](https://github.com/MarketKernel/html-disasm/releases)
-has `disassembler-<version>.html` — the whole disassembler in one file, to keep on disk and open
-in a browser with no network at all — and `SHA256SUMS.txt` to check it against.
+| Platform or runtime | Formats | Architectures or bytecode |
+| --- | --- | --- |
+| macOS | Mach-O executables, `.dylib`, universal binaries | arm64, arm64e, x86-64, i386 |
+| iOS | Mach-O, `.ipa`, zipped `.app` | arm64, armv7 |
+| Windows | PE `.exe`, `.dll` | x86-64, i386, arm64, ARM64EC, ARM64X, 32-bit Arm |
+| Linux | ELF executables, shared libraries | x86-64, i386, arm64, 32-bit Arm |
+| Android | ELF `.so`, `.apk`, `.aab`, `.apks`, `.xapk` | arm64-v8a, armeabi-v7a, x86_64, x86 |
+| WebAssembly | `.wasm` core modules | WebAssembly instructions |
+| .NET | Managed `.exe`, `.dll` | CIL (C#, F#, Visual Basic, and other CLI languages) |
+| JVM | `.class`, `.jar`, `.war`, `.jmod`, `.aar` | Java bytecode (including code compiled from Kotlin and Scala) |
 
-Source: <https://github.com/MarketKernel/html-disasm>.
+Explore decoded instructions in assembly notation, with explanations and instruction statistics. For **arm64, x86-64, WebAssembly, .NET, and Java**, you can also switch to a more readable **[HLA64](https://github.com/marketkernel/html-hlaa64)** representation. HLA64 is an assembler with higher-level syntax for ARM64, x64, and WebAssembly; this project also extends its notation to CIL and JVM bytecode.
+
+### Try it
+
+**[Open the online PWA](https://disasm.marketkernel.com)** — install it as an app or use it in your browser. After the first visit, it can run offline. Files are still opened locally and are never uploaded. On desktop Chrome, Edge, or Arc, use the browser's install option; on iOS, use **Share → Add to Home Screen**.
+
+**[Download a standalone HTML file](https://github.com/MarketKernel/html-disasm/releases)** — each release includes `disassembler-<version>.html` and `SHA256SUMS.txt`. Keep the file on disk and open it without an internet connection. Unlike the PWA, the downloaded file remains on the version you chose.
+
+Source repository: <https://github.com/MarketKernel/html-disasm>.
+
+### Examples
 
 ```
 address      assembly                              HLA64
@@ -46,10 +50,8 @@ address      assembly                              HLA64
 10003171c    ldaddl x9, x8, [x8]                   x8 = atomic_add(u64[x8], x9, release)
 ```
 
-The same program, `hello.c`, built for WebAssembly by Emscripten:
-
-The Android build of it for armeabi-v7a, Thumb-2 with one file in A32, from the APK as it is
-(stripped: which bytes are T32, A32 and data is worked out from the code):
+The Android armeabi-v7a build, with Thumb-2 and one A32 file, opened directly from the APK
+(stripped; the tool distinguishes T32, A32, and data through code analysis):
 
 ```
 address  assembly
@@ -63,6 +65,8 @@ address  assembly
 a20      cmp     r1, #1                      (A32, arm.c)
 a24      poplt   {r11, pc}
 ```
+
+The same `hello.c` program compiled to WebAssembly with Emscripten:
 
 ```
 offset  WebAssembly                     HLA64
@@ -85,10 +89,10 @@ offset  WebAssembly                     HLA64
 464     br_if 0
 ```
 
-## Using it
+## Getting started
 
-1. `./build.sh open` (or `npm install && npm run build`, then open `build/disassembler.html`).
-2. Click **Open a program** or drop a file on the page. An app's program is inside its bundle:
+1. Run `./build.sh open`, or run `npm install && npm run build` and open `build/disassembler.html`.
+2. Click **Open a program**, or drag a file onto the page. An app's program is inside its bundle:
    `Name.app/Contents/MacOS/Name` (in the Finder: Show Package Contents). Universal files open at
    their arm64 slice; the **Mach-O** page opens the others (x86_64, and the i386 or armv7 slices
    of old programs). An Android library is a `.so` file; an `.apk` (or `.aab`, or a bundle of
@@ -98,8 +102,7 @@ offset  WebAssembly                     HLA64
    `.jar` (or `.war`, `.jmod`, `.aar`) opens as one program, all its classes, the bytecode written as javap writes it. A `.wasm`
    file is recognised by its signature; a web page's module can be saved from the Network tab of
    the browser's developer tools.
-3. The page decodes every instruction (2 million take about a second, a 4-million-instruction
-   module a second and a half) and opens at `main`.
+3. The page decodes the instructions and opens at `main`. As a reference, two million instructions take about one second; a four-million-instruction module takes about 1.5 seconds.
 
 | Where | What |
 | --- | --- |
@@ -113,7 +116,7 @@ offset  WebAssembly                     HLA64
 **⌘K** (Ctrl K) searches functions, imports, strings, instructions and addresses (`0x1000…`);
 **G** jumps to an address. In the listing, **↑ ↓ PgUp PgDn** move the selection and **Enter** follows it.
 
-## The instruction catalogue
+## Instruction reference
 
 `src/data/arm64-instructions.json` holds every AArch64 instruction outside SVE and SME —
 1,194 mnemonics — each with a short name, a plain-English description, the operation as a
@@ -159,7 +162,7 @@ have it (A32, T32) and links to Arm's page; the descriptions are our own, in Eng
 (`src/data/arm32-instructions.ru.json`). A printed mnemonic finds its entry without its
 condition and qualifiers: `addeq` is `add`, `vaddeq.f32` `vadd`, `bls` `b`, `itte` `it`.
 
-## HLA64
+## HLA64 representation
 
 HLA64 is an assembler, not a new language: its programs are ordinary instructions, with sugar
 for what is obvious — `x0 = [x1 + 8]`, `if x8 == 0 { goto L… }`, `push x29, x30`, `f()`. The
@@ -199,7 +202,7 @@ The .NET view (`src/core/cil/hla.ts`) works as the WebAssembly one does, over CI
 
 ## Android: arm64-v8a and armeabi-v7a
 
-An Android library opens like a program, with the same pages; the **Mach-O** tab is **ELF**.
+Android native libraries use the same disassembly interface; the **Mach-O** tab is replaced by **ELF**.
 The file chip names the ABI (`arm64-v8a`, `armeabi-v7a`) and the oldest Android the library
 runs on (`Android 7.0+`), from the note the NDK leaves in it; without the note, Bionic's symbol
 versions (`LIBC`) still say Android, as glibc's say Linux. A Mach-O program shows its platform
@@ -242,7 +245,7 @@ the same way (`macOS 14.0+`).
 
 ## WebAssembly
 
-A `.wasm` file opens like a program, with the same pages. Code addresses are offsets in the
+A `.wasm` file uses the same disassembly interface. Code addresses are offsets in the
 file, as browsers' developer tools show them; data addresses are addresses in the module's
 linear memory.
 
@@ -277,8 +280,7 @@ linear memory.
 
 ## .NET (CIL)
 
-A .NET assembly — a `.dll` or `.exe` with a CLR header, from C#, F#, Visual Basic or C++/CLI —
-opens like any Windows program, with its IL as the code. An instruction's address is its RVA; the
+A .NET assembly — a `.dll` or `.exe` with a CLR header, compiled from C#, F#, Visual Basic, or C++/CLI — opens with its IL as the code. An instruction's address is its RVA; the
 listing writes it, as ildasm does, as the offset in its method (`IL_001f`).
 
 ```
@@ -384,7 +386,7 @@ constant pool index names after `//`.
   `if a >= b`, `dcmpg; ifge` stays `if dcmpg(a, b) >= 0`. On java.base 77% of the lines, 94% of
   the instructions, read as HLA64; on IntelliJ's own code, much of it Kotlin, 55% and 79%.
 
-## x86-64 and i386
+## x86-64 and i386 support
 
 A Linux program or library, an Android library for x86_64 or x86, or the x86_64 slice of a macOS
 program opens like the others, with the same pages; the listing is in Intel syntax, as
@@ -433,7 +435,7 @@ llvm-objdump prints it with `-M intel`.
   shell, 1.5 million instructions, and the x86 and x64 DLLs) decode exactly as llvm-objdump does.
 - The HLA64 view of x86-64 is described under [HLA64](#hla64); i386 code has none.
 
-## iOS and Objective-C
+## iOS and Objective-C support
 
 An iOS program is an arm64 Mach-O file like a Mac one, and opens the same way; an `.ipa` is a ZIP
 file with the app in `Payload/Name.app`, and opening it lists what it holds to run — the app's
@@ -461,7 +463,7 @@ for which devices and until when.
   (`LC_ENCRYPTION_INFO_64`, `cryptid 1`) until the device that runs it decrypts it. Such a file
   is recognised and refused; a copy decrypted on a device (`cryptid 0`) opens.
 
-## Windows on Arm
+## Windows on Arm support
 
 - **arm64** programs go through the arm64 analysis, **32-bit Arm** ones (Windows RT, IoT: Thumb-2
   only) through the AArch32 one. Imports are named whether the code calls them through a thunk
@@ -485,7 +487,7 @@ for which devices and until when.
   from globals (MSVC with the runtime linked in, new and old), the call just before `_cexit`
   (MinGW). The page opens there; this works the same for x86-64 and i386 programs.
 
-## Changing instructions (macOS)
+## Patching instructions (macOS)
 
 Click an instruction and **Change…** (key **E**): a window opens where the new instruction is
 typed as assembly (`mov w0, #1`, `b.ne 0x…`, `nop`) or as its bytes in hex, or picked from the
@@ -498,7 +500,7 @@ A change is written into the opened file at once; the listing marks the rows and
 be undone. **Download** saves the changed file. A macOS program's code signature holds a hash of
 every page, and Apple Silicon will not run arm64 code whose pages do not match, so the file is
 signed again, ad hoc — the way `codesign --sign -` and the linker sign (`src/core/patch.ts`):
-the page hashes are computed afresh (SHA-256 from the browser's own crypto, offline), the ad hoc
+the page hashes are computed afresh (SHA-256 using the browser's built-in cryptography, offline), the ad hoc
 flag is set, the team identifier and any Developer ID signature go, the entitlements stay. In a
 universal file every slice is signed again, the patched one and the rest. A file signed by a
 developer loses that signature and its notarization, so macOS may ask to confirm it on first
@@ -506,7 +508,7 @@ run; if it is inside an `.app`, re-sign the bundle with `codesign --force --deep
 `tests/patch.mjs` checks the whole path on a Mac: the patched program is signed, `codesign
 --verify --strict` accepts it, and it runs and returns what the new instructions say.
 
-## How it works
+## Implementation details
 
 - **Decoder** (`src/core/arm64/`): the A64 encoding tables by hand — data processing,
   branches and system instructions, loads and stores including the LSE atomics, scalar
@@ -560,7 +562,7 @@ run; if it is inside an `.app`, re-sign the bundle with `codesign --force --deep
   `connect-src` stays `'none'`. `build/disassembler.html` itself stays one file with no
   external references.
 
-## Build and tests
+## Building and testing
 
 Node 22+ and nothing else at run time; esbuild and TypeScript to build.
 
@@ -639,7 +641,7 @@ ld64 built from cctools-port. `tests/fixtures/swift-vectors.json` has 356 Swift 
 of the standard library and the SDK frameworks with the text `swift-demangle` prints for them,
 in full and simplified.
 
-## Versions and releases
+## Versioning and releases
 
 The version is written in one place, `package.json`. The build puts it into the page (the line
 at the bottom of the start page) and into the PWA's cache name. A build of the commit tagged
@@ -657,7 +659,7 @@ unit tests, then attaches `disassembler-<tag>.html` and `SHA256SUMS.txt` to the 
 stay local: they depend on the runner's Chrome and its timing, so `npm run check` runs them
 before a commit.
 
-## GitHub Pages
+## GitHub Pages deployment
 
 `.github/workflows/pages.yml` builds and unit-tests every push to `main` and deploys `build/pages/`
 to GitHub Pages (Settings → Pages → Source: GitHub Actions; Custom domain:
@@ -674,7 +676,7 @@ release and compare it with `SHA256SUMS.txt`.
 
 ## Translations
 
-The interface speaks English and Russian: **Settings → Language** (as the system, English,
+The interface supports English and Russian: **Settings → Language** (as the system, English,
 Русский). Switching redraws everything at once; the program is not read again.
 
 - Interface strings are `t('context', 'English text')` and `tn(…)` with plain literals in the
@@ -689,10 +691,10 @@ The interface speaks English and Russian: **Settings → Language** (as the syst
   placeholders, and all four Russian plural forms; `tests/data.mjs` that every instruction,
   condition and word has its Russian text.
 
-Another language is a dictionary in `src/locales`, its name in `src/core/i18n.ts`, and the two
+To add another language, create a dictionary in `src/locales`, register it in `src/core/i18n.ts`, and add the two
 `*.<code>.json` files in `src/data` registered in `src/core/catalog.ts`.
 
-## Layout
+## Repository structure
 
 | Path | What |
 | --- | --- |
@@ -742,7 +744,7 @@ Another language is a dictionary in `src/locales`, its name in `src/core/i18n.ts
 | `tools/` | Arm XML indexers (A64, AArch32), the x86 table generator, decoder verification (arm64, AArch32, x86, WebAssembly, CIL, JVM), ELF wrappers for llvm-objdump, Chrome driver, screenshots, the PWA icons, i18n |
 | `tests/` | unit tests and the browser tests (the single file, the PWA) |
 
-## Limitations
+## Current limitations
 
 - arm64 (and arm64e), x86_64, i386 and armv7 Mach-O, x86-64, i386, arm64 (ARM64EC and ARM64X included) and
   32-bit Arm PE (Windows), arm64, 32-bit Arm, x86-64 and i386 ELF (Android, Linux), WebAssembly
