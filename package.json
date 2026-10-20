@@ -1,0 +1,31 @@
+{
+  "name": "html-disassembler",
+  "version": "0.2.0",
+  "private": true,
+  "description": "An Arm, x86, WebAssembly, .NET and Java disassembler in one offline HTML file: macOS Mach-O (arm64, x86_64), Linux and Android ELF (arm64-v8a, armeabi-v7a, x86_64, x86, APK), wasm modules, .NET assemblies (CIL) and Java classes and JARs (JVM bytecode), instructions explained, statistics and an HLA64 view",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node tools/wasm.mjs --quiet && node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node tools/wasm.mjs --quiet && node tools/wasm-opcodes.mjs --check && cargo test -q -p disasm-core && node tests/decode.mjs && node tests/encode.mjs && node tests/arm32.mjs && node tests/x86.mjs && node tests/wasm.mjs && node tests/cil.mjs && node tests/jvm.mjs && node tests/elf.mjs && node tests/patch.mjs && node tests/macho.mjs && node tests/ios.mjs && node tests/winarm.mjs && node tests/demangle.mjs && node tests/hla.mjs && node tests/data.mjs && node tests/i18n.mjs",
+    "test:browser": "node tests/app.mjs && node tests/pwa.mjs",
+    "verify": "node tools/verify-decoder.mjs",
+    "verify:wasm": "node tools/verify-wasm.mjs",
+    "verify:cil": "node tools/verify-cil.mjs",
+    "verify:jvm": "node tools/verify-jvm.mjs",
+    "arm-index": "node tools/arm-index.mjs",
+    "shots": "node tools/shots.mjs",
+    "pwa-icons": "node tools/pwa-icons.mjs",
+    "check": "npm run typecheck && npm test && npm run build && npm run test:browser",
+    "wasm": "node tools/wasm.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "typescript": "^5.9.3"
+  }
+}

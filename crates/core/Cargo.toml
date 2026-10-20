@@ -1,0 +1,16 @@
+[package]
+name = "disasm-core"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "The disassembler's core: file formats, decoders, analysis. No I/O, no host: it runs the same in a browser (through crates/wasm) and natively."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+# Inflates the x86 tables (pure Rust: the WebAssembly module still imports nothing).
+miniz_oxide = { version = "0.8", default-features = false, features = ["with-alloc"] }
+
+[dev-dependencies]
+serde_json = "1"

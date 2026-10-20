@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Nothing leaves the page: the program is read from disk and taken apart here. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Disassembler for Arm and WebAssembly</title>
+<link rel="icon" href="__ICON__">
+<style>/*__STYLES__*/</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">
+    <img class="brand-logo" src="__ICON__" alt="">
+    <span class="brand-name" data-i18n="bar">Disassembler</span>
+  </div>
+  <div id="file-chip" class="file-chip" hidden>
+    <span id="file-name" class="file-name"></span>
+    <span id="file-arch" class="badge"></span>
+    <span id="file-platform" class="badge badge--platform" hidden></span>
+  </div>
+  <nav id="tabs" class="tabs" hidden>
+    <button class="tab is-active" type="button" data-view="listing" data-i18n="tabs">Code</button>
+    <button class="tab" type="button" data-view="stats" data-i18n="tabs">Statistics</button>
+    <button class="tab" type="button" data-view="strings" data-i18n="tabs">Strings</button>
+    <button id="tab-imports" class="tab" type="button" data-view="imports">Imports</button>
+    <button id="tab-overview" class="tab" type="button" data-view="overview">Mach-O</button>
+    <button class="tab" type="button" data-view="reference" data-i18n="tabs">Reference</button>
+  </nav>
+  <div class="bar-end">
+    <div id="mode" class="segmented" role="radiogroup" aria-label="Listing" data-i18n-attr="bar" hidden>
+      <button type="button" role="radio" aria-checked="true" data-mode="asm" title="Show instructions as the disassembler prints them (A)" data-i18n-attr="bar">Assembly</button>
+      <button type="button" role="radio" aria-checked="false" data-mode="hla" title="Show the code in HLA64 (H)" data-i18n-attr="bar">HLA64</button>
+    </div>
+    <button id="search-open" class="search-button" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <span data-i18n="bar">Search</span>
+      <kbd id="search-key">⌘K</kbd>
+    </button>
+    <button id="theme" class="icon-button" type="button" title="Theme" aria-label="Theme" data-i18n-attr="bar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+    </button>
+    <button id="menu-open" class="icon-button" type="button" title="Settings" aria-label="Settings" data-i18n-attr="bar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="start" class="start">
+  <div class="start-inner">
+    <p class="eyebrow" data-i18n="start">ARM64 · x86-64 · ARM32 · WebAssembly · .NET · JVM · one file · offline</p>
+    <h1 class="start-title"><span data-i18n="start">Take a program</span><br><em data-i18n="start">apart</em></h1>
+    <p class="start-copy" data-i18n="start">
+      Open a program for a Mac, an iPhone, Android, Windows or Linux — an app's executable, a <code data-slot="dylib">.dylib</code>,
+      a whole iOS app (<code data-slot="ipa">.ipa</code>), an Android library, a <code data-slot="so">.so</code> (or the whole <code data-slot="apk">.apk</code>),
+      an <code data-slot="exe">.exe</code> or <code data-slot="dll">.dll</code>, native or .NET —, Java bytecode (a <code data-slot="class">.class</code> or a <code data-slot="jar">.jar</code>), or a WebAssembly module, a <code data-slot="wasm">.wasm</code> file.
+      Every instruction is decoded and explained, counted, and shown as assembly or as
+      <b data-slot="hla">HLA64</b>. Nothing is uploaded: the file is read by this page.
+    </p>
+    <div id="drop" class="drop" tabindex="0" role="button" aria-describedby="drop-hint">
+      <svg class="drop-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 31V9m0 0l-8 8m8-8l8 8"/><path d="M9 29v6a4 4 0 004 4h22a4 4 0 004-4v-6"/></svg>
+      <span class="drop-title" data-i18n="start">Open a program</span>
+      <span id="drop-hint" class="drop-hint" data-i18n="start">or drop it here</span>
+    </div>
+    <p class="start-tip" data-i18n="start">An app's program is inside the bundle: <code data-slot="path">Name.app/Contents/MacOS/Name</code>. In the Finder, Show Package Contents opens it; an iOS app (<code data-slot="ipa">.ipa</code>) or a zipped app opens whole, and you pick its program or one of its frameworks. An Android app's libraries are inside its APK: open the APK and pick one. A web page's module can be saved from the Network tab of its developer tools.</p>
+    <p id="start-error" class="start-error" role="alert"></p>
+    <p class="start-version"><span data-i18n="start">Version</span> <span id="version"></span> · <a href="https://github.com/MarketKernel/html-disasm" target="_blank" rel="noopener noreferrer">github.com/MarketKernel/html-disasm</a></p>
+  </div>
+  <input id="file-input" type="file" hidden>
+</main>
+
+<div id="workspace" class="workspace" hidden>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-title"><span data-i18n="sidebar">Functions</span> <span id="fn-count" class="count"></span></div>
+      <input id="fn-filter" class="field" type="search" placeholder="Filter functions" spellcheck="false" autocomplete="off" data-i18n-attr="sidebar">
+      <div class="chips" id="fn-kinds">
+        <button type="button" class="chip is-on" data-kind="all" data-i18n="sidebar">All</button>
+        <button type="button" class="chip" data-kind="named" data-i18n="sidebar">Named</button>
+        <button type="button" class="chip" data-kind="import" data-i18n="sidebar">Imports</button>
+        <button type="button" class="chip" data-kind="export" data-i18n="sidebar">Exports</button>
+      </div>
+    </div>
+    <div id="fn-list" class="vlist" tabindex="0"></div>
+  </aside>
+
+  <div id="resize-sidebar" class="resizer resizer--sidebar" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Width of the function list" title="Drag to widen or narrow; double-click for the usual width" data-i18n-attr="workspace"></div>
+  <div id="resize-inspector" class="resizer resizer--inspector" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Width of the details panel" title="Drag to widen or narrow; double-click for the usual width" data-i18n-attr="workspace"></div>
+
+  <section class="views">
+    <div class="view is-active" data-view="listing">
+      <div class="listing-bar">
+        <button id="back" class="icon-button" type="button" title="Back (Alt+←)" aria-label="Back" data-i18n-attr="listing" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button id="forward" class="icon-button" type="button" title="Forward (Alt+→)" aria-label="Forward" data-i18n-attr="listing" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div id="crumb" class="crumb"></div>
+        <label class="toggle" title="Show the bytes of each instruction" data-i18n-attr="listing"><input id="show-bytes" type="checkbox"> <span data-i18n="listing">Bytes</span></label>
+        <label class="toggle" title="Draw branch arrows in the margin" data-i18n-attr="listing"><input id="show-arrows" type="checkbox" checked> <span data-i18n="listing">Arrows</span></label>
+        <div id="patch-bar" class="patch-bar" hidden>
+          <span id="patch-count" class="patch-count"></span>
+          <button id="patch-download" class="button button--primary" type="button" data-i18n="patch">Download</button>
+          <button id="patch-reset" class="button" type="button" data-i18n="patch">Undo all</button>
+        </div>
+      </div>
+      <div id="listing" class="listing" tabindex="0" aria-label="Listing" data-i18n-attr="listing">
+        <div id="listing-spacer" class="listing-spacer"></div>
+        <div id="listing-window" class="listing-window">
+          <svg id="arrows" class="arrows" aria-hidden="true"></svg>
+          <div id="listing-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" data-view="stats"><div id="stats" class="page"></div></div>
+    <div class="view" data-view="strings">
+      <div class="page-head">
+        <h2 data-i18n="strings">Strings</h2>
+        <input id="string-filter" class="field" type="search" placeholder="Filter strings" spellcheck="false" autocomplete="off" data-i18n-attr="strings">
+        <span id="string-count" class="count"></span>
+      </div>
+      <div id="string-list" class="vlist vlist--table"></div>
+    </div>
+    <div class="view" data-view="imports"><div id="imports" class="page"></div></div>
+    <div class="view" data-view="overview"><div id="overview" class="page"></div></div>
+    <div class="view" data-view="reference"><div id="reference" class="reference"></div></div>
+  </section>
+
+  <aside id="inspector" class="inspector" aria-live="polite"></aside>
+</div>
+
+<div id="progress" class="progress" hidden>
+  <div class="progress-card">
+    <p id="progress-stage" class="progress-stage"></p>
+    <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+    <p id="progress-detail" class="progress-detail"></p>
+  </div>
+</div>
+
+<div id="palette" class="palette" hidden>
+  <div class="palette-card" role="dialog" aria-modal="true" aria-label="Search" data-i18n-attr="palette">
+    <input id="palette-input" class="palette-input" type="text" placeholder="Function, address, string, mnemonic…" spellcheck="false" autocomplete="off" data-i18n-attr="palette">
+    <div id="palette-results" class="palette-results" role="listbox"></div>
+    <p class="palette-hint" data-i18n="palette">↑↓ to choose · Enter to go · Esc to close · <code data-slot="addr">0x1000…</code> jumps to an address</p>
+  </div>
+</div>
+
+<div id="menu" class="menu" hidden>
+  <div class="menu-card" role="dialog" aria-label="Settings" data-i18n-attr="menu">
+    <h3 data-i18n="menu">Settings</h3>
+    <label class="menu-row"><span data-i18n="menu">Language</span>
+      <select id="set-language" class="field">
+        <option value="system" data-i18n="menu">As the system</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+      </select>
+    </label>
+    <label class="menu-row"><span data-i18n="menu">Theme</span>
+      <select id="set-theme" class="field">
+        <option value="system" data-i18n="menu">As the system</option>
+        <option value="light" data-i18n="menu">Light</option>
+        <option value="dark" data-i18n="menu">Dark</option>
+      </select>
+    </label>
+    <label class="menu-row"><span data-i18n="menu">Names</span>
+      <select id="set-names" class="field">
+        <option value="short" data-i18n="menu">Demangled, short</option>
+        <option value="full" data-i18n="menu">Demangled, full</option>
+        <option value="raw" data-i18n="menu">As in the file</option>
+      </select>
+    </label>
+    <label class="menu-row menu-row--check"><input id="set-inspector" type="checkbox" checked> <span data-i18n="menu">Show the details panel</span></label>
+    <div class="menu-actions">
+      <button id="open-another" class="button" type="button" data-i18n="menu">Open another program</button>
+      <button id="menu-close" class="button button--primary" type="button" data-i18n="menu">Done</button>
+    </div>
+    <p class="menu-keys" data-i18n="menu">Keys: <kbd data-slot="k1">⌘K</kbd> search, <kbd data-slot="k2">A</kbd>/<kbd data-slot="k3">H</kbd> assembly or HLA64, <kbd data-slot="k4">G</kbd> go to address, <kbd data-slot="k5">Enter</kbd> follow a branch, <kbd data-slot="k6">X</kbd> references, <kbd data-slot="k7">Alt ←</kbd> back.</p>
+  </div>
+</div>
+
+<div id="editor" class="menu" hidden>
+  <div class="menu-card editor-card" role="dialog" aria-labelledby="editor-title" aria-modal="true">
+    <h3 id="editor-title" data-i18n="editor">Change this instruction</h3>
+    <div class="editor-now">
+      <span id="editor-addr" class="mono"></span>
+      <span id="editor-before" class="mono"></span>
+    </div>
+    <label class="editor-label" for="editor-input" data-i18n="editor">New instruction, or its bytes in hex</label>
+    <input id="editor-input" class="field mono" type="text" spellcheck="false" autocomplete="off" autocapitalize="off">
+    <div id="editor-preview" class="editor-preview"></div>
+    <div id="editor-quick" class="chips"></div>
+    <div class="menu-actions">
+      <button id="editor-cancel" class="button" type="button" data-i18n="editor">Cancel</button>
+      <button id="editor-apply" class="button button--primary" type="button" data-i18n="editor">Apply</button>
+    </div>
+    <p class="editor-note hint" data-i18n="editor">The change is written into the opened file. Download it when you are done; a macOS program is signed again ad hoc so it will run.</p>
+  </div>
+</div>
+
+<div id="picker" class="menu" hidden>
+  <div class="menu-card picker-card" role="dialog" aria-labelledby="picker-title">
+    <h3 id="picker-title"></h3>
+    <p id="picker-file" class="hint"></p>
+    <div id="picker-list" class="picker-list"></div>
+    <div class="menu-actions"><span></span><button id="picker-close" class="button" type="button" data-i18n="picker">Cancel</button></div>
+  </div>
+</div>
+
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script id="app-code" type="application/octet-stream" data-length="__APP_LENGTH__">__APP__</script>
+<script>
+  // The page's code and its core's WebAssembly module are the block above, deflated and seven bits to a
+  // character (build.mjs): decode it, inflate it, leave the module where the code looks for it, run the code.
+  (async () => {
+    const ESCAPED = [0, 10, 13, 60];
+    const block = document.getElementById('app-code');
+    const text = block.textContent;
+    const packed = new Uint8Array(Number(block.dataset.length));
+    block.remove();
+    let acc = 0;
+    let bits = 0;
+    let n = 0;
+    const take = (group) => {
+      acc = (acc << 7) | group;
+      bits += 7;
+      if (bits >= 8) {
+        bits -= 8;
+        if (n < packed.length) packed[n++] = acc >> bits;
+        acc &= (1 << bits) - 1;
+      }
+    };
+    for (let i = 0; i < text.length; i++) {
+      const c = text.charCodeAt(i);
+      if (c < 128) take(c);
+      else {
+        take(ESCAPED[(c - 128) >> 7]);
+        take((c - 128) & 127);
+      }
+    }
+    const stream = new Uint8Array(await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    const length = new DataView(stream.buffer).getUint32(0, true);
+    const code = new TextDecoder().decode(stream.subarray(4, 4 + length));
+    globalThis.__DISASM_CORE__ = stream.subarray(4 + length);
+    const script = document.createElement('script');
+    script.textContent = code;
+    document.body.append(script);
+    // It has run: the page need not keep a second copy of its text.
+    script.remove();
+  })()
+    .catch((error) => {
+      document.getElementById('start-error').textContent = `This browser cannot run the page: ${error}`;
+    })
+    .finally(() => document.documentElement.setAttribute('data-ready', ''));
+</script>
+</body>
+</html>

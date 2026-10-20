@@ -1,0 +1,1324 @@
+{
+ "about": "Every CIL instruction the disassembler decodes, with a plain-English description. The opcodes, operands and stack behaviour are in src/core/cil/opcodes.ts; the text is here.",
+ "source": {
+  "spec": "ECMA-335, Common Language Infrastructure, 6th edition, Partition III (CIL instruction set)",
+  "text": "Descriptions written for this project; follow the links for the authoritative text"
+ },
+ "docBase": "https://learn.microsoft.com/dotnet/api/system.reflection.emit.opcodes.",
+ "instructions": {
+  "add": {
+   "summary": "Add",
+   "description": "Pops two numbers and pushes their sum. Integers wrap around on overflow; add.ovf is the checked form.",
+   "operation": "a + b",
+   "doc": "Add"
+  },
+  "add.ovf": {
+   "summary": "Add with overflow check",
+   "description": "Pops two signed integers and pushes their sum, throwing OverflowException if it does not fit: C# checked(a + b).",
+   "operation": "checked(a + b)",
+   "doc": "Add_Ovf"
+  },
+  "add.ovf.un": {
+   "summary": "Add unsigned with overflow check",
+   "description": "Pops two integers, takes both as unsigned and pushes their sum, throwing OverflowException if it does not fit: checked arithmetic on uint or ulong in C#.",
+   "operation": "checked(a + b) unsigned",
+   "doc": "Add_Ovf_Un"
+  },
+  "and": {
+   "summary": "Bitwise AND",
+   "description": "Pops two integers and pushes their bitwise AND: C# & on integers and bools.",
+   "operation": "a & b",
+   "doc": "And"
+  },
+  "arglist": {
+   "summary": "Get the variable arguments",
+   "description": "Pushes a RuntimeArgumentHandle for the extra arguments passed to a vararg method, which C# spells __arglist.",
+   "operation": "push __arglist",
+   "doc": "Arglist"
+  },
+  "beq": {
+   "summary": "Branch if equal",
+   "description": "Pops two values and jumps if they are equal; the same as ceq followed by brtrue. The long form with a four-byte offset; beq.s is the short one.",
+   "operation": "if a == b goto target",
+   "doc": "Beq"
+  },
+  "beq.s": {
+   "summary": "Branch if equal (short form)",
+   "description": "Pops two values and jumps if they are equal; the same as ceq followed by brtrue. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a == b goto target",
+   "doc": "Beq_S"
+  },
+  "bge": {
+   "summary": "Branch if greater or equal",
+   "description": "Pops two values and jumps if the first is greater than or equal to the second, comparing integers as signed. Does not jump when either float is NaN. The long form with a four-byte offset; bge.s is the short one.",
+   "operation": "if a >= b goto target",
+   "doc": "Bge"
+  },
+  "bge.s": {
+   "summary": "Branch if greater or equal (short form)",
+   "description": "Pops two values and jumps if the first is greater than or equal to the second, comparing integers as signed. Does not jump when either float is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a >= b goto target",
+   "doc": "Bge_S"
+  },
+  "bge.un": {
+   "summary": "Branch if greater or equal, unsigned",
+   "description": "Pops two values and jumps if the first is greater than or equal to the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The long form with a four-byte offset; bge.un.s is the short one.",
+   "operation": "if a >= b goto target",
+   "doc": "Bge_Un"
+  },
+  "bge.un.s": {
+   "summary": "Branch if greater or equal, unsigned (short form)",
+   "description": "Pops two values and jumps if the first is greater than or equal to the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a >= b goto target",
+   "doc": "Bge_Un_S"
+  },
+  "bgt": {
+   "summary": "Branch if greater",
+   "description": "Pops two values and jumps if the first is greater than the second, comparing integers as signed. Does not jump when either float is NaN. The long form with a four-byte offset; bgt.s is the short one.",
+   "operation": "if a > b goto target",
+   "doc": "Bgt"
+  },
+  "bgt.s": {
+   "summary": "Branch if greater (short form)",
+   "description": "Pops two values and jumps if the first is greater than the second, comparing integers as signed. Does not jump when either float is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a > b goto target",
+   "doc": "Bgt_S"
+  },
+  "bgt.un": {
+   "summary": "Branch if greater, unsigned",
+   "description": "Pops two values and jumps if the first is greater than the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The long form with a four-byte offset; bgt.un.s is the short one.",
+   "operation": "if a > b goto target",
+   "doc": "Bgt_Un"
+  },
+  "bgt.un.s": {
+   "summary": "Branch if greater, unsigned (short form)",
+   "description": "Pops two values and jumps if the first is greater than the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a > b goto target",
+   "doc": "Bgt_Un_S"
+  },
+  "ble": {
+   "summary": "Branch if less or equal",
+   "description": "Pops two values and jumps if the first is less than or equal to the second, comparing integers as signed. Does not jump when either float is NaN. The long form with a four-byte offset; ble.s is the short one.",
+   "operation": "if a <= b goto target",
+   "doc": "Ble"
+  },
+  "ble.s": {
+   "summary": "Branch if less or equal (short form)",
+   "description": "Pops two values and jumps if the first is less than or equal to the second, comparing integers as signed. Does not jump when either float is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a <= b goto target",
+   "doc": "Ble_S"
+  },
+  "ble.un": {
+   "summary": "Branch if less or equal, unsigned",
+   "description": "Pops two values and jumps if the first is less than or equal to the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The long form with a four-byte offset; ble.un.s is the short one.",
+   "operation": "if a <= b goto target",
+   "doc": "Ble_Un"
+  },
+  "ble.un.s": {
+   "summary": "Branch if less or equal, unsigned (short form)",
+   "description": "Pops two values and jumps if the first is less than or equal to the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a <= b goto target",
+   "doc": "Ble_Un_S"
+  },
+  "blt": {
+   "summary": "Branch if less",
+   "description": "Pops two values and jumps if the first is less than the second, comparing integers as signed. Does not jump when either float is NaN. The long form with a four-byte offset; blt.s is the short one.",
+   "operation": "if a < b goto target",
+   "doc": "Blt"
+  },
+  "blt.s": {
+   "summary": "Branch if less (short form)",
+   "description": "Pops two values and jumps if the first is less than the second, comparing integers as signed. Does not jump when either float is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a < b goto target",
+   "doc": "Blt_S"
+  },
+  "blt.un": {
+   "summary": "Branch if less, unsigned",
+   "description": "Pops two values and jumps if the first is less than the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The long form with a four-byte offset; blt.un.s is the short one.",
+   "operation": "if a < b goto target",
+   "doc": "Blt_Un"
+  },
+  "blt.un.s": {
+   "summary": "Branch if less, unsigned (short form)",
+   "description": "Pops two values and jumps if the first is less than the second, comparing integers as unsigned. With floats it also jumps when either is NaN. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a < b goto target",
+   "doc": "Blt_Un_S"
+  },
+  "bne.un": {
+   "summary": "Branch if not equal",
+   "description": "Pops two values and jumps if they differ, or if either float is NaN (unordered). There is no signed form, since inequality does not depend on sign. The long form with a four-byte offset; bne.un.s is the short one.",
+   "operation": "if a != b goto target",
+   "doc": "Bne_Un"
+  },
+  "bne.un.s": {
+   "summary": "Branch if not equal (short form)",
+   "description": "Pops two values and jumps if they differ, or if either float is NaN (unordered). There is no signed form, since inequality does not depend on sign. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a != b goto target",
+   "doc": "Bne_Un_S"
+  },
+  "box": {
+   "summary": "Box a value",
+   "description": "Pops a value of the given value type and pushes a reference to a new heap object holding a copy of it. A reference type passes through as it is, and a Nullable<T> with no value becomes null.",
+   "operation": "push (object)v",
+   "doc": "Box"
+  },
+  "br": {
+   "summary": "Branch",
+   "description": "Jumps to the target unconditionally. The long form with a four-byte offset; br.s is the short one.",
+   "operation": "goto target",
+   "doc": "Br"
+  },
+  "br.s": {
+   "summary": "Branch (short form)",
+   "description": "Jumps to the target unconditionally. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "goto target",
+   "doc": "Br_S"
+  },
+  "break": {
+   "summary": "Debugger breakpoint",
+   "description": "Tells an attached debugger to stop here. Leaves the stack alone.",
+   "operation": "breakpoint",
+   "doc": "Break"
+  },
+  "brfalse": {
+   "summary": "Branch if false, zero or null",
+   "description": "Pops a value and jumps if it is zero, false or a null reference; brnull and brzero are other names for it. The long form with a four-byte offset; brfalse.s is the short one.",
+   "operation": "if !a goto target",
+   "doc": "Brfalse"
+  },
+  "brfalse.s": {
+   "summary": "Branch if false, zero or null (short form)",
+   "description": "Pops a value and jumps if it is zero, false or a null reference; brnull and brzero are other names for it. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if !a goto target",
+   "doc": "Brfalse_S"
+  },
+  "brtrue": {
+   "summary": "Branch if true, non-zero or not null",
+   "description": "Pops a value and jumps if it is non-zero, true or a non-null reference; brinst is another name for it. The long form with a four-byte offset; brtrue.s is the short one.",
+   "operation": "if a goto target",
+   "doc": "Brtrue"
+  },
+  "brtrue.s": {
+   "summary": "Branch if true, non-zero or not null (short form)",
+   "description": "Pops a value and jumps if it is non-zero, true or a non-null reference; brinst is another name for it. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "if a goto target",
+   "doc": "Brtrue_S"
+  },
+  "call": {
+   "summary": "Call a method",
+   "description": "Pops the arguments (this first, for an instance method), calls exactly the method the token names and pushes its result if it returns one. C# uses it for static methods, struct methods and base.M().",
+   "operation": "push method(args)",
+   "doc": "Call"
+  },
+  "calli": {
+   "summary": "Call through a function pointer",
+   "description": "Pops a function pointer from the top of the stack and the arguments beneath it, then calls the pointer with the stand-alone signature the token names. C# function pointers (delegate*) compile to it.",
+   "operation": "push (*fn)(args)",
+   "doc": "Calli"
+  },
+  "callvirt": {
+   "summary": "Call a virtual method",
+   "description": "Pops this and the arguments, calls the override chosen by the object's actual type and pushes the result. Throws NullReferenceException when this is null, which is why C# uses it even for non-virtual instance methods.",
+   "operation": "push obj.method(args)",
+   "doc": "Callvirt"
+  },
+  "castclass": {
+   "summary": "Cast to a type",
+   "description": "Pops an object reference and pushes it back if the object is of the given type or null; otherwise throws InvalidCastException. A C# cast (T)obj to a reference type.",
+   "operation": "push (T)obj",
+   "doc": "Castclass"
+  },
+  "ceq": {
+   "summary": "Compare equal",
+   "description": "Pops two values and pushes 1 if they are equal, 0 otherwise. C# == on numbers and references compiles to it, and so does !b as b == 0.",
+   "operation": "push a == b",
+   "doc": "Ceq"
+  },
+  "cgt": {
+   "summary": "Compare greater",
+   "description": "Pops two values and pushes 1 if the first is greater than the second, 0 otherwise, comparing integers as signed. A NaN gives 0.",
+   "operation": "push a > b",
+   "doc": "Cgt"
+  },
+  "cgt.un": {
+   "summary": "Compare greater, unsigned or unordered",
+   "description": "Like cgt, but integers compare as unsigned and a NaN gives 1. C# compiles x != null to cgt.un against null.",
+   "operation": "push a > b (unsigned)",
+   "doc": "Cgt_Un"
+  },
+  "ckfinite": {
+   "summary": "Check for a finite number",
+   "description": "Leaves the float on top of the stack in place, but throws ArithmeticException if it is NaN or an infinity.",
+   "operation": "a, or throw if not finite",
+   "doc": "Ckfinite"
+  },
+  "clt": {
+   "summary": "Compare less",
+   "description": "Pops two values and pushes 1 if the first is less than the second, 0 otherwise, comparing integers as signed. A NaN gives 0.",
+   "operation": "push a < b",
+   "doc": "Clt"
+  },
+  "clt.un": {
+   "summary": "Compare less, unsigned or unordered",
+   "description": "Like clt, but integers compare as unsigned and a NaN gives 1.",
+   "operation": "push a < b (unsigned)",
+   "doc": "Clt_Un"
+  },
+  "constrained.": {
+   "summary": "Constrained virtual call",
+   "description": "Prefixes a callvirt made through a pointer to a value of a generic type T: a reference type is loaded from the pointer, a struct's own method is called directly, and boxing happens only when there is no such method. Lets generic code call interface methods on T without boxing.",
+   "operation": "callvirt on T",
+   "doc": "Constrained"
+  },
+  "conv.i": {
+   "summary": "Convert to native int",
+   "description": "Pops a number and pushes it as a native int, sign-extending a shorter integer: the C# cast (nint). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.i is the checked form.",
+   "operation": "(nint)a",
+   "doc": "Conv_I"
+  },
+  "conv.i1": {
+   "summary": "Convert to int8",
+   "description": "Pops a number and pushes it truncated to 8 bits and sign-extended to int32: the C# cast (sbyte). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.i1 is the checked form.",
+   "operation": "(sbyte)a",
+   "doc": "Conv_I1"
+  },
+  "conv.i2": {
+   "summary": "Convert to int16",
+   "description": "Pops a number and pushes it truncated to 16 bits and sign-extended to int32: the C# cast (short). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.i2 is the checked form.",
+   "operation": "(short)a",
+   "doc": "Conv_I2"
+  },
+  "conv.i4": {
+   "summary": "Convert to int32",
+   "description": "Pops a number and pushes it as an int32: the C# cast (int). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.i4 is the checked form.",
+   "operation": "(int)a",
+   "doc": "Conv_I4"
+  },
+  "conv.i8": {
+   "summary": "Convert to int64",
+   "description": "Pops a number and pushes it as an int64, sign-extending a shorter integer: the C# cast (long). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.i8 is the checked form.",
+   "operation": "(long)a",
+   "doc": "Conv_I8"
+  },
+  "conv.ovf.i": {
+   "summary": "Convert to native int with overflow check",
+   "description": "Pops a number and pushes it as a native int, throwing OverflowException if the value does not fit: C# checked((nint)x).",
+   "operation": "checked((nint)a)",
+   "doc": "Conv_Ovf_I"
+  },
+  "conv.ovf.i.un": {
+   "summary": "Convert unsigned to native int with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a native int, throwing OverflowException if the value does not fit: a checked cast to nint from uint or ulong.",
+   "operation": "checked((nint)(unsigned)a)",
+   "doc": "Conv_Ovf_I_Un"
+  },
+  "conv.ovf.i1": {
+   "summary": "Convert to int8 with overflow check",
+   "description": "Pops a number and pushes it as an int8, throwing OverflowException if the value does not fit: C# checked((sbyte)x).",
+   "operation": "checked((sbyte)a)",
+   "doc": "Conv_Ovf_I1"
+  },
+  "conv.ovf.i1.un": {
+   "summary": "Convert unsigned to int8 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as an int8, throwing OverflowException if the value does not fit: a checked cast to sbyte from uint or ulong.",
+   "operation": "checked((sbyte)(unsigned)a)",
+   "doc": "Conv_Ovf_I1_Un"
+  },
+  "conv.ovf.i2": {
+   "summary": "Convert to int16 with overflow check",
+   "description": "Pops a number and pushes it as an int16, throwing OverflowException if the value does not fit: C# checked((short)x).",
+   "operation": "checked((short)a)",
+   "doc": "Conv_Ovf_I2"
+  },
+  "conv.ovf.i2.un": {
+   "summary": "Convert unsigned to int16 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as an int16, throwing OverflowException if the value does not fit: a checked cast to short from uint or ulong.",
+   "operation": "checked((short)(unsigned)a)",
+   "doc": "Conv_Ovf_I2_Un"
+  },
+  "conv.ovf.i4": {
+   "summary": "Convert to int32 with overflow check",
+   "description": "Pops a number and pushes it as an int32, throwing OverflowException if the value does not fit: C# checked((int)x).",
+   "operation": "checked((int)a)",
+   "doc": "Conv_Ovf_I4"
+  },
+  "conv.ovf.i4.un": {
+   "summary": "Convert unsigned to int32 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as an int32, throwing OverflowException if the value does not fit: a checked cast to int from uint or ulong.",
+   "operation": "checked((int)(unsigned)a)",
+   "doc": "Conv_Ovf_I4_Un"
+  },
+  "conv.ovf.i8": {
+   "summary": "Convert to int64 with overflow check",
+   "description": "Pops a number and pushes it as an int64, throwing OverflowException if the value does not fit: C# checked((long)x).",
+   "operation": "checked((long)a)",
+   "doc": "Conv_Ovf_I8"
+  },
+  "conv.ovf.i8.un": {
+   "summary": "Convert unsigned to int64 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as an int64, throwing OverflowException if the value does not fit: a checked cast to long from uint or ulong.",
+   "operation": "checked((long)(unsigned)a)",
+   "doc": "Conv_Ovf_I8_Un"
+  },
+  "conv.ovf.u": {
+   "summary": "Convert to native uint with overflow check",
+   "description": "Pops a number and pushes it as a native uint, throwing OverflowException if the value does not fit: C# checked((nuint)x).",
+   "operation": "checked((nuint)a)",
+   "doc": "Conv_Ovf_U"
+  },
+  "conv.ovf.u.un": {
+   "summary": "Convert unsigned to native uint with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a native uint, throwing OverflowException if the value does not fit: a checked cast to nuint from uint or ulong.",
+   "operation": "checked((nuint)(unsigned)a)",
+   "doc": "Conv_Ovf_U_Un"
+  },
+  "conv.ovf.u1": {
+   "summary": "Convert to uint8 with overflow check",
+   "description": "Pops a number and pushes it as a uint8, throwing OverflowException if the value does not fit: C# checked((byte)x).",
+   "operation": "checked((byte)a)",
+   "doc": "Conv_Ovf_U1"
+  },
+  "conv.ovf.u1.un": {
+   "summary": "Convert unsigned to uint8 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a uint8, throwing OverflowException if the value does not fit: a checked cast to byte from uint or ulong.",
+   "operation": "checked((byte)(unsigned)a)",
+   "doc": "Conv_Ovf_U1_Un"
+  },
+  "conv.ovf.u2": {
+   "summary": "Convert to uint16 with overflow check",
+   "description": "Pops a number and pushes it as a uint16, throwing OverflowException if the value does not fit: C# checked((ushort)x).",
+   "operation": "checked((ushort)a)",
+   "doc": "Conv_Ovf_U2"
+  },
+  "conv.ovf.u2.un": {
+   "summary": "Convert unsigned to uint16 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a uint16, throwing OverflowException if the value does not fit: a checked cast to ushort from uint or ulong.",
+   "operation": "checked((ushort)(unsigned)a)",
+   "doc": "Conv_Ovf_U2_Un"
+  },
+  "conv.ovf.u4": {
+   "summary": "Convert to uint32 with overflow check",
+   "description": "Pops a number and pushes it as a uint32, throwing OverflowException if the value does not fit: C# checked((uint)x).",
+   "operation": "checked((uint)a)",
+   "doc": "Conv_Ovf_U4"
+  },
+  "conv.ovf.u4.un": {
+   "summary": "Convert unsigned to uint32 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a uint32, throwing OverflowException if the value does not fit: a checked cast to uint from uint or ulong.",
+   "operation": "checked((uint)(unsigned)a)",
+   "doc": "Conv_Ovf_U4_Un"
+  },
+  "conv.ovf.u8": {
+   "summary": "Convert to uint64 with overflow check",
+   "description": "Pops a number and pushes it as a uint64, throwing OverflowException if the value does not fit: C# checked((ulong)x).",
+   "operation": "checked((ulong)a)",
+   "doc": "Conv_Ovf_U8"
+  },
+  "conv.ovf.u8.un": {
+   "summary": "Convert unsigned to uint64 with overflow check",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a uint64, throwing OverflowException if the value does not fit: a checked cast to ulong from uint or ulong.",
+   "operation": "checked((ulong)(unsigned)a)",
+   "doc": "Conv_Ovf_U8_Un"
+  },
+  "conv.r.un": {
+   "summary": "Convert unsigned to float",
+   "description": "Pops an integer, takes it as unsigned and pushes it as a float; a conv.r4 or conv.r8 usually follows. C# casts from uint or ulong to float or double compile to it.",
+   "operation": "(double)(unsigned)a",
+   "doc": "Conv_R_Un"
+  },
+  "conv.r4": {
+   "summary": "Convert to float32",
+   "description": "Pops a number and pushes it as a float32, rounding if needed: the C# cast (float).",
+   "operation": "(float)a",
+   "doc": "Conv_R4"
+  },
+  "conv.r8": {
+   "summary": "Convert to float64",
+   "description": "Pops a number and pushes it as a float64: the C# cast (double).",
+   "operation": "(double)a",
+   "doc": "Conv_R8"
+  },
+  "conv.u": {
+   "summary": "Convert to native uint",
+   "description": "Pops a number and pushes it as a native unsigned int, zero-extending a shorter integer: the C# cast (nuint). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.u is the checked form.",
+   "operation": "(nuint)a",
+   "doc": "Conv_U"
+  },
+  "conv.u1": {
+   "summary": "Convert to uint8",
+   "description": "Pops a number and pushes it truncated to 8 bits and zero-extended to int32: the C# cast (byte). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.u1 is the checked form.",
+   "operation": "(byte)a",
+   "doc": "Conv_U1"
+  },
+  "conv.u2": {
+   "summary": "Convert to uint16",
+   "description": "Pops a number and pushes it truncated to 16 bits and zero-extended to int32: the C# cast (ushort). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.u2 is the checked form.",
+   "operation": "(ushort)a",
+   "doc": "Conv_U2"
+  },
+  "conv.u4": {
+   "summary": "Convert to uint32",
+   "description": "Pops a number and pushes it as an unsigned int32: the C# cast (uint). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.u4 is the checked form.",
+   "operation": "(uint)a",
+   "doc": "Conv_U4"
+  },
+  "conv.u8": {
+   "summary": "Convert to uint64",
+   "description": "Pops a number and pushes it as an int64, zero-extending a shorter integer: the C# cast (ulong). A float is truncated toward zero; values that do not fit go unnoticed, conv.ovf.u8 is the checked form.",
+   "operation": "(ulong)a",
+   "doc": "Conv_U8"
+  },
+  "cpblk": {
+   "summary": "Copy a block of memory",
+   "description": "Pops a byte count, a source address and a destination address and copies that many bytes, like memcpy. Unsafe.CopyBlock compiles to it.",
+   "operation": "memcpy(dst, src, n)",
+   "doc": "Cpblk"
+  },
+  "cpobj": {
+   "summary": "Copy a value through addresses",
+   "description": "Pops a source address and a destination address beneath it and copies the value of the given type from one to the other.",
+   "operation": "*dst = *src",
+   "doc": "Cpobj"
+  },
+  "div": {
+   "summary": "Divide",
+   "description": "Pops two numbers and pushes the first divided by the second. Integer division rounds toward zero, throws DivideByZeroException on a zero divisor and OverflowException on MinValue / -1; floats follow IEEE 754.",
+   "operation": "a / b",
+   "doc": "Div"
+  },
+  "div.un": {
+   "summary": "Divide unsigned",
+   "description": "Pops two integers, takes both as unsigned and pushes the quotient. Throws DivideByZeroException on a zero divisor.",
+   "operation": "a / b (unsigned)",
+   "doc": "Div_Un"
+  },
+  "dup": {
+   "summary": "Duplicate the top value",
+   "description": "Pops the value on top of the stack and pushes it twice.",
+   "operation": "push a; push a",
+   "doc": "Dup"
+  },
+  "endfilter": {
+   "summary": "End an exception filter",
+   "description": "Pops an int32 that ends a filter block: 1 means the handler takes the exception, 0 means the search goes on. C# catch (...) when (...) makes filters.",
+   "operation": "return pop from filter",
+   "doc": "Endfilter"
+  },
+  "endfinally": {
+   "summary": "End a finally or fault block",
+   "description": "Returns from a finally or fault handler to wherever the runtime was heading: the target of a leave or the further unwinding of an exception. endfault is another name for it.",
+   "operation": "end handler",
+   "doc": "Endfinally"
+  },
+  "initblk": {
+   "summary": "Fill a block of memory",
+   "description": "Pops a byte count, a byte value and an address and sets that many bytes to the value, like memset. Unsafe.InitBlock compiles to it.",
+   "operation": "memset(a, v, n)",
+   "doc": "Initblk"
+  },
+  "initobj": {
+   "summary": "Zero a value",
+   "description": "Pops an address and sets the value of the given type there to all zeros, or null for a reference type: C# default(T) assigned to a struct local or field.",
+   "operation": "*(T*)a = default(T)",
+   "doc": "Initobj"
+  },
+  "isinst": {
+   "summary": "Test an object's type",
+   "description": "Pops an object reference and pushes it back if the object is of the given type, or null if it is not. C# is and as compile to it.",
+   "operation": "push obj as T",
+   "doc": "Isinst"
+  },
+  "jmp": {
+   "summary": "Jump to another method",
+   "description": "Leaves the current method and enters the given one with the same arguments. The stack must be empty and the two signatures must match.",
+   "operation": "goto method(args)",
+   "doc": "Jmp"
+  },
+  "ldarg": {
+   "summary": "Load argument",
+   "description": "Pushes the argument with the given number. The number takes two bytes; ldarg.s is the shorter form for the first 256.",
+   "operation": "push arg[n]",
+   "doc": "Ldarg"
+  },
+  "ldarg.0": {
+   "summary": "Load argument 0",
+   "description": "Pushes argument 0; in an instance method that is this. A one-byte form of ldarg for the first four arguments.",
+   "operation": "push arg0",
+   "doc": "Ldarg_0"
+  },
+  "ldarg.1": {
+   "summary": "Load argument 1",
+   "description": "Pushes argument 1. A one-byte form of ldarg for the first four arguments.",
+   "operation": "push arg1",
+   "doc": "Ldarg_1"
+  },
+  "ldarg.2": {
+   "summary": "Load argument 2",
+   "description": "Pushes argument 2. A one-byte form of ldarg for the first four arguments.",
+   "operation": "push arg2",
+   "doc": "Ldarg_2"
+  },
+  "ldarg.3": {
+   "summary": "Load argument 3",
+   "description": "Pushes argument 3. A one-byte form of ldarg for the first four arguments.",
+   "operation": "push arg3",
+   "doc": "Ldarg_3"
+  },
+  "ldarg.s": {
+   "summary": "Load argument (short form)",
+   "description": "Pushes the argument with the given number. The number is one byte (0 to 255); ldarg takes two.",
+   "operation": "push arg[n]",
+   "doc": "Ldarg_S"
+  },
+  "ldarga": {
+   "summary": "Load argument address",
+   "description": "Pushes a managed pointer to the argument with the given number, as C# does to pass a parameter by ref or to call a method on a struct parameter. The number takes two bytes; ldarga.s is the shorter form for the first 256.",
+   "operation": "push &arg[n]",
+   "doc": "Ldarga"
+  },
+  "ldarga.s": {
+   "summary": "Load argument address (short form)",
+   "description": "Pushes a managed pointer to the argument with the given number, as C# does to pass a parameter by ref or to call a method on a struct parameter. The number is one byte (0 to 255); ldarga takes two.",
+   "operation": "push &arg[n]",
+   "doc": "Ldarga_S"
+  },
+  "ldc.i4": {
+   "summary": "Load an int32 constant",
+   "description": "Pushes the int32 value written in the four bytes after the opcode. A bool true or false is just 1 or 0 here.",
+   "operation": "push n",
+   "doc": "Ldc_I4"
+  },
+  "ldc.i4.0": {
+   "summary": "Load 0",
+   "description": "Pushes the int32 value 0. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 0",
+   "doc": "Ldc_I4_0"
+  },
+  "ldc.i4.1": {
+   "summary": "Load 1",
+   "description": "Pushes the int32 value 1. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 1",
+   "doc": "Ldc_I4_1"
+  },
+  "ldc.i4.2": {
+   "summary": "Load 2",
+   "description": "Pushes the int32 value 2. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 2",
+   "doc": "Ldc_I4_2"
+  },
+  "ldc.i4.3": {
+   "summary": "Load 3",
+   "description": "Pushes the int32 value 3. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 3",
+   "doc": "Ldc_I4_3"
+  },
+  "ldc.i4.4": {
+   "summary": "Load 4",
+   "description": "Pushes the int32 value 4. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 4",
+   "doc": "Ldc_I4_4"
+  },
+  "ldc.i4.5": {
+   "summary": "Load 5",
+   "description": "Pushes the int32 value 5. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 5",
+   "doc": "Ldc_I4_5"
+  },
+  "ldc.i4.6": {
+   "summary": "Load 6",
+   "description": "Pushes the int32 value 6. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 6",
+   "doc": "Ldc_I4_6"
+  },
+  "ldc.i4.7": {
+   "summary": "Load 7",
+   "description": "Pushes the int32 value 7. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 7",
+   "doc": "Ldc_I4_7"
+  },
+  "ldc.i4.8": {
+   "summary": "Load 8",
+   "description": "Pushes the int32 value 8. Small constants from -1 to 8 have one-byte forms like this one.",
+   "operation": "push 8",
+   "doc": "Ldc_I4_8"
+  },
+  "ldc.i4.m1": {
+   "summary": "Load -1",
+   "description": "Pushes the int32 value -1. A one-byte form of ldc.i4.",
+   "operation": "push -1",
+   "doc": "Ldc_I4_M1"
+  },
+  "ldc.i4.s": {
+   "summary": "Load a small int32 constant",
+   "description": "Pushes an int32 sign-extended from the signed byte after the opcode, so -128 to 127 in two bytes.",
+   "operation": "push (sbyte)n",
+   "doc": "Ldc_I4_S"
+  },
+  "ldc.i8": {
+   "summary": "Load an int64 constant",
+   "description": "Pushes the int64 value written in the eight bytes after the opcode.",
+   "operation": "push n",
+   "doc": "Ldc_I8"
+  },
+  "ldc.r4": {
+   "summary": "Load a float32 constant",
+   "description": "Pushes the float32 value written in the four bytes after the opcode; on the stack it becomes the general float type.",
+   "operation": "push x",
+   "doc": "Ldc_R4"
+  },
+  "ldc.r8": {
+   "summary": "Load a float64 constant",
+   "description": "Pushes the float64 value written in the eight bytes after the opcode.",
+   "operation": "push x",
+   "doc": "Ldc_R8"
+  },
+  "ldelem": {
+   "summary": "Load an element of a given type",
+   "description": "Pops an index and an array and pushes the element, whose type the token gives; the general form for structs and generic parameters. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem"
+  },
+  "ldelem.i": {
+   "summary": "Load a native int element",
+   "description": "Pops an index and an array and pushes the native int at that index. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_I"
+  },
+  "ldelem.i1": {
+   "summary": "Load an int8 element",
+   "description": "Pops an index and an array and pushes the int8 at that index, sign-extended to int32. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_I1"
+  },
+  "ldelem.i2": {
+   "summary": "Load an int16 element",
+   "description": "Pops an index and an array and pushes the int16 at that index, sign-extended to int32. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_I2"
+  },
+  "ldelem.i4": {
+   "summary": "Load an int32 element",
+   "description": "Pops an index and an array and pushes the int32 at that index. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_I4"
+  },
+  "ldelem.i8": {
+   "summary": "Load an int64 element",
+   "description": "Pops an index and an array and pushes the int64 at that index, also used for uint64, which has no form of its own. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_I8"
+  },
+  "ldelem.r4": {
+   "summary": "Load a float32 element",
+   "description": "Pops an index and an array and pushes the float32 at that index. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_R4"
+  },
+  "ldelem.r8": {
+   "summary": "Load a float64 element",
+   "description": "Pops an index and an array and pushes the float64 at that index. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_R8"
+  },
+  "ldelem.ref": {
+   "summary": "Load an object reference element",
+   "description": "Pops an index and an array and pushes the reference at that index. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_Ref"
+  },
+  "ldelem.u1": {
+   "summary": "Load a uint8 element",
+   "description": "Pops an index and an array and pushes the uint8 at that index, zero-extended to int32. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_U1"
+  },
+  "ldelem.u2": {
+   "summary": "Load a uint16 element",
+   "description": "Pops an index and an array and pushes the uint16 at that index, zero-extended to int32. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_U2"
+  },
+  "ldelem.u4": {
+   "summary": "Load a uint32 element",
+   "description": "Pops an index and an array and pushes the uint32 at that index, which the stack holds as a plain int32. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "push arr[i]",
+   "doc": "Ldelem_U4"
+  },
+  "ldelema": {
+   "summary": "Load an element address",
+   "description": "Pops an index and an array and pushes a managed pointer to the element, for ref arr[i], fixed and calls on struct elements. Throws NullReferenceException, IndexOutOfRangeException, or ArrayTypeMismatchException when the element type is not exactly the given one.",
+   "operation": "push &arr[i]",
+   "doc": "Ldelema"
+  },
+  "ldfld": {
+   "summary": "Load an instance field",
+   "description": "Pops an object (or a struct or its address) and pushes the value of the given field. Throws NullReferenceException on null.",
+   "operation": "push obj.field",
+   "doc": "Ldfld"
+  },
+  "ldflda": {
+   "summary": "Load an instance field address",
+   "description": "Pops an object or a struct address and pushes a managed pointer to the given field, for ref obj.field and calls on struct fields. Throws NullReferenceException on null.",
+   "operation": "push &obj.field",
+   "doc": "Ldflda"
+  },
+  "ldftn": {
+   "summary": "Load a method pointer",
+   "description": "Pushes a native pointer to the code of the given method. Followed by newobj of a delegate constructor it makes a C# delegate; with calli it calls the method.",
+   "operation": "push &method",
+   "doc": "Ldftn"
+  },
+  "ldind.i": {
+   "summary": "Load native int indirectly",
+   "description": "Pops an address and pushes the native int stored there. A null address throws NullReferenceException.",
+   "operation": "push *(nint*)a",
+   "doc": "Ldind_I"
+  },
+  "ldind.i1": {
+   "summary": "Load int8 indirectly",
+   "description": "Pops an address and pushes the int8 stored there, sign-extended to int32. A null address throws NullReferenceException.",
+   "operation": "push *(int8*)a",
+   "doc": "Ldind_I1"
+  },
+  "ldind.i2": {
+   "summary": "Load int16 indirectly",
+   "description": "Pops an address and pushes the int16 stored there, sign-extended to int32. A null address throws NullReferenceException.",
+   "operation": "push *(int16*)a",
+   "doc": "Ldind_I2"
+  },
+  "ldind.i4": {
+   "summary": "Load int32 indirectly",
+   "description": "Pops an address and pushes the int32 stored there. A null address throws NullReferenceException.",
+   "operation": "push *(int32*)a",
+   "doc": "Ldind_I4"
+  },
+  "ldind.i8": {
+   "summary": "Load int64 indirectly",
+   "description": "Pops an address and pushes the int64 stored there, also used for uint64, which has no form of its own. A null address throws NullReferenceException.",
+   "operation": "push *(int64*)a",
+   "doc": "Ldind_I8"
+  },
+  "ldind.r4": {
+   "summary": "Load float32 indirectly",
+   "description": "Pops an address and pushes the float32 stored there. A null address throws NullReferenceException.",
+   "operation": "push *(float32*)a",
+   "doc": "Ldind_R4"
+  },
+  "ldind.r8": {
+   "summary": "Load float64 indirectly",
+   "description": "Pops an address and pushes the float64 stored there. A null address throws NullReferenceException.",
+   "operation": "push *(float64*)a",
+   "doc": "Ldind_R8"
+  },
+  "ldind.ref": {
+   "summary": "Load an object reference indirectly",
+   "description": "Pops an address and pushes the object reference stored there. A null address throws NullReferenceException.",
+   "operation": "push *(object*)a",
+   "doc": "Ldind_Ref"
+  },
+  "ldind.u1": {
+   "summary": "Load uint8 indirectly",
+   "description": "Pops an address and pushes the uint8 stored there, zero-extended to int32. A null address throws NullReferenceException.",
+   "operation": "push *(uint8*)a",
+   "doc": "Ldind_U1"
+  },
+  "ldind.u2": {
+   "summary": "Load uint16 indirectly",
+   "description": "Pops an address and pushes the uint16 stored there, zero-extended to int32. A null address throws NullReferenceException.",
+   "operation": "push *(uint16*)a",
+   "doc": "Ldind_U2"
+  },
+  "ldind.u4": {
+   "summary": "Load uint32 indirectly",
+   "description": "Pops an address and pushes the uint32 stored there, which the stack holds as a plain int32. A null address throws NullReferenceException.",
+   "operation": "push *(uint32*)a",
+   "doc": "Ldind_U4"
+  },
+  "ldlen": {
+   "summary": "Array length",
+   "description": "Pops an array and pushes its number of elements as a native unsigned int: arr.Length. Throws NullReferenceException on null.",
+   "operation": "push arr.Length",
+   "doc": "Ldlen"
+  },
+  "ldloc": {
+   "summary": "Load local",
+   "description": "Pushes the value of the local variable with the given number. The number takes two bytes; ldloc.s is the shorter form for the first 256.",
+   "operation": "push loc[n]",
+   "doc": "Ldloc"
+  },
+  "ldloc.0": {
+   "summary": "Load local 0",
+   "description": "Pushes the value of local variable 0. A one-byte form of ldloc for the first four locals.",
+   "operation": "push loc0",
+   "doc": "Ldloc_0"
+  },
+  "ldloc.1": {
+   "summary": "Load local 1",
+   "description": "Pushes the value of local variable 1. A one-byte form of ldloc for the first four locals.",
+   "operation": "push loc1",
+   "doc": "Ldloc_1"
+  },
+  "ldloc.2": {
+   "summary": "Load local 2",
+   "description": "Pushes the value of local variable 2. A one-byte form of ldloc for the first four locals.",
+   "operation": "push loc2",
+   "doc": "Ldloc_2"
+  },
+  "ldloc.3": {
+   "summary": "Load local 3",
+   "description": "Pushes the value of local variable 3. A one-byte form of ldloc for the first four locals.",
+   "operation": "push loc3",
+   "doc": "Ldloc_3"
+  },
+  "ldloc.s": {
+   "summary": "Load local (short form)",
+   "description": "Pushes the value of the local variable with the given number. The number is one byte (0 to 255); ldloc takes two.",
+   "operation": "push loc[n]",
+   "doc": "Ldloc_S"
+  },
+  "ldloca": {
+   "summary": "Load local address",
+   "description": "Pushes a managed pointer to the local variable with the given number: for ref locals, out arguments and calls on a struct local. The number takes two bytes; ldloca.s is the shorter form for the first 256.",
+   "operation": "push &loc[n]",
+   "doc": "Ldloca"
+  },
+  "ldloca.s": {
+   "summary": "Load local address (short form)",
+   "description": "Pushes a managed pointer to the local variable with the given number: for ref locals, out arguments and calls on a struct local. The number is one byte (0 to 255); ldloca takes two.",
+   "operation": "push &loc[n]",
+   "doc": "Ldloca_S"
+  },
+  "ldnull": {
+   "summary": "Load null",
+   "description": "Pushes a null object reference.",
+   "operation": "push null",
+   "doc": "Ldnull"
+  },
+  "ldobj": {
+   "summary": "Load a value through an address",
+   "description": "Pops an address and pushes the value of the given type stored there, usually a struct. A null address throws NullReferenceException.",
+   "operation": "push *(T*)a",
+   "doc": "Ldobj"
+  },
+  "ldsfld": {
+   "summary": "Load a static field",
+   "description": "Pushes the value of the given static field, running the type's static constructor first if it has not run yet.",
+   "operation": "push T.field",
+   "doc": "Ldsfld"
+  },
+  "ldsflda": {
+   "summary": "Load a static field address",
+   "description": "Pushes a managed pointer to the given static field (or an unmanaged one when the field has an RVA, as array initialisers do).",
+   "operation": "push &T.field",
+   "doc": "Ldsflda"
+  },
+  "ldstr": {
+   "summary": "Load a string literal",
+   "description": "Pushes a reference to the string literal the token names in the #US heap. Equal literals are interned and share one System.String object.",
+   "operation": "push \"...\"",
+   "doc": "Ldstr"
+  },
+  "ldtoken": {
+   "summary": "Load a metadata handle",
+   "description": "Pushes the runtime handle of a type, method or field: a RuntimeTypeHandle, RuntimeMethodHandle or RuntimeFieldHandle. C# typeof(T) is ldtoken followed by a call to Type.GetTypeFromHandle.",
+   "operation": "push handle(token)",
+   "doc": "Ldtoken"
+  },
+  "ldvirtftn": {
+   "summary": "Load a virtual method pointer",
+   "description": "Pops an object and pushes a pointer to the code its type runs for the given virtual method, for delegates bound to virtual methods. Throws NullReferenceException on null.",
+   "operation": "push &obj.method",
+   "doc": "Ldvirtftn"
+  },
+  "leave": {
+   "summary": "Leave a protected block",
+   "description": "Exits a try or catch block to the target, running the finally blocks it passes and emptying the stack. C# compiles return, break and the normal end of a try this way. The long form with a four-byte offset; leave.s is the short one.",
+   "operation": "clear stack; goto target",
+   "doc": "Leave"
+  },
+  "leave.s": {
+   "summary": "Leave a protected block (short form)",
+   "description": "Exits a try or catch block to the target, running the finally blocks it passes and emptying the stack. The short form: a one-byte signed offset from the next instruction.",
+   "operation": "clear stack; goto target",
+   "doc": "Leave_S"
+  },
+  "localloc": {
+   "summary": "Allocate on the stack",
+   "description": "Pops a byte count and pushes a pointer to that many bytes in the current frame, freed when the method returns: C# stackalloc. The bytes are zeroed if the method has the localsinit flag; running out of room throws StackOverflowException.",
+   "operation": "push stackalloc byte[n]",
+   "doc": "Localloc"
+  },
+  "mkrefany": {
+   "summary": "Make a typed reference",
+   "description": "Pops an address and pushes a TypedReference that pairs it with the given type: C# __makeref.",
+   "operation": "push __makeref(*a)",
+   "doc": "Mkrefany"
+  },
+  "mul": {
+   "summary": "Multiply",
+   "description": "Pops two numbers and pushes their product. Integers keep the low bits on overflow; mul.ovf is the checked form.",
+   "operation": "a * b",
+   "doc": "Mul"
+  },
+  "mul.ovf": {
+   "summary": "Multiply with overflow check",
+   "description": "Pops two signed integers and pushes their product, throwing OverflowException if it does not fit: C# checked(a * b).",
+   "operation": "checked(a * b)",
+   "doc": "Mul_Ovf"
+  },
+  "mul.ovf.un": {
+   "summary": "Multiply unsigned with overflow check",
+   "description": "Pops two integers, takes both as unsigned and pushes their product, throwing OverflowException if it does not fit: checked arithmetic on uint or ulong in C#.",
+   "operation": "checked(a * b) unsigned",
+   "doc": "Mul_Ovf_Un"
+  },
+  "neg": {
+   "summary": "Negate",
+   "description": "Pops a number and pushes it with the sign flipped. An integer MinValue stays as it is; C# checked(-x) uses sub.ovf from zero instead.",
+   "operation": "-a",
+   "doc": "Neg"
+  },
+  "newarr": {
+   "summary": "Create an array",
+   "description": "Pops an element count and pushes a new zero-based one-dimensional array of the given element type, all elements zeroed: C# new T[n]. A negative count throws OverflowException.",
+   "operation": "push new T[n]",
+   "doc": "Newarr"
+  },
+  "newobj": {
+   "summary": "Create an object",
+   "description": "Allocates a new instance, calls the given constructor with the popped arguments and pushes the instance: C# new T(...). Also creates multi-dimensional arrays through their constructors.",
+   "operation": "push new T(args)",
+   "doc": "Newobj"
+  },
+  "no.": {
+   "summary": "Skip runtime checks",
+   "description": "Tells the runtime that the following instruction may skip its type (1), range (2) or null (4) checks, as the byte after the prefix says. Compilers rarely emit it and runtimes may ignore it.",
+   "operation": "no check n",
+   "doc": ""
+  },
+  "nop": {
+   "summary": "No operation",
+   "description": "Does nothing. Debug builds scatter it so that lines and braces have an instruction to put a breakpoint on.",
+   "operation": "nothing",
+   "doc": "Nop"
+  },
+  "not": {
+   "summary": "Bitwise NOT",
+   "description": "Pops an integer and pushes it with every bit inverted: C# ~. A logical !b compiles to ceq against zero instead.",
+   "operation": "~a",
+   "doc": "Not"
+  },
+  "or": {
+   "summary": "Bitwise OR",
+   "description": "Pops two integers and pushes their bitwise OR: C# | on integers and bools.",
+   "operation": "a | b",
+   "doc": "Or"
+  },
+  "pop": {
+   "summary": "Discard the top value",
+   "description": "Removes the value on top of the stack, such as the unused result of a call.",
+   "operation": "drop a",
+   "doc": "Pop"
+  },
+  "readonly.": {
+   "summary": "Read-only element address",
+   "description": "Prefixes ldelema: the array type check is skipped and the pointer it gives is one the code promises not to write through. Generic code uses it to call methods on array elements of type T.",
+   "operation": "readonly &arr[i]",
+   "doc": "Readonly"
+  },
+  "refanytype": {
+   "summary": "Type of a typed reference",
+   "description": "Pops a TypedReference and pushes the RuntimeTypeHandle of the type it refers to: C# __reftype, followed by Type.GetTypeFromHandle.",
+   "operation": "push typeof(tr)",
+   "doc": "Refanytype"
+  },
+  "refanyval": {
+   "summary": "Address inside a typed reference",
+   "description": "Pops a TypedReference and pushes the address it holds, throwing InvalidCastException if it does not refer to the given type: C# __refvalue.",
+   "operation": "push &__refvalue(tr, T)",
+   "doc": "Refanyval"
+  },
+  "rem": {
+   "summary": "Remainder",
+   "description": "Pops two numbers and pushes the remainder of dividing the first by the second, with the sign of the first: C# %. Integers throw DivideByZeroException on a zero divisor; floats give NaN.",
+   "operation": "a % b",
+   "doc": "Rem"
+  },
+  "rem.un": {
+   "summary": "Remainder unsigned",
+   "description": "Pops two integers, takes both as unsigned and pushes the remainder of their division. Throws DivideByZeroException on a zero divisor.",
+   "operation": "a % b (unsigned)",
+   "doc": "Rem_Un"
+  },
+  "ret": {
+   "summary": "Return from the method",
+   "description": "Returns to the caller, popping the return value if the method has one. Nothing else may be left on the stack.",
+   "operation": "return [pop]",
+   "doc": "Ret"
+  },
+  "rethrow": {
+   "summary": "Rethrow the current exception",
+   "description": "Throws the exception being handled again, keeping its stack trace; allowed only inside a catch block. A bare throw; in C# compiles to it.",
+   "operation": "throw (again)",
+   "doc": "Rethrow"
+  },
+  "shl": {
+   "summary": "Shift left",
+   "description": "Pops a shift amount and an integer and pushes the integer shifted left, filling with zeros. The result is unspecified for an amount not below the width, so C# masks the amount first.",
+   "operation": "a << b",
+   "doc": "Shl"
+  },
+  "shr": {
+   "summary": "Arithmetic shift right",
+   "description": "Pops a shift amount and an integer and pushes the integer shifted right, copying the sign bit into the freed bits: C# >> on a signed type.",
+   "operation": "a >> b",
+   "doc": "Shr"
+  },
+  "shr.un": {
+   "summary": "Logical shift right",
+   "description": "Pops a shift amount and an integer and pushes the integer shifted right, filling with zeros: C# >> on an unsigned type and >>>.",
+   "operation": "a >>> b",
+   "doc": "Shr_Un"
+  },
+  "sizeof": {
+   "summary": "Size of a type",
+   "description": "Pushes the size in bytes of the given type as an unsigned int32; for a reference type, the size of a reference. C# sizeof(T) on structs and Unsafe.SizeOf<T>() use it.",
+   "operation": "push sizeof(T)",
+   "doc": "Sizeof"
+  },
+  "starg": {
+   "summary": "Store to argument",
+   "description": "Pops a value and stores it in the argument with the given number, which is what assigning to a parameter in C# does. The number takes two bytes; starg.s is the shorter form for the first 256.",
+   "operation": "arg[n] = pop",
+   "doc": "Starg"
+  },
+  "starg.s": {
+   "summary": "Store to argument (short form)",
+   "description": "Pops a value and stores it in the argument with the given number, which is what assigning to a parameter in C# does. The number is one byte (0 to 255); starg takes two.",
+   "operation": "arg[n] = pop",
+   "doc": "Starg_S"
+  },
+  "stelem": {
+   "summary": "Store an element of a given type",
+   "description": "Pops a value, an index and an array and stores the value, of the type the token gives, in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem"
+  },
+  "stelem.i": {
+   "summary": "Store a native int element",
+   "description": "Pops a value, an index and an array and stores the value in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_I"
+  },
+  "stelem.i1": {
+   "summary": "Store an int8 element",
+   "description": "Pops a value, an index and an array and stores the value, truncated to 8 bits, in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_I1"
+  },
+  "stelem.i2": {
+   "summary": "Store an int16 element",
+   "description": "Pops a value, an index and an array and stores the value, truncated to 16 bits, in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_I2"
+  },
+  "stelem.i4": {
+   "summary": "Store an int32 element",
+   "description": "Pops a value, an index and an array and stores the value in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_I4"
+  },
+  "stelem.i8": {
+   "summary": "Store an int64 element",
+   "description": "Pops a value, an index and an array and stores the value in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_I8"
+  },
+  "stelem.r4": {
+   "summary": "Store a float32 element",
+   "description": "Pops a value, an index and an array and stores the value, rounded to float32, in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_R4"
+  },
+  "stelem.r8": {
+   "summary": "Store a float64 element",
+   "description": "Pops a value, an index and an array and stores the value in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index.",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_R8"
+  },
+  "stelem.ref": {
+   "summary": "Store an object reference element",
+   "description": "Pops a value, an index and an array and stores the value in that element. Throws NullReferenceException on a null array and IndexOutOfRangeException on a bad index. An object that does not suit the array's real element type throws ArrayTypeMismatchException (array covariance).",
+   "operation": "arr[i] = v",
+   "doc": "Stelem_Ref"
+  },
+  "stfld": {
+   "summary": "Store to an instance field",
+   "description": "Pops a value and the object (or struct address) beneath it and stores the value in the given field. Throws NullReferenceException on null.",
+   "operation": "obj.field = v",
+   "doc": "Stfld"
+  },
+  "stind.i": {
+   "summary": "Store native int indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there. A null address throws NullReferenceException.",
+   "operation": "*(nint*)a = v",
+   "doc": "Stind_I"
+  },
+  "stind.i1": {
+   "summary": "Store int8 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there, truncated to 8 bits. A null address throws NullReferenceException.",
+   "operation": "*(int8*)a = v",
+   "doc": "Stind_I1"
+  },
+  "stind.i2": {
+   "summary": "Store int16 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there, truncated to 16 bits. A null address throws NullReferenceException.",
+   "operation": "*(int16*)a = v",
+   "doc": "Stind_I2"
+  },
+  "stind.i4": {
+   "summary": "Store int32 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there. A null address throws NullReferenceException.",
+   "operation": "*(int32*)a = v",
+   "doc": "Stind_I4"
+  },
+  "stind.i8": {
+   "summary": "Store int64 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there. A null address throws NullReferenceException.",
+   "operation": "*(int64*)a = v",
+   "doc": "Stind_I8"
+  },
+  "stind.r4": {
+   "summary": "Store float32 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there, rounded to float32. A null address throws NullReferenceException.",
+   "operation": "*(float32*)a = v",
+   "doc": "Stind_R4"
+  },
+  "stind.r8": {
+   "summary": "Store float64 indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there. A null address throws NullReferenceException.",
+   "operation": "*(float64*)a = v",
+   "doc": "Stind_R8"
+  },
+  "stind.ref": {
+   "summary": "Store an object reference indirectly",
+   "description": "Pops a value and the address beneath it and stores the value there. A null address throws NullReferenceException.",
+   "operation": "*(object*)a = v",
+   "doc": "Stind_Ref"
+  },
+  "stloc": {
+   "summary": "Store to local",
+   "description": "Pops a value and stores it in the local variable with the given number. The number takes two bytes; stloc.s is the shorter form for the first 256.",
+   "operation": "loc[n] = pop",
+   "doc": "Stloc"
+  },
+  "stloc.0": {
+   "summary": "Store to local 0",
+   "description": "Pops a value and stores it in local variable 0. A one-byte form of stloc for the first four locals.",
+   "operation": "loc0 = pop",
+   "doc": "Stloc_0"
+  },
+  "stloc.1": {
+   "summary": "Store to local 1",
+   "description": "Pops a value and stores it in local variable 1. A one-byte form of stloc for the first four locals.",
+   "operation": "loc1 = pop",
+   "doc": "Stloc_1"
+  },
+  "stloc.2": {
+   "summary": "Store to local 2",
+   "description": "Pops a value and stores it in local variable 2. A one-byte form of stloc for the first four locals.",
+   "operation": "loc2 = pop",
+   "doc": "Stloc_2"
+  },
+  "stloc.3": {
+   "summary": "Store to local 3",
+   "description": "Pops a value and stores it in local variable 3. A one-byte form of stloc for the first four locals.",
+   "operation": "loc3 = pop",
+   "doc": "Stloc_3"
+  },
+  "stloc.s": {
+   "summary": "Store to local (short form)",
+   "description": "Pops a value and stores it in the local variable with the given number. The number is one byte (0 to 255); stloc takes two.",
+   "operation": "loc[n] = pop",
+   "doc": "Stloc_S"
+  },
+  "stobj": {
+   "summary": "Store a value through an address",
+   "description": "Pops a value and the address beneath it and stores the value, of the given type, there. A null address throws NullReferenceException.",
+   "operation": "*(T*)a = v",
+   "doc": "Stobj"
+  },
+  "stsfld": {
+   "summary": "Store to a static field",
+   "description": "Pops a value and stores it in the given static field, running the type's static constructor first if needed.",
+   "operation": "T.field = v",
+   "doc": "Stsfld"
+  },
+  "sub": {
+   "summary": "Subtract",
+   "description": "Pops two numbers and pushes the first minus the second. Integers wrap around on overflow; sub.ovf is the checked form.",
+   "operation": "a - b",
+   "doc": "Sub"
+  },
+  "sub.ovf": {
+   "summary": "Subtract with overflow check",
+   "description": "Pops two signed integers and pushes their difference, throwing OverflowException if it does not fit: C# checked(a - b).",
+   "operation": "checked(a - b)",
+   "doc": "Sub_Ovf"
+  },
+  "sub.ovf.un": {
+   "summary": "Subtract unsigned with overflow check",
+   "description": "Pops two integers, takes both as unsigned and pushes their difference, throwing OverflowException if it does not fit: checked arithmetic on uint or ulong in C#.",
+   "operation": "checked(a - b) unsigned",
+   "doc": "Sub_Ovf_Un"
+  },
+  "switch": {
+   "summary": "Jump table",
+   "description": "Pops an unsigned index and jumps to that entry of the table of four-byte offsets after the opcode; an index past the end falls through to the next instruction. C# switch over dense cases compiles to it.",
+   "operation": "goto targets[a]",
+   "doc": "Switch"
+  },
+  "tail.": {
+   "summary": "Tail call",
+   "description": "Makes the following call, calli or callvirt replace the current method's frame, so that deep recursion does not use up the stack; a ret must come right after. F# emits it, C# does not.",
+   "operation": "return call(...)",
+   "doc": "Tailcall"
+  },
+  "throw": {
+   "summary": "Throw an exception",
+   "description": "Pops an object reference and throws it as an exception. A null reference throws NullReferenceException instead.",
+   "operation": "throw pop",
+   "doc": "Throw"
+  },
+  "unaligned.": {
+   "summary": "Unaligned access",
+   "description": "Tells the following load, store, cpblk or initblk that its address may be aligned only to the number of bytes after the prefix: 1, 2 or 4.",
+   "operation": "align n",
+   "doc": "Unaligned"
+  },
+  "unbox": {
+   "summary": "Unbox to an address",
+   "description": "Pops a boxed value and pushes a managed pointer to the value inside the box. Throws NullReferenceException on null and InvalidCastException if the box holds another type.",
+   "operation": "push &((T)obj)",
+   "doc": "Unbox"
+  },
+  "unbox.any": {
+   "summary": "Unbox to a value",
+   "description": "Pops a boxed value and pushes a copy of the value, or acts as castclass when the type is a reference type: C# (T)obj for a value type or a generic T. Throws NullReferenceException or InvalidCastException.",
+   "operation": "push (T)obj",
+   "doc": "Unbox_Any"
+  },
+  "volatile.": {
+   "summary": "Volatile access",
+   "description": "Makes the following memory access volatile: it is not cached, merged or moved across other volatile accesses. C# volatile fields and Volatile.Read/Write produce it.",
+   "operation": "volatile",
+   "doc": "Volatile"
+  },
+  "xor": {
+   "summary": "Bitwise exclusive OR",
+   "description": "Pops two integers and pushes their bitwise exclusive OR: C# ^.",
+   "operation": "a ^ b",
+   "doc": "Xor"
+  }
+ }
+}

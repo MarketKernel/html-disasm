@@ -1,0 +1,1288 @@
+{
+ "about": "Every JVM instruction javap prints, with a plain-English description. The opcodes, operands and stack behaviour are in src/core/jvm/opcodes.ts; the text is here. The wide forms are named as javap names them (iload_w).",
+ "source": {
+  "spec": "The Java Virtual Machine Specification, Java SE 25 Edition, chapter 6 (The Java Virtual Machine Instruction Set)",
+  "text": "Descriptions written for this project; follow the links for the authoritative text"
+ },
+ "docBase": "https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-6.html#jvms-6.5.",
+ "instructions": {
+  "aaload": {
+   "summary": "Load a reference from an array",
+   "description": "Pops an index and an array and pushes the reference element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "aaload"
+  },
+  "aastore": {
+   "summary": "Store a reference into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. Throws ArrayStoreException when the object's class does not fit the array's element type. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "aastore"
+  },
+  "aconst_null": {
+   "summary": "Push null",
+   "description": "Pushes the null reference.",
+   "operation": "push null",
+   "doc": "aconst_null"
+  },
+  "aload": {
+   "summary": "Load reference from a local",
+   "description": "Pushes a reference from the local variable whose slot number follows the opcode. Parameters are the first locals: this (in an instance method) is slot 0.",
+   "operation": "push local[n]",
+   "doc": "aload"
+  },
+  "aload_0": {
+   "summary": "Load reference from local 0",
+   "description": "Pushes a reference from local variable 0. One byte in place of aload 0. In an instance method local 0 is this.",
+   "operation": "push local[0]",
+   "doc": "aload_n"
+  },
+  "aload_1": {
+   "summary": "Load reference from local 1",
+   "description": "Pushes a reference from local variable 1. One byte in place of aload 1.",
+   "operation": "push local[1]",
+   "doc": "aload_n"
+  },
+  "aload_2": {
+   "summary": "Load reference from local 2",
+   "description": "Pushes a reference from local variable 2. One byte in place of aload 2.",
+   "operation": "push local[2]",
+   "doc": "aload_n"
+  },
+  "aload_3": {
+   "summary": "Load reference from local 3",
+   "description": "Pushes a reference from local variable 3. One byte in place of aload 3.",
+   "operation": "push local[3]",
+   "doc": "aload_n"
+  },
+  "aload_w": {
+   "summary": "Load reference from a local (wide)",
+   "description": "Pushes a reference from a local variable, as aload does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "push local[n]",
+   "doc": "wide"
+  },
+  "anewarray": {
+   "summary": "Create an array of references",
+   "description": "Pops a length and pushes a new array of that many null references, of the class, interface or array type named.",
+   "operation": "push new Class[n]",
+   "doc": "anewarray"
+  },
+  "areturn": {
+   "summary": "Return reference",
+   "description": "Pops a reference and returns it to the caller, whose stack gets it. In a synchronized method the monitor is released first.",
+   "operation": "return a",
+   "doc": "areturn"
+  },
+  "arraylength": {
+   "summary": "Length of an array",
+   "description": "Pops an array and pushes its length. Throws NullPointerException on null.",
+   "operation": "push array.length",
+   "doc": "arraylength"
+  },
+  "astore": {
+   "summary": "Store reference into a local",
+   "description": "Pops a reference and stores it in the local variable whose slot number follows the opcode. astore also stores the return address jsr pushes.",
+   "operation": "local[n] = pop",
+   "doc": "astore"
+  },
+  "astore_0": {
+   "summary": "Store reference into local 0",
+   "description": "Pops a reference and stores it in local variable 0. One byte in place of astore 0.",
+   "operation": "local[0] = pop",
+   "doc": "astore_n"
+  },
+  "astore_1": {
+   "summary": "Store reference into local 1",
+   "description": "Pops a reference and stores it in local variable 1. One byte in place of astore 1.",
+   "operation": "local[1] = pop",
+   "doc": "astore_n"
+  },
+  "astore_2": {
+   "summary": "Store reference into local 2",
+   "description": "Pops a reference and stores it in local variable 2. One byte in place of astore 2.",
+   "operation": "local[2] = pop",
+   "doc": "astore_n"
+  },
+  "astore_3": {
+   "summary": "Store reference into local 3",
+   "description": "Pops a reference and stores it in local variable 3. One byte in place of astore 3.",
+   "operation": "local[3] = pop",
+   "doc": "astore_n"
+  },
+  "astore_w": {
+   "summary": "Store reference into a local (wide)",
+   "description": "Pops a reference and stores it in a local variable, as astore does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "local[n] = pop",
+   "doc": "wide"
+  },
+  "athrow": {
+   "summary": "Throw an exception",
+   "description": "Pops a Throwable and throws it: the nearest handler of the method that covers this instruction and catches its class gets it on an empty stack; if none does, the method ends and the caller's handlers are looked at. Throws NullPointerException on null.",
+   "operation": "throw a",
+   "doc": "athrow"
+  },
+  "baload": {
+   "summary": "Load a byte or boolean from an array",
+   "description": "Pops an index and an array and pushes the byte or boolean element at that index. The byte is sign-extended to an int (a boolean array holds 0 and 1). Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "baload"
+  },
+  "bastore": {
+   "summary": "Store a byte or boolean into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. The int is truncated to its low 8 bits (for a boolean array, its lowest bit). Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "bastore"
+  },
+  "bipush": {
+   "summary": "Push a byte as int",
+   "description": "Pushes the signed byte that follows the opcode, sign-extended to an int: constants from -128 to 127.",
+   "operation": "push (int) byte",
+   "doc": "bipush"
+  },
+  "caload": {
+   "summary": "Load a char from an array",
+   "description": "Pops an index and an array and pushes the char element at that index. The char is zero-extended to an int. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "caload"
+  },
+  "castore": {
+   "summary": "Store a char into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. The int is truncated to its low 16 bits. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "castore"
+  },
+  "checkcast": {
+   "summary": "Check a cast",
+   "description": "Pops a reference and pushes it back unchanged if it is null or an instance of the type named; otherwise throws ClassCastException: (Type) x.",
+   "operation": "push (Type) a",
+   "doc": "checkcast"
+  },
+  "d2f": {
+   "summary": "Convert double to float",
+   "description": "Pops double and pushes it as float. Rounds the double to the nearest float; too large becomes an infinity, too small zero.",
+   "operation": "(float) a",
+   "doc": "d2f"
+  },
+  "d2i": {
+   "summary": "Convert double to int",
+   "description": "Pops double and pushes it as int. Drops the fraction (rounds toward zero). A NaN gives 0, and a value outside the int range gives Integer.MIN_VALUE or MAX_VALUE.",
+   "operation": "(int) a",
+   "doc": "d2i"
+  },
+  "d2l": {
+   "summary": "Convert double to long",
+   "description": "Pops double and pushes it as long. Drops the fraction; a NaN gives 0, a value outside the long range Long.MIN_VALUE or MAX_VALUE.",
+   "operation": "(long) a",
+   "doc": "d2l"
+  },
+  "dadd": {
+   "summary": "Add doubles",
+   "description": "Pops two doubles and pushes their sum. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a + b",
+   "doc": "dadd"
+  },
+  "daload": {
+   "summary": "Load a double from an array",
+   "description": "Pops an index and an array and pushes the double element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "daload"
+  },
+  "dastore": {
+   "summary": "Store a double into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "dastore"
+  },
+  "dcmpg": {
+   "summary": "Compare doubles, NaN as greater",
+   "description": "Pops b, then a, two doubles, and pushes 1 if a > b, 0 if they are equal and -1 if a < b — and 1 when either is NaN. javac picks it for < and <= tests, so that a NaN makes them false.",
+   "operation": "a > b ? 1 : a == b ? 0 : -1 (NaN: 1)",
+   "doc": "dcmp_op"
+  },
+  "dcmpl": {
+   "summary": "Compare doubles, NaN as less",
+   "description": "Pops b, then a, two doubles, and pushes 1 if a > b, 0 if they are equal and -1 if a < b — and -1 when either is NaN. javac picks it for > and >= tests, so that a NaN makes them false.",
+   "operation": "a > b ? 1 : a == b ? 0 : -1 (NaN: -1)",
+   "doc": "dcmp_op"
+  },
+  "dconst_0": {
+   "summary": "Push double 0.0",
+   "description": "Pushes the double constant 0.0.",
+   "operation": "push 0.0",
+   "doc": "dconst_d"
+  },
+  "dconst_1": {
+   "summary": "Push double 1.0",
+   "description": "Pushes the double constant 1.0.",
+   "operation": "push 1.0",
+   "doc": "dconst_d"
+  },
+  "ddiv": {
+   "summary": "Divide doubles",
+   "description": "Pops b, then a, and pushes a / b by IEEE 754: dividing by zero gives an infinity or NaN, never an exception.",
+   "operation": "a / b",
+   "doc": "ddiv"
+  },
+  "dload": {
+   "summary": "Load double from a local",
+   "description": "Pushes a double (two slots) from the local variable whose slot number follows the opcode. Parameters are the first locals: this (in an instance method) is slot 0.",
+   "operation": "push local[n]",
+   "doc": "dload"
+  },
+  "dload_0": {
+   "summary": "Load double from local 0",
+   "description": "Pushes a double (two slots) from local variable 0. One byte in place of dload 0.",
+   "operation": "push local[0]",
+   "doc": "dload_n"
+  },
+  "dload_1": {
+   "summary": "Load double from local 1",
+   "description": "Pushes a double (two slots) from local variable 1. One byte in place of dload 1.",
+   "operation": "push local[1]",
+   "doc": "dload_n"
+  },
+  "dload_2": {
+   "summary": "Load double from local 2",
+   "description": "Pushes a double (two slots) from local variable 2. One byte in place of dload 2.",
+   "operation": "push local[2]",
+   "doc": "dload_n"
+  },
+  "dload_3": {
+   "summary": "Load double from local 3",
+   "description": "Pushes a double (two slots) from local variable 3. One byte in place of dload 3.",
+   "operation": "push local[3]",
+   "doc": "dload_n"
+  },
+  "dload_w": {
+   "summary": "Load double from a local (wide)",
+   "description": "Pushes a double (two slots) from a local variable, as dload does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "push local[n]",
+   "doc": "wide"
+  },
+  "dmul": {
+   "summary": "Multiply doubles",
+   "description": "Pops two doubles and pushes their product. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a * b",
+   "doc": "dmul"
+  },
+  "dneg": {
+   "summary": "Negate double",
+   "description": "Pops a value and pushes its negation. Flips the sign bit: -0.0 and 0.0 trade places, NaN stays NaN.",
+   "operation": "-a",
+   "doc": "dneg"
+  },
+  "drem": {
+   "summary": "Remainder of doubles",
+   "description": "Pops b, then a, and pushes the remainder of a / b with the quotient truncated toward zero, as C's fmod — not IEEE 754's remainder (that is Math.IEEEremainder). It has the sign of a.",
+   "operation": "a % b",
+   "doc": "drem"
+  },
+  "dreturn": {
+   "summary": "Return double",
+   "description": "Pops a double and returns it to the caller, whose stack gets it. In a synchronized method the monitor is released first.",
+   "operation": "return a",
+   "doc": "dreturn"
+  },
+  "dstore": {
+   "summary": "Store double into a local",
+   "description": "Pops a double (two slots) and stores it in the local variable whose slot number follows the opcode.",
+   "operation": "local[n] = pop",
+   "doc": "dstore"
+  },
+  "dstore_0": {
+   "summary": "Store double into local 0",
+   "description": "Pops a double (two slots) and stores it in local variable 0. One byte in place of dstore 0.",
+   "operation": "local[0] = pop",
+   "doc": "dstore_n"
+  },
+  "dstore_1": {
+   "summary": "Store double into local 1",
+   "description": "Pops a double (two slots) and stores it in local variable 1. One byte in place of dstore 1.",
+   "operation": "local[1] = pop",
+   "doc": "dstore_n"
+  },
+  "dstore_2": {
+   "summary": "Store double into local 2",
+   "description": "Pops a double (two slots) and stores it in local variable 2. One byte in place of dstore 2.",
+   "operation": "local[2] = pop",
+   "doc": "dstore_n"
+  },
+  "dstore_3": {
+   "summary": "Store double into local 3",
+   "description": "Pops a double (two slots) and stores it in local variable 3. One byte in place of dstore 3.",
+   "operation": "local[3] = pop",
+   "doc": "dstore_n"
+  },
+  "dstore_w": {
+   "summary": "Store double into a local (wide)",
+   "description": "Pops a double (two slots) and stores it in a local variable, as dstore does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "local[n] = pop",
+   "doc": "wide"
+  },
+  "dsub": {
+   "summary": "Subtract doubles",
+   "description": "Pops b, then a, and pushes a − b. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a - b",
+   "doc": "dsub"
+  },
+  "dup": {
+   "summary": "Duplicate the top value",
+   "description": "Pushes a copy of the one-slot value on top. javac uses it for new (the object for the constructor and the one kept), for x = y = z, and for x++ on fields.",
+   "operation": "a → a a",
+   "doc": "dup"
+  },
+  "dup2": {
+   "summary": "Duplicate two slots",
+   "description": "Pushes a copy of the top two slots: one long or double, or two one-slot values (an array and an index for a[i]++, say).",
+   "operation": "b a → b a b a",
+   "doc": "dup2"
+  },
+  "dup2_x1": {
+   "summary": "Duplicate two slots under the next",
+   "description": "Copies the top two slots (a long or double, or two values) and inserts the copy below the one-slot value under them.",
+   "operation": "c b a → b a c b a",
+   "doc": "dup2_x1"
+  },
+  "dup2_x2": {
+   "summary": "Duplicate two slots under the next two",
+   "description": "Copies the top two slots and inserts the copy two slots further down; each pair may be one long or double or two one-slot values.",
+   "operation": "d c b a → b a d c b a",
+   "doc": "dup2_x2"
+  },
+  "dup_x1": {
+   "summary": "Duplicate the top value under the next",
+   "description": "Copies the one-slot value on top and inserts the copy below the value under it: an assignment to a field used as a value, obj.f = v, needs it.",
+   "operation": "b a → a b a",
+   "doc": "dup_x1"
+  },
+  "dup_x2": {
+   "summary": "Duplicate the top value under the next two slots",
+   "description": "Copies the one-slot value on top and inserts the copy two slots down: below two one-slot values, or below one long or double. Used for an assignment to an array element used as a value.",
+   "operation": "c b a → a c b a",
+   "doc": "dup_x2"
+  },
+  "f2d": {
+   "summary": "Convert float to double",
+   "description": "Pops float and pushes it as double. Widens the float to a double, exactly.",
+   "operation": "(double) a",
+   "doc": "f2d"
+  },
+  "f2i": {
+   "summary": "Convert float to int",
+   "description": "Pops float and pushes it as int. Drops the fraction (rounds toward zero). A NaN gives 0, and a value outside the int range gives Integer.MIN_VALUE or MAX_VALUE: Java saturates, it does not wrap.",
+   "operation": "(int) a",
+   "doc": "f2i"
+  },
+  "f2l": {
+   "summary": "Convert float to long",
+   "description": "Pops float and pushes it as long. Drops the fraction; a NaN gives 0, a value outside the long range Long.MIN_VALUE or MAX_VALUE.",
+   "operation": "(long) a",
+   "doc": "f2l"
+  },
+  "fadd": {
+   "summary": "Add floats",
+   "description": "Pops two floats and pushes their sum. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a + b",
+   "doc": "fadd"
+  },
+  "faload": {
+   "summary": "Load a float from an array",
+   "description": "Pops an index and an array and pushes the float element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "faload"
+  },
+  "fastore": {
+   "summary": "Store a float into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "fastore"
+  },
+  "fcmpg": {
+   "summary": "Compare floats, NaN as greater",
+   "description": "Pops b, then a, two floats, and pushes 1 if a > b, 0 if they are equal and -1 if a < b — and 1 when either is NaN. javac picks it for < and <= tests, so that a NaN makes them false.",
+   "operation": "a > b ? 1 : a == b ? 0 : -1 (NaN: 1)",
+   "doc": "fcmp_op"
+  },
+  "fcmpl": {
+   "summary": "Compare floats, NaN as less",
+   "description": "Pops b, then a, two floats, and pushes 1 if a > b, 0 if they are equal and -1 if a < b — and -1 when either is NaN. javac picks it for > and >= tests, so that a NaN makes them false.",
+   "operation": "a > b ? 1 : a == b ? 0 : -1 (NaN: -1)",
+   "doc": "fcmp_op"
+  },
+  "fconst_0": {
+   "summary": "Push float 0.0",
+   "description": "Pushes the float constant 0.0f.",
+   "operation": "push 0.0f",
+   "doc": "fconst_f"
+  },
+  "fconst_1": {
+   "summary": "Push float 1.0",
+   "description": "Pushes the float constant 1.0f.",
+   "operation": "push 1.0f",
+   "doc": "fconst_f"
+  },
+  "fconst_2": {
+   "summary": "Push float 2.0",
+   "description": "Pushes the float constant 2.0f.",
+   "operation": "push 2.0f",
+   "doc": "fconst_f"
+  },
+  "fdiv": {
+   "summary": "Divide floats",
+   "description": "Pops b, then a, and pushes a / b by IEEE 754: dividing by zero gives an infinity or NaN, never an exception.",
+   "operation": "a / b",
+   "doc": "fdiv"
+  },
+  "fload": {
+   "summary": "Load float from a local",
+   "description": "Pushes a float from the local variable whose slot number follows the opcode. Parameters are the first locals: this (in an instance method) is slot 0.",
+   "operation": "push local[n]",
+   "doc": "fload"
+  },
+  "fload_0": {
+   "summary": "Load float from local 0",
+   "description": "Pushes a float from local variable 0. One byte in place of fload 0.",
+   "operation": "push local[0]",
+   "doc": "fload_n"
+  },
+  "fload_1": {
+   "summary": "Load float from local 1",
+   "description": "Pushes a float from local variable 1. One byte in place of fload 1.",
+   "operation": "push local[1]",
+   "doc": "fload_n"
+  },
+  "fload_2": {
+   "summary": "Load float from local 2",
+   "description": "Pushes a float from local variable 2. One byte in place of fload 2.",
+   "operation": "push local[2]",
+   "doc": "fload_n"
+  },
+  "fload_3": {
+   "summary": "Load float from local 3",
+   "description": "Pushes a float from local variable 3. One byte in place of fload 3.",
+   "operation": "push local[3]",
+   "doc": "fload_n"
+  },
+  "fload_w": {
+   "summary": "Load float from a local (wide)",
+   "description": "Pushes a float from a local variable, as fload does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "push local[n]",
+   "doc": "wide"
+  },
+  "fmul": {
+   "summary": "Multiply floats",
+   "description": "Pops two floats and pushes their product. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a * b",
+   "doc": "fmul"
+  },
+  "fneg": {
+   "summary": "Negate float",
+   "description": "Pops a value and pushes its negation. Flips the sign bit: -0.0 and 0.0 trade places, NaN stays NaN.",
+   "operation": "-a",
+   "doc": "fneg"
+  },
+  "frem": {
+   "summary": "Remainder of floats",
+   "description": "Pops b, then a, and pushes the remainder of a / b with the quotient truncated toward zero, as C's fmod — not IEEE 754's remainder (that is Math.IEEEremainder). It has the sign of a.",
+   "operation": "a % b",
+   "doc": "frem"
+  },
+  "freturn": {
+   "summary": "Return float",
+   "description": "Pops a float and returns it to the caller, whose stack gets it. In a synchronized method the monitor is released first.",
+   "operation": "return a",
+   "doc": "freturn"
+  },
+  "fstore": {
+   "summary": "Store float into a local",
+   "description": "Pops a float and stores it in the local variable whose slot number follows the opcode.",
+   "operation": "local[n] = pop",
+   "doc": "fstore"
+  },
+  "fstore_0": {
+   "summary": "Store float into local 0",
+   "description": "Pops a float and stores it in local variable 0. One byte in place of fstore 0.",
+   "operation": "local[0] = pop",
+   "doc": "fstore_n"
+  },
+  "fstore_1": {
+   "summary": "Store float into local 1",
+   "description": "Pops a float and stores it in local variable 1. One byte in place of fstore 1.",
+   "operation": "local[1] = pop",
+   "doc": "fstore_n"
+  },
+  "fstore_2": {
+   "summary": "Store float into local 2",
+   "description": "Pops a float and stores it in local variable 2. One byte in place of fstore 2.",
+   "operation": "local[2] = pop",
+   "doc": "fstore_n"
+  },
+  "fstore_3": {
+   "summary": "Store float into local 3",
+   "description": "Pops a float and stores it in local variable 3. One byte in place of fstore 3.",
+   "operation": "local[3] = pop",
+   "doc": "fstore_n"
+  },
+  "fstore_w": {
+   "summary": "Store float into a local (wide)",
+   "description": "Pops a float and stores it in a local variable, as fstore does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "local[n] = pop",
+   "doc": "wide"
+  },
+  "fsub": {
+   "summary": "Subtract floats",
+   "description": "Pops b, then a, and pushes a − b. IEEE 754 arithmetic, rounding to nearest.",
+   "operation": "a - b",
+   "doc": "fsub"
+  },
+  "getfield": {
+   "summary": "Read a field of an object",
+   "description": "Pops an object and pushes the value of its field (a Fieldref). Throws NullPointerException on null.",
+   "operation": "push obj.field",
+   "doc": "getfield"
+  },
+  "getstatic": {
+   "summary": "Read a static field",
+   "description": "Pushes the value of a class's static field, named by a Fieldref in the constant pool. The class is initialized first if it has not been.",
+   "operation": "push Class.field",
+   "doc": "getstatic"
+  },
+  "goto": {
+   "summary": "Branch",
+   "description": "Goes to the target, a signed 16-bit offset from this instruction: the jump back of a loop, the jump past an else.",
+   "operation": "goto target",
+   "doc": "goto"
+  },
+  "goto_w": {
+   "summary": "Branch (wide offset)",
+   "description": "Goes to the target, a signed 32-bit offset from this instruction. A method's code is under 64 KiB, so compilers hardly need it.",
+   "operation": "goto target",
+   "doc": "goto_w"
+  },
+  "i2b": {
+   "summary": "Convert int to byte",
+   "description": "Pops int and pushes it as byte. Keeps the low 8 bits of the int and sign-extends them back to an int: (byte) x.",
+   "operation": "(byte) a",
+   "doc": "i2b"
+  },
+  "i2c": {
+   "summary": "Convert int to char",
+   "description": "Pops int and pushes it as char. Keeps the low 16 bits of the int and zero-extends them back to an int: (char) x.",
+   "operation": "(char) a",
+   "doc": "i2c"
+  },
+  "i2d": {
+   "summary": "Convert int to double",
+   "description": "Pops int and pushes it as double. Converts the int to a double, exactly.",
+   "operation": "(double) a",
+   "doc": "i2d"
+  },
+  "i2f": {
+   "summary": "Convert int to float",
+   "description": "Pops int and pushes it as float. Converts the int to the nearest float; a large int may lose its low digits.",
+   "operation": "(float) a",
+   "doc": "i2f"
+  },
+  "i2l": {
+   "summary": "Convert int to long",
+   "description": "Pops int and pushes it as long. Sign-extends the int to a long; nothing is lost.",
+   "operation": "(long) a",
+   "doc": "i2l"
+  },
+  "i2s": {
+   "summary": "Convert int to short",
+   "description": "Pops int and pushes it as short. Keeps the low 16 bits of the int and sign-extends them back to an int: (short) x.",
+   "operation": "(short) a",
+   "doc": "i2s"
+  },
+  "iadd": {
+   "summary": "Add ints",
+   "description": "Pops two ints and pushes their sum. On overflow it wraps around (only the low bits are kept); Math.addExact is the checked form.",
+   "operation": "a + b",
+   "doc": "iadd"
+  },
+  "iaload": {
+   "summary": "Load a int from an array",
+   "description": "Pops an index and an array and pushes the int element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "iaload"
+  },
+  "iand": {
+   "summary": "Bitwise AND of ints",
+   "description": "Pops two ints and pushes their bitwise AND: Java's & on integers, and on booleans when both sides must be evaluated.",
+   "operation": "a & b",
+   "doc": "iand"
+  },
+  "iastore": {
+   "summary": "Store a int into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "iastore"
+  },
+  "iconst_0": {
+   "summary": "Push int 0",
+   "description": "Pushes the int constant 0. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 0",
+   "doc": "iconst_i"
+  },
+  "iconst_1": {
+   "summary": "Push int 1",
+   "description": "Pushes the int constant 1. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 1",
+   "doc": "iconst_i"
+  },
+  "iconst_2": {
+   "summary": "Push int 2",
+   "description": "Pushes the int constant 2. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 2",
+   "doc": "iconst_i"
+  },
+  "iconst_3": {
+   "summary": "Push int 3",
+   "description": "Pushes the int constant 3. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 3",
+   "doc": "iconst_i"
+  },
+  "iconst_4": {
+   "summary": "Push int 4",
+   "description": "Pushes the int constant 4. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 4",
+   "doc": "iconst_i"
+  },
+  "iconst_5": {
+   "summary": "Push int 5",
+   "description": "Pushes the int constant 5. One byte in place of bipush for the most common small numbers.",
+   "operation": "push 5",
+   "doc": "iconst_i"
+  },
+  "iconst_m1": {
+   "summary": "Push int -1",
+   "description": "Pushes the int constant -1. One byte in place of bipush for the most common small numbers.",
+   "operation": "push -1",
+   "doc": "iconst_i"
+  },
+  "idiv": {
+   "summary": "Divide ints",
+   "description": "Pops b, then a, and pushes a / b rounded toward zero. Throws ArithmeticException when b is 0; the smallest int divided by -1 gives itself.",
+   "operation": "a / b",
+   "doc": "idiv"
+  },
+  "if_acmpeq": {
+   "summary": "Branch if references are the same",
+   "description": "Pops two references and goes to the target if they are the same object (or both null): Java's == on objects, not equals().",
+   "operation": "if a == b: goto target",
+   "doc": "if_acmp_cond"
+  },
+  "if_acmpne": {
+   "summary": "Branch if references differ",
+   "description": "Pops two references and goes to the target if they are not the same object.",
+   "operation": "if a != b: goto target",
+   "doc": "if_acmp_cond"
+  },
+  "if_icmpeq": {
+   "summary": "Branch if ints are equal",
+   "description": "Pops b, then a, two ints, and goes to the target if they are equal; otherwise the next instruction runs.",
+   "operation": "if a == b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "if_icmpge": {
+   "summary": "Branch if int a >= b",
+   "description": "Pops b, then a, two ints, and goes to the target if a >= b; otherwise the next instruction runs.",
+   "operation": "if a >= b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "if_icmpgt": {
+   "summary": "Branch if int a > b",
+   "description": "Pops b, then a, two ints, and goes to the target if a > b; otherwise the next instruction runs.",
+   "operation": "if a > b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "if_icmple": {
+   "summary": "Branch if int a <= b",
+   "description": "Pops b, then a, two ints, and goes to the target if a <= b; otherwise the next instruction runs.",
+   "operation": "if a <= b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "if_icmplt": {
+   "summary": "Branch if int a < b",
+   "description": "Pops b, then a, two ints, and goes to the target if a < b; otherwise the next instruction runs.",
+   "operation": "if a < b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "if_icmpne": {
+   "summary": "Branch if ints are not equal",
+   "description": "Pops b, then a, two ints, and goes to the target if they are not equal; otherwise the next instruction runs.",
+   "operation": "if a != b: goto target",
+   "doc": "if_icmp_cond"
+  },
+  "ifeq": {
+   "summary": "Branch if int is equal to zero",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is equal to zero; otherwise the next instruction runs. After a comparison (lcmp, fcmpl…) it tests the comparison; on a boolean, ifeq means false and ifne true.",
+   "operation": "if a == 0: goto target",
+   "doc": "if_cond"
+  },
+  "ifge": {
+   "summary": "Branch if int is zero or more",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is zero or more; otherwise the next instruction runs. After lcmp, fcmpl or dcmpg it tests the comparison.",
+   "operation": "if a >= 0: goto target",
+   "doc": "if_cond"
+  },
+  "ifgt": {
+   "summary": "Branch if int is greater than zero",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is greater than zero; otherwise the next instruction runs. After lcmp, fcmpl or dcmpg it tests the comparison.",
+   "operation": "if a > 0: goto target",
+   "doc": "if_cond"
+  },
+  "ifle": {
+   "summary": "Branch if int is zero or less",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is zero or less; otherwise the next instruction runs. After lcmp, fcmpl or dcmpg it tests the comparison.",
+   "operation": "if a <= 0: goto target",
+   "doc": "if_cond"
+  },
+  "iflt": {
+   "summary": "Branch if int is less than zero",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is less than zero; otherwise the next instruction runs. After lcmp, fcmpl or dcmpg it tests the comparison.",
+   "operation": "if a < 0: goto target",
+   "doc": "if_cond"
+  },
+  "ifne": {
+   "summary": "Branch if int is not zero",
+   "description": "Pops an int and goes to the target (a signed 16-bit offset from this instruction) if it is not zero; otherwise the next instruction runs. After a comparison (lcmp, fcmpl…) it tests the comparison; on a boolean, ifeq means false and ifne true.",
+   "operation": "if a != 0: goto target",
+   "doc": "if_cond"
+  },
+  "ifnonnull": {
+   "summary": "Branch if not null",
+   "description": "Pops a reference and goes to the target if it is not null.",
+   "operation": "if a != null: goto target",
+   "doc": "ifnonnull"
+  },
+  "ifnull": {
+   "summary": "Branch if null",
+   "description": "Pops a reference and goes to the target if it is null.",
+   "operation": "if a == null: goto target",
+   "doc": "ifnull"
+  },
+  "iinc": {
+   "summary": "Increment a local int",
+   "description": "Adds the signed byte that follows the slot number to the int in that local variable, without touching the stack: i++, i += 5, i -= 1.",
+   "operation": "local[n] += c",
+   "doc": "iinc"
+  },
+  "iinc_w": {
+   "summary": "Increment a local int (wide)",
+   "description": "Adds a signed 16-bit constant to the int in a local variable, as iinc does. Wide form: the wide prefix (0xC4) makes both the slot number and the constant two bytes.",
+   "operation": "local[n] += c",
+   "doc": "wide"
+  },
+  "iload": {
+   "summary": "Load int from a local",
+   "description": "Pushes an int from the local variable whose slot number follows the opcode. Parameters are the first locals: this (in an instance method) is slot 0.",
+   "operation": "push local[n]",
+   "doc": "iload"
+  },
+  "iload_0": {
+   "summary": "Load int from local 0",
+   "description": "Pushes an int from local variable 0. One byte in place of iload 0.",
+   "operation": "push local[0]",
+   "doc": "iload_n"
+  },
+  "iload_1": {
+   "summary": "Load int from local 1",
+   "description": "Pushes an int from local variable 1. One byte in place of iload 1.",
+   "operation": "push local[1]",
+   "doc": "iload_n"
+  },
+  "iload_2": {
+   "summary": "Load int from local 2",
+   "description": "Pushes an int from local variable 2. One byte in place of iload 2.",
+   "operation": "push local[2]",
+   "doc": "iload_n"
+  },
+  "iload_3": {
+   "summary": "Load int from local 3",
+   "description": "Pushes an int from local variable 3. One byte in place of iload 3.",
+   "operation": "push local[3]",
+   "doc": "iload_n"
+  },
+  "iload_w": {
+   "summary": "Load int from a local (wide)",
+   "description": "Pushes an int from a local variable, as iload does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "push local[n]",
+   "doc": "wide"
+  },
+  "imul": {
+   "summary": "Multiply ints",
+   "description": "Pops two ints and pushes their product. On overflow it wraps around (only the low bits are kept); Math.multiplyExact is the checked form.",
+   "operation": "a * b",
+   "doc": "imul"
+  },
+  "ineg": {
+   "summary": "Negate int",
+   "description": "Pops a value and pushes its negation. The smallest int stays itself.",
+   "operation": "-a",
+   "doc": "ineg"
+  },
+  "instanceof": {
+   "summary": "Test the type of an object",
+   "description": "Pops a reference and pushes 1 if it is an instance of the type named, 0 if not or if it is null: x instanceof Type.",
+   "operation": "push a instanceof Type",
+   "doc": "instanceof"
+  },
+  "invokedynamic": {
+   "summary": "Call through a call site",
+   "description": "Pops the arguments and calls whatever the call site is linked to. The first time it runs, the bootstrap method the constant names builds the call site; javac uses it for lambdas and method references (LambdaMetafactory), string concatenation (StringConcatFactory), records' equals, hashCode and toString, and pattern switches.",
+   "operation": "push callsite(args)",
+   "doc": "invokedynamic"
+  },
+  "invokeinterface": {
+   "summary": "Call a method of an interface",
+   "description": "Pops the arguments and the object and calls the object's implementation of an interface method. Its operands also give the number of argument slots (with the object) and a zero, which javap prints after the index.",
+   "operation": "push obj.method(args)",
+   "doc": "invokeinterface"
+  },
+  "invokespecial": {
+   "summary": "Call a method exactly",
+   "description": "Pops the arguments and the object and calls the very method named, without looking for an override: a constructor (<init>), a super.method() call, and in old class files private methods.",
+   "operation": "push Class.method(obj, args)",
+   "doc": "invokespecial"
+  },
+  "invokestatic": {
+   "summary": "Call a static method",
+   "description": "Pops the arguments and calls a static method; its result, if any, is pushed. The class is initialized first if it has not been.",
+   "operation": "push Class.method(args)",
+   "doc": "invokestatic"
+  },
+  "invokevirtual": {
+   "summary": "Call a method of an object",
+   "description": "Pops the arguments and the object and calls the method the object's own class has for the name and descriptor — an override if there is one. The result, if any, is pushed. Throws NullPointerException on null.",
+   "operation": "push obj.method(args)",
+   "doc": "invokevirtual"
+  },
+  "ior": {
+   "summary": "Bitwise OR of ints",
+   "description": "Pops two ints and pushes their bitwise OR: Java's |.",
+   "operation": "a | b",
+   "doc": "ior"
+  },
+  "irem": {
+   "summary": "Remainder of ints",
+   "description": "Pops b, then a, and pushes the remainder of a / b, a − (a / b) × b: it has the sign of a. Throws ArithmeticException when b is 0.",
+   "operation": "a % b",
+   "doc": "irem"
+  },
+  "ireturn": {
+   "summary": "Return int",
+   "description": "Pops an int (or a boolean, byte, char, short) and returns it to the caller, whose stack gets it. In a synchronized method the monitor is released first.",
+   "operation": "return a",
+   "doc": "ireturn"
+  },
+  "ishl": {
+   "summary": "Shift int left",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted left. Only the low 5 bits of the count are used, so it is taken modulo 32.",
+   "operation": "a << n",
+   "doc": "ishl"
+  },
+  "ishr": {
+   "summary": "Shift int right, keeping the sign",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted right, copies of the sign bit filling in from the left: Java's >>. The count is taken modulo 32.",
+   "operation": "a >> n",
+   "doc": "ishr"
+  },
+  "istore": {
+   "summary": "Store int into a local",
+   "description": "Pops an int and stores it in the local variable whose slot number follows the opcode.",
+   "operation": "local[n] = pop",
+   "doc": "istore"
+  },
+  "istore_0": {
+   "summary": "Store int into local 0",
+   "description": "Pops an int and stores it in local variable 0. One byte in place of istore 0.",
+   "operation": "local[0] = pop",
+   "doc": "istore_n"
+  },
+  "istore_1": {
+   "summary": "Store int into local 1",
+   "description": "Pops an int and stores it in local variable 1. One byte in place of istore 1.",
+   "operation": "local[1] = pop",
+   "doc": "istore_n"
+  },
+  "istore_2": {
+   "summary": "Store int into local 2",
+   "description": "Pops an int and stores it in local variable 2. One byte in place of istore 2.",
+   "operation": "local[2] = pop",
+   "doc": "istore_n"
+  },
+  "istore_3": {
+   "summary": "Store int into local 3",
+   "description": "Pops an int and stores it in local variable 3. One byte in place of istore 3.",
+   "operation": "local[3] = pop",
+   "doc": "istore_n"
+  },
+  "istore_w": {
+   "summary": "Store int into a local (wide)",
+   "description": "Pops an int and stores it in a local variable, as istore does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "local[n] = pop",
+   "doc": "wide"
+  },
+  "isub": {
+   "summary": "Subtract ints",
+   "description": "Pops b, then a, and pushes a − b. On overflow it wraps around (only the low bits are kept); Math.subtractExact is the checked form.",
+   "operation": "a - b",
+   "doc": "isub"
+  },
+  "iushr": {
+   "summary": "Shift int right, filling with zeros",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted right, zeros filling in from the left: Java's >>>. The count is taken modulo 32.",
+   "operation": "a >>> n",
+   "doc": "iushr"
+  },
+  "ixor": {
+   "summary": "Bitwise XOR of ints",
+   "description": "Pops two ints and pushes their bitwise exclusive OR: Java's ^. With -1 it inverts every bit, which is how ~x compiles.",
+   "operation": "a ^ b",
+   "doc": "ixor"
+  },
+  "jsr": {
+   "summary": "Jump to a subroutine",
+   "description": "Pushes the address of the next instruction and goes to the target: how old compilers (Java 1.4 and earlier) ran a finally block from every exit. Class files of version 51 (Java 7) and later may not use it. javap does not print its target.",
+   "operation": "push return address; goto target",
+   "doc": "jsr"
+  },
+  "jsr_w": {
+   "summary": "Jump to a subroutine (wide offset)",
+   "description": "Like jsr, with a signed 32-bit offset.",
+   "operation": "push return address; goto target",
+   "doc": "jsr_w"
+  },
+  "l2d": {
+   "summary": "Convert long to double",
+   "description": "Pops long and pushes it as double. Converts the long to the nearest double; above 2^53 the low digits may be lost.",
+   "operation": "(double) a",
+   "doc": "l2d"
+  },
+  "l2f": {
+   "summary": "Convert long to float",
+   "description": "Pops long and pushes it as float. Converts the long to the nearest float.",
+   "operation": "(float) a",
+   "doc": "l2f"
+  },
+  "l2i": {
+   "summary": "Convert long to int",
+   "description": "Pops long and pushes it as int. Keeps the low 32 bits of the long: the value may change and even its sign.",
+   "operation": "(int) a",
+   "doc": "l2i"
+  },
+  "ladd": {
+   "summary": "Add longs",
+   "description": "Pops two longs and pushes their sum. On overflow it wraps around (only the low bits are kept); Math.addExact is the checked form.",
+   "operation": "a + b",
+   "doc": "ladd"
+  },
+  "laload": {
+   "summary": "Load a long from an array",
+   "description": "Pops an index and an array and pushes the long element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "laload"
+  },
+  "land": {
+   "summary": "Bitwise AND of longs",
+   "description": "Pops two longs and pushes their bitwise AND: Java's & on integers, and on booleans when both sides must be evaluated.",
+   "operation": "a & b",
+   "doc": "land"
+  },
+  "lastore": {
+   "summary": "Store a long into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "lastore"
+  },
+  "lcmp": {
+   "summary": "Compare longs",
+   "description": "Pops b, then a, two longs, and pushes 1 if a > b, 0 if they are equal and -1 if a < b. A branch on the result (ifge, iflt…) follows.",
+   "operation": "a > b ? 1 : a == b ? 0 : -1",
+   "doc": "lcmp"
+  },
+  "lconst_0": {
+   "summary": "Push long 0",
+   "description": "Pushes the long constant 0L.",
+   "operation": "push 0L",
+   "doc": "lconst_l"
+  },
+  "lconst_1": {
+   "summary": "Push long 1",
+   "description": "Pushes the long constant 1L.",
+   "operation": "push 1L",
+   "doc": "lconst_l"
+  },
+  "ldc": {
+   "summary": "Load a constant",
+   "description": "Pushes a constant from the class's constant pool, named by a one-byte index: an int, a float, a String, a class (its Class object), a method type, a method handle, or a dynamic constant made by its bootstrap method on first use.",
+   "operation": "push pool[index]",
+   "doc": "ldc"
+  },
+  "ldc2_w": {
+   "summary": "Load a long or double constant",
+   "description": "Pushes a long or a double (or a dynamic constant of one of those types) from the constant pool, by a two-byte index. Such constants take two pool entries and two stack slots.",
+   "operation": "push pool[index]",
+   "doc": "ldc2_w"
+  },
+  "ldc_w": {
+   "summary": "Load a constant (wide index)",
+   "description": "Like ldc, with a two-byte index, for constants past the first 256 entries of the pool.",
+   "operation": "push pool[index]",
+   "doc": "ldc_w"
+  },
+  "ldiv": {
+   "summary": "Divide longs",
+   "description": "Pops b, then a, and pushes a / b rounded toward zero. Throws ArithmeticException when b is 0; the smallest long divided by -1 gives itself.",
+   "operation": "a / b",
+   "doc": "ldiv"
+  },
+  "lload": {
+   "summary": "Load long from a local",
+   "description": "Pushes a long (two slots) from the local variable whose slot number follows the opcode. Parameters are the first locals: this (in an instance method) is slot 0.",
+   "operation": "push local[n]",
+   "doc": "lload"
+  },
+  "lload_0": {
+   "summary": "Load long from local 0",
+   "description": "Pushes a long (two slots) from local variable 0. One byte in place of lload 0.",
+   "operation": "push local[0]",
+   "doc": "lload_n"
+  },
+  "lload_1": {
+   "summary": "Load long from local 1",
+   "description": "Pushes a long (two slots) from local variable 1. One byte in place of lload 1.",
+   "operation": "push local[1]",
+   "doc": "lload_n"
+  },
+  "lload_2": {
+   "summary": "Load long from local 2",
+   "description": "Pushes a long (two slots) from local variable 2. One byte in place of lload 2.",
+   "operation": "push local[2]",
+   "doc": "lload_n"
+  },
+  "lload_3": {
+   "summary": "Load long from local 3",
+   "description": "Pushes a long (two slots) from local variable 3. One byte in place of lload 3.",
+   "operation": "push local[3]",
+   "doc": "lload_n"
+  },
+  "lload_w": {
+   "summary": "Load long from a local (wide)",
+   "description": "Pushes a long (two slots) from a local variable, as lload does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "push local[n]",
+   "doc": "wide"
+  },
+  "lmul": {
+   "summary": "Multiply longs",
+   "description": "Pops two longs and pushes their product. On overflow it wraps around (only the low bits are kept); Math.multiplyExact is the checked form.",
+   "operation": "a * b",
+   "doc": "lmul"
+  },
+  "lneg": {
+   "summary": "Negate long",
+   "description": "Pops a value and pushes its negation. The smallest long stays itself.",
+   "operation": "-a",
+   "doc": "lneg"
+  },
+  "lookupswitch": {
+   "summary": "Jump by matching a key",
+   "description": "Pops an int and goes to the target of the key equal to it, or to the default when none is. The keys are sorted, so it can be searched; compilers use it for a sparse switch, and for a switch on strings (by hashCode).",
+   "operation": "goto target[a] or default",
+   "doc": "lookupswitch"
+  },
+  "lor": {
+   "summary": "Bitwise OR of longs",
+   "description": "Pops two longs and pushes their bitwise OR: Java's |.",
+   "operation": "a | b",
+   "doc": "lor"
+  },
+  "lrem": {
+   "summary": "Remainder of longs",
+   "description": "Pops b, then a, and pushes the remainder of a / b, a − (a / b) × b: it has the sign of a. Throws ArithmeticException when b is 0.",
+   "operation": "a % b",
+   "doc": "lrem"
+  },
+  "lreturn": {
+   "summary": "Return long",
+   "description": "Pops a long and returns it to the caller, whose stack gets it. In a synchronized method the monitor is released first.",
+   "operation": "return a",
+   "doc": "lreturn"
+  },
+  "lshl": {
+   "summary": "Shift long left",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted left. Only the low 6 bits of the count are used, so it is taken modulo 64.",
+   "operation": "a << n",
+   "doc": "lshl"
+  },
+  "lshr": {
+   "summary": "Shift long right, keeping the sign",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted right, copies of the sign bit filling in from the left: Java's >>. The count is taken modulo 64.",
+   "operation": "a >> n",
+   "doc": "lshr"
+  },
+  "lstore": {
+   "summary": "Store long into a local",
+   "description": "Pops a long (two slots) and stores it in the local variable whose slot number follows the opcode.",
+   "operation": "local[n] = pop",
+   "doc": "lstore"
+  },
+  "lstore_0": {
+   "summary": "Store long into local 0",
+   "description": "Pops a long (two slots) and stores it in local variable 0. One byte in place of lstore 0.",
+   "operation": "local[0] = pop",
+   "doc": "lstore_n"
+  },
+  "lstore_1": {
+   "summary": "Store long into local 1",
+   "description": "Pops a long (two slots) and stores it in local variable 1. One byte in place of lstore 1.",
+   "operation": "local[1] = pop",
+   "doc": "lstore_n"
+  },
+  "lstore_2": {
+   "summary": "Store long into local 2",
+   "description": "Pops a long (two slots) and stores it in local variable 2. One byte in place of lstore 2.",
+   "operation": "local[2] = pop",
+   "doc": "lstore_n"
+  },
+  "lstore_3": {
+   "summary": "Store long into local 3",
+   "description": "Pops a long (two slots) and stores it in local variable 3. One byte in place of lstore 3.",
+   "operation": "local[3] = pop",
+   "doc": "lstore_n"
+  },
+  "lstore_w": {
+   "summary": "Store long into a local (wide)",
+   "description": "Pops a long (two slots) and stores it in a local variable, as lstore does. Wide form: the wide prefix (0xC4) makes the slot number two bytes, so slots up to 65535 can be reached.",
+   "operation": "local[n] = pop",
+   "doc": "wide"
+  },
+  "lsub": {
+   "summary": "Subtract longs",
+   "description": "Pops b, then a, and pushes a − b. On overflow it wraps around (only the low bits are kept); Math.subtractExact is the checked form.",
+   "operation": "a - b",
+   "doc": "lsub"
+  },
+  "lushr": {
+   "summary": "Shift long right, filling with zeros",
+   "description": "Pops a shift count (an int) and a value and pushes the value shifted right, zeros filling in from the left: Java's >>>. The count is taken modulo 64.",
+   "operation": "a >>> n",
+   "doc": "lushr"
+  },
+  "lxor": {
+   "summary": "Bitwise XOR of longs",
+   "description": "Pops two longs and pushes their bitwise exclusive OR: Java's ^. With -1 it inverts every bit, which is how ~x compiles.",
+   "operation": "a ^ b",
+   "doc": "lxor"
+  },
+  "monitorenter": {
+   "summary": "Enter a monitor",
+   "description": "Pops an object and takes its lock, waiting while another thread holds it; the thread that holds it may take it again. The start of a synchronized block. Throws NullPointerException on null.",
+   "operation": "lock a",
+   "doc": "monitorenter"
+  },
+  "monitorexit": {
+   "summary": "Exit a monitor",
+   "description": "Pops an object and releases one hold of its lock. javac puts it at every way out of a synchronized block, the exceptional one too.",
+   "operation": "unlock a",
+   "doc": "monitorexit"
+  },
+  "multianewarray": {
+   "summary": "Create a multidimensional array",
+   "description": "Pops one length per dimension the operand gives and pushes a new array of the array type named, with its sub-arrays made: new int[3][4]. Dimensions past those given stay null: new String[2][].",
+   "operation": "push new type[a][b]…",
+   "doc": "multianewarray"
+  },
+  "new": {
+   "summary": "Create an object",
+   "description": "Allocates an object of the class named and pushes a reference to it, its fields zero. It is not yet constructed: javac follows it with dup, the arguments and invokespecial <init>.",
+   "operation": "push new Class",
+   "doc": "new"
+  },
+  "newarray": {
+   "summary": "Create an array of a primitive type",
+   "description": "Pops a length and pushes a new array of that many elements of the primitive type named by the operand byte (boolean, char, float, double, byte, short, int or long), each zero. Throws NegativeArraySizeException for a negative length.",
+   "operation": "push new type[n]",
+   "doc": "newarray"
+  },
+  "nop": {
+   "summary": "No operation",
+   "description": "Does nothing. Compilers rarely emit it; it can keep room in code that is patched later.",
+   "operation": "nothing",
+   "doc": "nop"
+  },
+  "pop": {
+   "summary": "Discard the top value",
+   "description": "Pops the value on top of the stack and throws it away: a call's result that is not used, say. The value must be one slot (not a long or a double).",
+   "operation": "pop",
+   "doc": "pop"
+  },
+  "pop2": {
+   "summary": "Discard two slots",
+   "description": "Pops two slots and throws them away: one long or double, or two values of one slot each.",
+   "operation": "pop; pop",
+   "doc": "pop2"
+  },
+  "putfield": {
+   "summary": "Write a field of an object",
+   "description": "Pops a value and an object and stores the value in the object's field (a Fieldref). Throws NullPointerException on null.",
+   "operation": "obj.field = value",
+   "doc": "putfield"
+  },
+  "putstatic": {
+   "summary": "Write a static field",
+   "description": "Pops a value and stores it in a class's static field (a Fieldref). The class is initialized first if it has not been.",
+   "operation": "Class.field = pop",
+   "doc": "putstatic"
+  },
+  "ret": {
+   "summary": "Return from a subroutine",
+   "description": "Goes to the return address held in the local variable whose slot follows the opcode, where jsr's astore put it: the end of an old-style finally block. javap does not print the slot.",
+   "operation": "goto local[n]",
+   "doc": "ret"
+  },
+  "ret_w": {
+   "summary": "Return from a subroutine (wide)",
+   "description": "Like ret, for a local variable past slot 255: the wide prefix makes the slot number two bytes.",
+   "operation": "goto local[n]",
+   "doc": "wide"
+  },
+  "return": {
+   "summary": "Return from a void method",
+   "description": "Returns to the caller with no value: the end of a void method or constructor.",
+   "operation": "return",
+   "doc": "return"
+  },
+  "saload": {
+   "summary": "Load a short from an array",
+   "description": "Pops an index and an array and pushes the short element at that index. The short is sign-extended to an int. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "push array[index]",
+   "doc": "saload"
+  },
+  "sastore": {
+   "summary": "Store a short into an array",
+   "description": "Pops a value, an index and an array and stores the value as the element at that index. The int is truncated to its low 16 bits. Throws NullPointerException on a null array and ArrayIndexOutOfBoundsException on an index outside it.",
+   "operation": "array[index] = value",
+   "doc": "sastore"
+  },
+  "sipush": {
+   "summary": "Push a short as int",
+   "description": "Pushes the signed 16-bit number that follows the opcode, sign-extended to an int: constants from -32768 to 32767.",
+   "operation": "push (int) short",
+   "doc": "sipush"
+  },
+  "swap": {
+   "summary": "Swap the top two values",
+   "description": "Exchanges the two one-slot values on top of the stack. javac seldom needs it; other compilers do.",
+   "operation": "b a → a b",
+   "doc": "swap"
+  },
+  "tableswitch": {
+   "summary": "Jump through a table",
+   "description": "Pops an int and, if it is between the table's low and high values, goes to the target for it; otherwise to the default. Compilers use it for a dense switch. Its operands start at a multiple of four bytes from the start of the code.",
+   "operation": "goto table[a - low] or default",
+   "doc": "tableswitch"
+  }
+ }
+}

@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer push does not cancel one already under way.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the PWA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The core is Rust, compiled to WebAssembly by `npm test` / `npm run build` (tools/wasm.mjs);
+      # Binaryen's wasm-opt makes the module smaller.
+      - run: rustup target add wasm32-unknown-unknown
+      - run: sudo apt-get install -y --no-install-recommends binaryen
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      # The browser tests (tests/app.mjs, tests/pwa.mjs) are left out here: they depend on the
+      # runner's Chrome and its timing, and one has failed now and then for no fault of the code.
+      # `npm run check` runs them before a commit.
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/pages
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

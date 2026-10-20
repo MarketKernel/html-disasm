@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/wasm"]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+debug = false
+
+# The bridge (crates/wasm) is JSON, sessions and glue that run once per question: optimized for size it
+# shrinks the module by a tenth, deflated, at no cost a benchmark can see. The core's hot paths (decoders,
+# passes) stay at opt-level 3, where "s" or "z" would cost 10-70% of their speed.
+[profile.release.package.disasm-wasm]
+opt-level = "z"
+
+# Tests decode millions of words; keep them quick without losing the debug checks.
+[profile.test]
+opt-level = 2
+debug-assertions = true
+overflow-checks = true
+
+# Symbols for profiling the native examples (`cargo run --profile profiling --example bench`).
+[profile.profiling]
+inherits = "release"
+debug = true

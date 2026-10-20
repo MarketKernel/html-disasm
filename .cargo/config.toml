@@ -1,0 +1,6 @@
+# The WebAssembly build of the core (tools/wasm.mjs): LLVM inlines less than opt-level 3 would.
+# Inlining is most of what level 3 adds to the module's size; at a threshold of 50 the module is
+# 49 KB smaller deflated (5% of it) and the analyses 0-5% slower, where opt-level "s" would cost
+# 10-17% and "z" 35-60%. Native builds (tests, examples) keep LLVM's own threshold.
+[target.wasm32-unknown-unknown]
+rustflags = ["-C", "llvm-args=-inline-threshold=50"]
