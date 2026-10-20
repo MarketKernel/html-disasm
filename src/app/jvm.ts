@@ -252,7 +252,7 @@ export function jvmRowHtml(p: JvmProgram, rows: Rows, r: number, selected: boole
     }
   }
   const insn = p.insn(value);
-  const bytes = settings.bytes ? `<span class="r-bytes">${insn.bytes5}</span>` : '';
+  const bytes = settings.bytes ? `<span class="r-bytes r-bytes--5">${insn.bytes5}</span>` : '';
   const addr = `<span class="r-addr" title="${esc(`${hex(p.addrOf(value))} · ${t('listing', 'offset in the class file')} ${hex(p.fileOffset(value))}`)}">${p.pc(value)}</span>`;
   if (hla) {
     const last = p.joinedTo(value);

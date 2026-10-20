@@ -226,7 +226,7 @@ export function cilRowHtml(p: CilProgram, rows: Rows, r: number, selected: boole
   const insn = p.insn(value);
   const fn = p.functions[p.functionOfIndex(value)];
   const offset = p.addrOf(value) - (fn?.addr ?? 0);
-  const bytes = settings.bytes ? `<span class="r-bytes">${insn.bytes5}</span>` : '';
+  const bytes = settings.bytes ? `<span class="r-bytes r-bytes--5">${insn.bytes5}</span>` : '';
   const addr = `<span class="r-addr" title="RVA ${hex(p.addrOf(value))}">${label(offset)}</span>`;
   if (hla) {
     const last = p.joinedTo(value);

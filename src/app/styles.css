@@ -342,7 +342,9 @@ body.is-resizing { cursor: col-resize; user-select: none; }
 .row.is-flash { animation: flash 1.2s ease-out; }
 @keyframes flash { from { background: var(--accent-soft); } }
 .r-addr { color: var(--muted); width: 10.5ch; flex: none; user-select: none; }
-.r-bytes { color: var(--muted); width: 13ch; flex: none; opacity: 0.8; } /* four bytes are 11ch, plus a gap */
+.r-bytes { color: var(--muted); width: 13ch; flex: none; opacity: 0.8; white-space: nowrap; overflow: hidden; } /* four bytes are 11ch, plus a gap */
+.r-bytes--5 { width: 18ch; } /* five bytes and an ellipsis are 16ch */
+.r-bytes--x86 { width: 24ch; } /* seven bytes and an ellipsis are 22ch */
 .r-code { flex: none; }
 .r-mn { display: inline-block; min-width: 8ch; color: var(--s-mnemonic); font-weight: 550; }
 .r-ops { color: var(--text); }

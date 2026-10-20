@@ -106,6 +106,13 @@ function bytesOf(p: X86Program, index: number): string {
   return [...p.image.bytes.subarray(at, at + Math.min(length, 15))].map((b) => b.toString(16).padStart(2, '0')).join(' ');
 }
 
+/** The bytes column: seven bytes cover most instructions, a longer one ends in an ellipsis with the whole encoding in its tooltip (and the inspector). */
+function bytesCell(p: X86Program, index: number): string {
+  const full = bytesOf(p, index);
+  if (full.length <= 20) return `<span class="r-bytes r-bytes--x86">${full}</span>`;
+  return `<span class="r-bytes r-bytes--x86" title="${full}">${full.slice(0, 20)} …</span>`;
+}
+
 
 /** The lifting context, with functions named as the settings ask. */
 function liftContext(p: X86Program): X86LiftContext {
@@ -185,7 +192,7 @@ export function x86RowHtml(p: X86Program, rows: Rows, r: number, selected: boole
       return `<div class="row pad${sel}" data-row="${r}">${addrCell(p.addrOf(value))}${rows.mode === 'hla' ? '<span class="r-indent"></span>' : ''}<span class="r-code">${x86AsmHtml(p, insn)} <span class="t-op">× ${n(count)}</span></span><span class="r-comment">; ${esc(t('listing', 'padding'))}, ${esc(tn('inspector', '{count} byte', '{count} bytes', bytes))}</span></div>`;
     }
   }
-  const bytes = showBytes ? `<span class="r-bytes r-bytes--x86">${bytesOf(p, value)}</span>` : '';
+  const bytes = showBytes ? bytesCell(p, value) : '';
   if (rows.mode === 'hla') return `<div class="row${sel}" data-row="${r}">${addrCell(p.addrOf(value))}${bytes}<span class="r-indent"></span><span class="r-code">${hlaRow(p, value)}</span></div>`;
   const insn = p.insn(value);
   return `<div class="row${sel}" data-row="${r}">${addrCell(p.addrOf(value))}${bytes}<span class="r-code">${x86AsmHtml(p, insn)}</span>${comment(p, value)}</div>`;
